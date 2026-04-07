@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tradease — My Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--bg4:#252525;
+  --border:#2A2A2A;--border-hi:#3A3A3A;
+  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.12);
+  --white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;
+  --green:#22C55E;--yellow:#FBbf24;--red:#EF4444;
+  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
+  --r:12px;--r-lg:20px;--r-xl:28px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:auto;}
+body{font-family:var(--body);background:var(--bg);color:var(--g1);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;opacity:0;transition:opacity .15s ease;}
+button{cursor:pointer;border:none;font-family:var(--body);}
+
+#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;}
+.spinner{width:40px;height:40px;border-radius:50%;border:3px solid var(--bg3);border-top-color:var(--orange);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading-screen p{font-family:var(--display);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g3);}
+
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.ready{display:flex;animation:fadeIn .18s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.view{display:none;}
+.view.active{display:block;animation:fadeIn .15s ease both;}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);height:64px;padding:0 28px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;transition:opacity .12s;flex-shrink:0;text-decoration:none;}
+.logo:hover{opacity:.82;}
+.logo-img{width:34px;height:34px;border-radius:9px;object-fit:cover;flex-shrink:0;}
+.logo-text{font-family:var(--display);font-size:22px;font-weight:900;color:var(--orange);text-transform:uppercase;letter-spacing:.03em;-webkit-text-stroke:0.8px #000;paint-order:stroke fill;}
+.logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;}
+.topbar-nav{display:flex;align-items:center;gap:2px;margin-left:20px;flex:1;}
+.tnav{font-size:13px;font-weight:600;color:var(--g2);padding:7px 13px;border-radius:8px;cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;}
+.tnav:hover,.tnav.active{color:var(--white);background:var(--bg3);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.nav-uname{font-size:13px;font-weight:600;color:var(--g2);}
+.nav-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;font-weight:900;color:white;cursor:pointer;transition:opacity .12s,border-color .12s;flex-shrink:0;border:2px solid transparent;}
+.nav-av:hover{opacity:.85;border-color:var(--orange);}
+.nav-av.on{border-color:var(--orange);}
+.so-btn{font-size:12px;font-weight:700;color:var(--g3);padding:6px 12px;border-radius:8px;background:none;transition:color .1s,background .1s;text-transform:uppercase;letter-spacing:.05em;}
+.so-btn:hover{color:var(--white);background:var(--bg3);}
+/* Notifications */
+.notif-btn{position:relative;width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,border-color .12s;font-size:16px;flex-shrink:0;}
+.notif-btn:hover{background:var(--bg4);border-color:var(--border-hi);}
+.notif-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:var(--orange);color:white;border-radius:50px;font-size:10px;font-weight:800;font-family:var(--display);display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg2);}
+.notif-badge.show{display:flex;}
+.notif-panel{position:fixed;top:72px;right:20px;width:340px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:0 16px 48px rgba(0,0,0,.6);z-index:500;display:none;overflow:hidden;animation:fadeIn .15s ease both;}
+.notif-panel.open{display:block;}
+.notif-hdr{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.notif-hdr-title{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.notif-mark-all{font-size:12px;color:var(--orange);cursor:pointer;font-weight:600;background:none;border:none;transition:opacity .12s;}
+.notif-mark-all:hover{opacity:.75;}
+.notif-list{max-height:380px;overflow-y:auto;}
+.notif-item{padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;display:flex;gap:12px;align-items:flex-start;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--bg3);}
+.notif-item.unread{background:rgba(255,107,43,.04);}
+.notif-item.unread .notif-dot{opacity:1;}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px;opacity:0;}
+.notif-msg{font-size:13px;color:var(--g1);line-height:1.5;flex:1;}
+.notif-time{font-size:11px;color:var(--g3);margin-top:3px;}
+.notif-empty{padding:32px;text-align:center;color:var(--g3);font-size:13px;}
+
+/* BODY */
+.pg{flex:1;padding:36px 28px;max-width:1100px;margin:0 auto;width:100%;}
+.pg-hdr{margin-bottom:28px;}
+.pg-hdr h1{font-family:var(--display);font-size:clamp(26px,4vw,38px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:4px;}
+.pg-hdr p{font-size:14px;color:var(--g2);}
+
+/* WELCOME */
+.wb{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:var(--r-xl);padding:30px 34px;display:flex;align-items:center;gap:20px;margin-bottom:28px;position:relative;overflow:hidden;}
+.wb::after{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,43,.1) 0%,transparent 70%);pointer-events:none;}
+.wb-av{width:58px;height:58px;border-radius:15px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:22px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 6px 20px rgba(255,107,43,.28);}
+.wb-txt h2{font-family:var(--display);font-size:26px;font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:3px;}
+.wb-txt p{font-size:14px;color:var(--g2);}
+.wb-srch{margin-left:auto;display:flex;background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;width:300px;flex-shrink:0;transition:border-color .15s;}
+.wb-srch:focus-within{border-color:var(--orange);}
+.wb-srch input{flex:1;background:none;border:none;outline:none;padding:10px 13px;font-family:var(--body);font-size:14px;color:var(--g1);}
+.wb-srch input::placeholder{color:var(--g3);}
+.wb-srch button{padding:9px 14px;background:var(--orange);color:white;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s;}
+.wb-srch button:hover{background:var(--orange-dk);}
+
+/* QUICK ACTIONS */
+.qa-row{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
+.qa-btn{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 16px;color:var(--g1);font-size:13px;font-weight:600;transition:border-color .12s,background .12s;cursor:pointer;}
+.qa-btn:hover{border-color:var(--orange);background:var(--bg3);}
+
+/* SECTION */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:28px;}
+.st{font-family:var(--display);font-size:17px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.sa{font-size:13px;color:var(--orange);cursor:pointer;font-weight:600;transition:opacity .1s;}
+.sa:hover{opacity:.75;}
+
+/* CONTRACTOR GRID */
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.cc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;cursor:pointer;transition:border-color .14s,transform .14s;will-change:transform;}
+.cc:hover{border-color:var(--orange);transform:translateY(-3px);}
+.cc-top{display:flex;align-items:center;gap:11px;margin-bottom:12px;}
+.cc-av{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;font-weight:900;color:white;flex-shrink:0;}
+.cc-name{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:1px;}
+.cc-trade{font-size:12px;color:var(--g2);}
+.cc-loc{font-size:12px;color:var(--g3);margin-bottom:9px;}
+.cc-about{font-size:13px;color:var(--g2);line-height:1.6;margin-bottom:12px;}
+.cc-btn{width:100%;padding:9px;border-radius:var(--r);background:var(--orange);color:white;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s;}
+.cc-btn:hover{background:var(--orange-dk);}
+
+/* BOOKING LIST */
+.bl{display:flex;flex-direction:column;gap:10px;}
+.bi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:border-color .12s;}
+.bi:hover{border-color:var(--border-hi);}
+.bi-ic{width:42px;height:42px;border-radius:10px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.bi-info{flex:1;}
+.bi-cn{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--white);}
+.bi-meta{font-size:13px;color:var(--g2);margin-top:2px;}
+.bi-desc{font-size:12px;color:var(--g3);margin-top:3px;}
+.bst{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:4px 9px;border-radius:50px;flex-shrink:0;}
+.bst-pending  {background:rgba(251,191,36,.12);color:#FBbf24;}
+.bst-accepted {background:rgba(34,197,94,.12); color:#22C55E;}
+.bst-inprogress{background:rgba(59,130,246,.12);color:#60A5FA;}
+.bst-declined {background:rgba(239,68,68,.12); color:#EF4444;}
+.bst-completed{background:rgba(96,96,96,.2);   color:#A8A8A8;}
+.sp{background:rgba(251,191,36,.12);color:#FBbf24;}
+.sc{background:rgba(34,197,94,.12); color:#22C55E;}
+.sd{background:rgba(96,96,96,.2);   color:#A8A8A8;}
+
+/* Calendar badge in booking rows */
+.cal-badge{
+  width:52px;height:58px;border-radius:12px;flex-shrink:0;
+  background:rgba(255,107,43,0.12);border:1px solid rgba(255,107,43,0.3);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 0 14px rgba(255,107,43,0.2);position:relative;overflow:hidden;
+}
+.cal-badge::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,107,43,0.08),transparent);pointer-events:none;}
+.cal-badge-month{font-family:var(--display);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);line-height:1;}
+.cal-badge-day{font-family:var(--display);font-size:22px;font-weight:900;color:var(--white);line-height:1.1;}
+.cal-badge-done{background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.3);box-shadow:0 0 14px rgba(34,197,94,0.2);}
+.cal-badge-done .cal-badge-month{color:#22C55E;}
+.cal-badge-check{position:absolute;top:3px;right:4px;font-size:10px;color:#22C55E;font-weight:900;}
+.bi-done{border-color:rgba(34,197,94,0.2) !important;}
+.bi-done:hover{border-color:rgba(34,197,94,0.35) !important;}
+.bi-desc{font-size:12px;color:var(--g3);font-style:italic;margin-top:2px;}
+.fb{padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:600;background:var(--bg2);color:var(--g2);border:1px solid var(--border);cursor:pointer;transition:all .12s;}
+.fb:hover{color:var(--white);border-color:var(--border-hi);}
+.fb.on{background:var(--orange);color:white;border-color:var(--orange);}
+
+/* EMPTY */
+.empty{background:var(--bg2);border:1px dashed var(--border);border-radius:var(--r-xl);padding:52px 32px;text-align:center;}
+.ei{font-size:38px;margin-bottom:12px;}
+.empty h4{font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;color:var(--g2);margin-bottom:8px;}
+.empty p{font-size:13px;color:var(--g3);}
+
+/* PROFILE */
+.pf-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:var(--r-xl);padding:34px;display:flex;align-items:center;gap:26px;margin-bottom:24px;position:relative;overflow:hidden;}
+.pf-card::after{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,43,.09) 0%,transparent 70%);pointer-events:none;}
+.pf-av{width:84px;height:84px;border-radius:20px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:32px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 28px rgba(255,107,43,.3);}
+.pf-info h2{font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+.pf-email{font-size:14px;color:var(--g2);margin-bottom:3px;}
+.pf-loc{font-size:13px;color:var(--g3);}
+.pf-joined{font-size:12px;color:var(--g3);margin-top:5px;}
+.pf-acts{margin-left:auto;display:flex;flex-direction:column;gap:9px;flex-shrink:0;}
+.btn-or{padding:10px 20px;border-radius:var(--r);background:var(--orange);color:white;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s;box-shadow:0 4px 14px rgba(255,107,43,.28);}
+.btn-or:hover{background:var(--orange-dk);}
+.btn-gy{padding:10px 20px;border-radius:var(--r);background:var(--bg4);color:var(--g1);border:1px solid var(--border);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s,border-color .1s;}
+.btn-gy:hover{background:var(--bg3);border-color:var(--border-hi);}
+.btn-red{padding:10px 20px;border-radius:var(--r);background:var(--bg4);color:var(--red);border:1px solid rgba(239,68,68,.25);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s,border-color .1s;}
+.btn-red:hover{background:rgba(239,68,68,.1);border-color:var(--red);}
+
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.ii{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;}
+.il{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);margin-bottom:5px;}
+.iv{font-family:var(--display);font-size:18px;font-weight:800;color:var(--white);}
+.iv.sm{font-size:15px;font-weight:500;font-family:var(--body);}
+
+.acct-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;}
+.acct-lbl{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--g3);margin-bottom:14px;}
+.acct-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);}
+.acct-row:last-child{border-bottom:none;padding-bottom:0;}
+.acct-row-title{font-weight:600;font-size:14px;color:var(--g1);margin-bottom:2px;}
+.acct-row-sub{font-size:12px;color:var(--g3);}
+
+/* MODALS */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.mbg.open{display:flex;}
+.mdl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);width:100%;max-width:490px;overflow:hidden;animation:fadeIn .18s ease both;}
+.mh{background:linear-gradient(135deg,var(--orange),var(--orange-dk));padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.mh h3{font-family:var(--display);font-size:19px;font-weight:900;text-transform:uppercase;color:white;letter-spacing:.02em;}
+.mc{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:white;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .1s;}
+.mc:hover{background:rgba(255,255,255,.3);}
+.mb{padding:22px 24px;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);}
+.fg input,.fg textarea,.fg select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;color:var(--g1);font-family:var(--body);font-size:14px;outline:none;transition:border-color .15s;width:100%;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--orange);}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3);}
+.fg select option{background:var(--bg3);}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.fg textarea{min-height:80px;resize:vertical;}
+.ms{width:100%;padding:12px;background:var(--orange);color:white;border-radius:var(--r);font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;transition:background .1s;margin-top:4px;}
+.ms:hover{background:var(--orange-dk);}
+.ms:disabled{opacity:.6;cursor:not-allowed;}
+
+/* BOOK MODAL HEADER */
+.bmh{background:linear-gradient(135deg,var(--orange),var(--orange-dk));padding:20px 24px;display:flex;align-items:center;gap:13px;}
+.bma{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:17px;font-weight:900;color:white;flex-shrink:0;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg3);color:var(--g1);border:1px solid var(--border);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:0 6px 28px rgba(0,0,0,.5);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:290px;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:960px){.cg{grid-template-columns:1fr 1fr;}.ig{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){
+  .cg{grid-template-columns:1fr;}.wb,.pf-card{flex-direction:column;align-items:flex-start;}
+  .wb-srch{width:100%;margin-left:0;}.pf-acts{margin-left:0;flex-direction:row;flex-wrap:wrap;}
+  .ig{grid-template-columns:1fr;}.pg{padding:20px 14px;}
+  .topbar-nav .tnav:not(.active){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div style="font-family:var(--display);font-size:26px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;">Tradease<span style="color:var(--orange);">.</span></div>
+  <div class="spinner"></div>
+  <p>Loading your dashboard…</p>
+</div>
+
+<div id="app">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="logo" onclick="goHome()">
+      <img class="logo-img" src="./tradease-logo.png" alt="Tradease"/>
+      <span class="logo-text">Tradease</span><span class="logo-dot"></span>
+    </div>
+    <div class="topbar-nav">
+      <span class="tnav" id="tab-d" onclick="showView('d')">Dashboard</span>
+      <span class="tnav" id="tab-b" onclick="showView('b')">My Bookings</span>
+      <span class="tnav" id="tab-f" onclick="findContractors()">Find Contractors</span>
+    </div>
+    <div class="topbar-right">
+      <span class="nav-uname" id="nav-uname"></span>
+      <div class="notif-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
+        🔔<span class="notif-badge" id="notif-badge"></span>
+      </div>
+      <div class="nav-av" id="nav-av" onclick="showView('p')" title="My Profile"></div>
+      <button class="so-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-hdr">
+      <span class="notif-hdr-title">Notifications</span>
+      <button class="notif-mark-all" onclick="markAllRead()">Mark all read</button>
+    </div>
+    <div class="notif-list" id="notif-list">
+      <div class="notif-empty">No notifications yet</div>
+    </div>
+  </div>
+
+  <!-- VIEW: DASHBOARD -->
+  <div class="view active" id="view-d">
+    <div class="pg">
+      <div class="wb">
+        <div class="wb-av" id="wb-av"></div>
+        <div class="wb-txt">
+          <h2 id="wb-h">Welcome back!</h2>
+          <p id="wb-p">Find a trusted contractor near you.</p>
+        </div>
+        <div class="wb-srch">
+          <input type="text" id="srch" placeholder="What do you need help with?" onkeydown="if(event.key==='Enter')runSearch()"/>
+          <button onclick="runSearch()">Search</button>
+        </div>
+      </div>
+
+      <div class="qa-row">
+        <button class="qa-btn" onclick="showView('b')">📅 My Bookings</button>
+        <button class="qa-btn" onclick="showView('p')">👤 My Profile</button>
+        <button class="qa-btn" onclick="findContractors()">🔍 Find Contractors</button>
+      </div>
+
+      <div class="sh">
+        <div class="st">Featured Contractors</div>
+        <span class="sa" onclick="findContractors()">View all →</span>
+      </div>
+      <div class="cg" id="cg">
+        <div style="grid-column:1/-1;text-align:center;padding:44px;color:var(--g3);">
+          <div class="spinner" style="margin:0 auto 12px;"></div>
+          <div style="font-size:13px;">Loading contractors…</div>
+        </div>
+      </div>
+
+      <div class="sh">
+        <div class="st">Recent Bookings</div>
+        <span class="sa" onclick="showView('b')">View all →</span>
+      </div>
+      <div class="bl" id="recent-bl">
+        <div style="text-align:center;padding:20px;color:var(--g3);font-size:13px;">
+          <div class="spinner" style="margin:0 auto 10px;"></div>Loading…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: BOOKINGS -->
+  <div class="view" id="view-b">
+    <div class="pg">
+      <div class="pg-hdr">
+        <h1>My Bookings</h1>
+        <p>All your service booking requests.</p>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+        <button class="fb on" onclick="filterBk('all',this)">All</button>
+        <button class="fb" onclick="filterBk('pending',this)">Pending</button>
+        <button class="fb" onclick="filterBk('accepted',this)">Accepted</button>
+        <button class="fb" onclick="filterBk('declined',this)">Declined</button>
+        <button class="fb" onclick="filterBk('completed',this)">Completed</button>
+      </div>
+      <div class="bl" id="all-bl">
+        <div style="text-align:center;padding:44px;color:var(--g3);">
+          <div class="spinner" style="margin:0 auto 12px;"></div>Loading bookings…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: PROFILE -->
+  <div class="view" id="view-p">
+    <div class="pg">
+      <div class="pg-hdr">
+        <h1>My Profile</h1>
+        <p>Manage your account information.</p>
+      </div>
+
+      <div class="pf-card">
+        <div class="pf-av" id="pf-av"></div>
+        <div class="pf-info">
+          <h2 id="pf-name">—</h2>
+          <div class="pf-email" id="pf-email">—</div>
+          <div class="pf-loc" id="pf-loc"></div>
+          <div class="pf-joined" id="pf-joined"></div>
+        </div>
+        <div class="pf-acts">
+          <button class="btn-or" onclick="openEdit()">✏️ Edit Profile</button>
+          <button class="btn-gy" onclick="showView('b')">📅 My Bookings</button>
+          <button class="btn-red" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="ig">
+        <div class="ii"><div class="il">Full Name</div><div class="iv" id="ii-name">—</div></div>
+        <div class="ii"><div class="il">Email</div><div class="iv sm" id="ii-email">—</div></div>
+        <div class="ii"><div class="il">Location</div><div class="iv" id="ii-loc">—</div></div>
+        <div class="ii"><div class="il">Phone</div><div class="iv" id="ii-phone">—</div></div>
+        <div class="ii"><div class="il">Total Bookings</div><div class="iv" id="ii-bk">0</div></div>
+        <div class="ii"><div class="il">Member Since</div><div class="iv sm" id="ii-since">—</div></div>
+      </div>
+
+      <div class="acct-card">
+        <div class="acct-lbl">Account Settings</div>
+        <div class="acct-row">
+          <div><div class="acct-row-title">Change Password</div><div class="acct-row-sub">We'll send a reset link to your email</div></div>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="sendReset()">Send Link</button>
+        </div>
+        <div class="acct-row">
+          <div><div class="acct-row-title" style="color:var(--red);">Sign Out</div><div class="acct-row-sub">Sign out of this device</div></div>
+          <button class="btn-red" style="padding:8px 14px;font-size:12px;" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- EDIT MODAL -->
+<div class="mbg" id="edit-modal" onclick="if(event.target===this)closeEdit()">
+  <div class="mdl">
+    <div class="mh"><h3>Edit Profile</h3><button class="mc" onclick="closeEdit()">✕</button></div>
+    <div class="mb">
+      <div class="fgr">
+        <div class="fg"><label>Full Name</label><input type="text" id="e-name" placeholder="Your name"/></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="e-phone" placeholder="(917) 555-0000"/></div>
+      </div>
+      <div class="fg"><label>Location (City / ZIP)</label><input type="text" id="e-loc" placeholder="Brooklyn, NY"/></div>
+      <button class="ms" id="e-save" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK MODAL -->
+<div class="mbg" id="book-modal" onclick="if(event.target===this)closeBook()">
+  <div class="mdl">
+    <div class="bmh">
+      <div class="bma" id="bm-av"></div>
+      <div>
+        <div style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;color:white;" id="bm-name"></div>
+        <div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:1px;" id="bm-trade"></div>
+      </div>
+      <button class="mc" style="margin-left:auto;" onclick="closeBook()">✕</button>
+    </div>
+    <div class="mb">
+      <div class="fg"><label>Describe the Job</label><textarea id="bm-desc" placeholder="e.g. Leaking pipe under kitchen sink, needs fixing ASAP"></textarea></div>
+
+      <!-- Availability status -->
+      <div id="av-loading" style="font-size:13px;color:var(--g2);margin-bottom:12px;display:none;">
+        <span style="opacity:.6;">⏳ Loading availability…</span>
+      </div>
+      <div id="av-note" style="display:none;font-size:13px;border-radius:var(--r);padding:10px 14px;margin-bottom:12px;"></div>
+
+      <div class="fgr">
+        <div class="fg">
+          <label>Preferred Date</label>
+          <input type="date" id="bm-date" onchange="onDateChange()"/>
+          <div id="bm-date-hint" style="font-size:11px;color:var(--g3);margin-top:4px;"></div>
+        </div>
+        <div class="fg">
+          <label>Preferred Time</label>
+          <select id="bm-time">
+            <option value="">— pick a date first —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Available days chips (when contractor has availability set) -->
+      <div id="av-days-wrap" style="display:none;margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);margin-bottom:8px;">Available Days</div>
+        <div id="av-days-chips" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+      </div>
+
+      <button class="ms" id="bm-sub" onclick="submitBook()">Confirm Booking →</button>
+      <p style="text-align:center;font-size:12px;color:var(--g3);margin-top:8px;">No payment needed now. Contractor will confirm.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://linqsojbszglbgpoxgtv.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const COLS=['linear-gradient(135deg,#FF6B2B,#E05520)','linear-gradient(135deg,#3B82F6,#1D4ED8)','linear-gradient(135deg,#10B981,#059669)','linear-gradient(135deg,#8B5CF6,#6D28D9)','linear-gradient(135deg,#F59E0B,#D97706)','linear-gradient(135deg,#EC4899,#BE185D)','linear-gradient(135deg,#06B6D4,#0284C7)'];
+
+let user=null,prof=null,bkgs=[],activeC=null;
+
+// ── VIEWS ──
+const TABS={d:'tab-d',b:'tab-b',p:null};
+function showView(v){
+  ['d','b','p'].forEach(x=>{
+    document.getElementById('view-'+x).classList.remove('active');
+    if(TABS[x])document.getElementById(TABS[x])?.classList.remove('active');
+  });
+  document.getElementById('view-'+v).classList.add('active');
+  if(TABS[v])document.getElementById(TABS[v])?.classList.add('active');
+  document.getElementById('nav-av').classList.toggle('on',v==='p');
+  window.scrollTo(0,0);
+}
+
+// ── INIT ──
+let _redirecting = false; // guard against double-redirect
+
+async function init(){
+  const{data:{session},error:sessionErr}=await sb.auth.getSession();
+
+  if(sessionErr || !session){
+    if(!_redirecting){ _redirecting=true; window.location.replace('./tradease-auth.html'); }
+    return;
+  }
+
+  user = session.user;
+
+  // Fetch profile — but don't block on it failing
+  const{data:p, error:profileErr} = await sb.from('users')
+    .select('*').eq('id', user.id).single();
+
+  // If profile row doesn't exist yet (new signup), create it
+  if(profileErr || !p){
+    // Try to insert a basic row so the user isn't stuck
+    await sb.from('users').upsert({
+      id:       user.id,
+      username: user.user_metadata?.display_name || user.email.split('@')[0],
+      email:    user.email,
+      role:     user.user_metadata?.role || 'customer',
+    }, { onConflict: 'id' });
+    prof = { role: user.user_metadata?.role || 'customer' };
+  } else {
+    prof = p;
+  }
+
+  // Role check — contractors go to their dashboard
+  if(prof?.role === 'contractor'){
+    if(!_redirecting){ _redirecting=true; window.location.replace('./contractor-dashboard.html'); }
+    return;
+  }
+
+  // All good — reveal the page
+  document.body.style.opacity='1';
+  fillUI();
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('app').classList.add('ready');
+  showView('d');
+  await Promise.all([loadContractors(), loadBookings(), loadNotifications()]);
+  subscribeToBookings();
+  subscribeToNotifications();
+}
+
+function fillUI(){
+  const name=prof?.username||user.user_metadata?.display_name||user.email.split('@')[0];
+  const ini=name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const email=user.email;
+  const loc=prof?.location||'—';
+  const phone=prof?.phone||'—';
+  // topbar
+  document.getElementById('nav-uname').textContent=name.split(' ')[0];
+  document.getElementById('nav-av').textContent=ini;
+  // welcome
+  document.getElementById('wb-av').textContent=ini;
+  document.getElementById('wb-h').textContent='Welcome back, '+name.split(' ')[0]+'!';
+  document.getElementById('wb-p').textContent=loc!=='—'?'Find trusted contractors near '+loc+'.':'Find trusted contractors near you.';
+  // profile
+  document.getElementById('pf-av').textContent=ini;
+  document.getElementById('pf-name').textContent=name;
+  document.getElementById('pf-email').textContent=email;
+  document.getElementById('pf-loc').textContent=loc!=='—'?'📍 '+loc:'';
+  document.getElementById('ii-name').textContent=name;
+  document.getElementById('ii-email').textContent=email;
+  document.getElementById('ii-loc').textContent=loc;
+  document.getElementById('ii-phone').textContent=phone;
+  if(prof?.created_at){
+    const j=new Date(prof.created_at).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    document.getElementById('pf-joined').textContent='Member since '+j;
+    document.getElementById('ii-since').textContent=j;
+  }
+  // edit modal prefill
+  document.getElementById('e-name').value=name||'';
+  document.getElementById('e-phone').value=phone!=='—'?phone:'';
+  document.getElementById('e-loc').value=loc!=='—'?loc:'';
+}
+
+// ── CONTRACTORS ──
+async function loadContractors(){
+  const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating').order('rating',{ascending:false}).limit(6);
+  const isLive = data && data.length > 0;
+  const list = isLive ? data.map((c,i)=>({
+    id:c.id, name:c.company_name,
+    ini:(c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+    trade:c.trade_type, loc:c.location||'New York, NY',
+    about:(c.description||'Professional contractor serving New York.').substring(0,80)+'…',
+    col:COLS[i%COLS.length],
+    sample:false,
+  })) : fallback();
+
+  document.getElementById('cg').innerHTML = list.map(c=>`
+    <div class="cc">
+      <div class="cc-top">
+        <div class="cc-av" style="background:${c.col};">${c.ini}</div>
+        <div>
+          <div class="cc-name">${c.name}${c.sample?` <span style="font-size:9px;background:rgba(255,107,43,.12);color:var(--orange);border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;">Sample</span>`:''}
+          </div>
+          <div class="cc-trade">${c.trade||'Contractor'}</div>
+        </div>
+      </div>
+      <div class="cc-loc">📍 ${c.loc}</div>
+      <div class="cc-about">${c.about}</div>
+      <button class="cc-btn" onclick='openBook(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Book Now</button>
+    </div>`).join('');
+}
+
+// ── BOOKINGS ──
+async function loadBookings(){
+  const{data}=await sb.from('bookings').select('*').eq('customer_id',user.id).order('created_at',{ascending:false});
+  bkgs=data||[];
+  document.getElementById('ii-bk').textContent=bkgs.length;
+  renderBk('recent-bl',bkgs.slice(0,3));
+  renderBk('all-bl',bkgs);
+}
+
+function statusStyle(s){
+  if(s==='pending')     return {cls:'bst-pending',   label:'Pending'};
+  if(s==='accepted')    return {cls:'bst-accepted',  label:'Accepted ✓'};
+  if(s==='in_progress') return {cls:'bst-inprogress',label:'In Progress 🔧'};
+  if(s==='declined')    return {cls:'bst-declined',  label:'Declined'};
+  if(s==='completed')   return {cls:'bst-completed', label:'Completed'};
+  return {cls:'bst-pending', label:s};
+}
+
+function renderBk(elId,list){
+  const el=document.getElementById(elId);
+  if(!list||!list.length){
+    el.innerHTML=`<div class="empty"><div class="ei">📅</div><h4>No Bookings Yet</h4><p>Book a contractor above to get started.</p></div>`;return;
+  }
+  el.innerHTML=list.map(b=>{
+    const{cls,label}=statusStyle(b.status);
+    const dt  = b.booking_date ? new Date(b.booking_date+'T00:00:00') : null;
+    const dtStr = dt ? dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}) : '—';
+    const dayNum  = dt ? dt.getDate() : '';
+    const monthSh = dt ? dt.toLocaleDateString('en-US',{month:'short'}).toUpperCase() : '';
+    const isDone  = b.status === 'completed';
+    const canCancel = b.status === 'pending';
+
+    const tradeIcon = {
+      'Plumbing':'🔧','Electrical':'⚡','HVAC':'❄️','Handyman':'🔨',
+      'Roofing':'🏠','Cleaning':'🧹','Mechanical':'⚙️','Painting':'🖌️',
+      'Carpentry':'🪵','Landscaping':'🌿'
+    }[b.trade] || '📋';
+
+    return`<div class="bi ${isDone?'bi-done':''}" id="bk-${b.id}">
+      <!-- Mini calendar badge -->
+      ${dt ? `<div class="cal-badge ${isDone?'cal-badge-done':''}">
+        <div class="cal-badge-month">${monthSh}</div>
+        <div class="cal-badge-day">${dayNum}</div>
+        ${isDone?`<div class="cal-badge-check">✓</div>`:''}
+      </div>` : `<div class="bi-ic" style="${b.status==='accepted'?'background:rgba(34,197,94,.12);color:#22C55E;':b.status==='declined'?'background:rgba(239,68,68,.12);color:#EF4444;':''}">${tradeIcon}</div>`}
+      <div class="bi-info">
+        <div class="bi-cn">${b.contractor_name||'Contractor'}</div>
+        <div class="bi-meta">
+          <span>${tradeIcon} ${b.trade||''}</span>
+          ${dt?`<span>· ${dtStr}</span>`:''}
+          ${b.booking_time?`<span>· ${b.booking_time}</span>`:''}
+        </div>
+        ${b.description?`<div class="bi-desc">"${b.description.substring(0,65)}${b.description.length>65?'…':''}"</div>`:''}
+        ${isDone?`<div style="font-size:12px;color:#22C55E;margin-top:4px;font-weight:600;">✅ Job Completed${b.completed_at?' · '+new Date(b.completed_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):''}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+        <span class="bst ${cls}">${label}</span>
+        ${canCancel?`<button onclick="cancelBookingWithFee('${b.id}','${b.booking_date||''}','${b.booking_time||''}')" style="font-size:11px;color:var(--g3);background:none;border:none;cursor:pointer;padding:0;transition:color .1s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--g3)'">Cancel</button>`:''}
+        ${isDone?`<button onclick="showCalendarCard('${b.id}')" style="font-size:11px;color:var(--orange);background:none;border:none;cursor:pointer;font-weight:700;padding:0;">📅 View</button>`:''}
+        ${isDone?`<button onclick="promptRating('${b.id}')" style="font-size:11px;color:#FBBC04;background:rgba(251,188,4,.08);border:1px solid rgba(251,188,4,.2);border-radius:6px;cursor:pointer;font-weight:700;padding:3px 8px;margin-top:2px;">⭐ Rate</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterBk(s,btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const map={'confirmed':'accepted'}; // handle old data
+  const f=s==='all'?bkgs:bkgs.filter(b=>b.status===(map[s]||s));
+  renderBk('all-bl',f);
+}
+
+async function cancelBooking(id){ cancelBookingWithFee(id,'',''); }
+
+async function cancelBookingWithFee(id, bookingDate, bookingTime) {
+  let hoursUntil = 999;
+  if (bookingDate) {
+    const ts = new Date(bookingDate + 'T' + (bookingTime||'09:00'));
+    hoursUntil = (ts - new Date()) / 3600000;
+  }
+  let feePct=0, feeMsg='Free cancellation — no charge.';
+  if (hoursUntil < 0)       { feePct=100; feeMsg='Booking has passed — 100% fee, no refund.'; }
+  else if (hoursUntil < 12) { feePct=100; feeMsg='Under 12 hours — 100% cancellation fee applies.'; }
+  else if (hoursUntil < 24) { feePct=50;  feeMsg='12–24 hours notice — 50% fee applies.'; }
+  else if (hoursUntil < 48) { feePct=25;  feeMsg='24–48 hours notice — 25% fee applies.'; }
+
+  const ok = confirm(feePct>0
+    ? `⚠️ Cancellation Fee\n\n${feeMsg}\n\nCancel anyway?`
+    : `Cancel this booking?\n\n${feeMsg}`);
+  if (!ok) return;
+
+  const {error} = await sb.from('bookings').update({
+    status:'cancelled', cancelled_by:'customer',
+    cancelled_at:new Date().toISOString(),
+    fee_percent:feePct, fee_applied:feePct>0,
+  }).eq('id',id).eq('customer_id',user.id);
+
+  if (error) { showToast('❌ Could not cancel. Try again.'); return; }
+  bkgs=bkgs.map(b=>b.id===id?{...b,status:'cancelled'}:b);
+  renderBk('recent-bl',bkgs.slice(0,3));
+  renderBk('all-bl',bkgs);
+  showToast(feePct>0 ? `✅ Cancelled. Note: ${feeMsg}` : '✅ Booking cancelled — no charge.');
+}
+
+function showCalendarCard(bookingId) {
+  const b=bkgs.find(x=>x.id===bookingId); if(!b) return;
+  showBookingCalendarCard({contractorName:b.contractor_name||'Contractor',trade:b.trade||'Service',date:b.booking_date||'',time:b.booking_time||'',status:b.status});
+}
+
+function showBookingCalendarCard({contractorName,trade,date,time,status}){
+  const d=date?new Date(date+'T00:00:00'):new Date();
+  const month=d.toLocaleDateString('en-US',{month:'long'}),year=d.getFullYear(),dayNum=d.getDate();
+  const dayName=d.toLocaleDateString('en-US',{weekday:'long'});
+  const firstDay=new Date(d.getFullYear(),d.getMonth(),1).getDay();
+  const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  let cells='';
+  for(let i=0;i<firstDay;i++) cells+=`<div></div>`;
+  for(let i=1;i<=dim;i++) cells+=`<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:${i===dayNum?900:500};color:${i===dayNum?'white':'rgba(255,255,255,0.35)'};border-radius:8px;background:${i===dayNum?'linear-gradient(135deg,#FF6B2B,#E05520)':'transparent'};box-shadow:${i===dayNum?'0 0 12px rgba(255,107,43,0.5)':''};${i===dayNum?'transform:scale(1.1);':''}">${i}</div>`;
+  const isDone=status==='completed';
+  const tr={'Plumbing':'🔧','Electrical':'⚡','HVAC':'❄️','Handyman':'🔨','Roofing':'🏠','Cleaning':'🧹','Mechanical':'⚙️','Painting':'🖌️','Carpentry':'🪵','Landscaping':'🌿'}[trade]||'📋';
+  let fmt=time; try{if(time.match(/^\d{1,2}:\d{2}$/)){const[h,m]=time.split(':').map(Number);fmt=`${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;}}catch(e){}
+  const ex=document.getElementById('cal-card-overlay'); if(ex)ex.remove();
+  const ov=document.createElement('div'); ov.id='cal-card-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.82);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  ov.innerHTML=`<div style="background:rgba(10,10,14,0.96);border:1px solid rgba(255,107,43,0.3);border-radius:28px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 0 60px rgba(255,107,43,0.25),0 24px 80px rgba(0,0,0,0.7);">
+    <div style="background:linear-gradient(135deg,${isDone?'#22C55E,#16A34A':'#FF6B2B,#E05520'});padding:16px 20px;display:flex;align-items:center;gap:12px;">
+      <div style="font-size:24px;">${isDone?'✅':tr}</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.7);">${isDone?'Completed':'Appointment'}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:white;text-transform:uppercase;">${contractorName}</div></div>
+      <button onclick="document.getElementById('cal-card-overlay').remove()" style="margin-left:auto;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="padding:18px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;color:white;text-align:center;margin-bottom:10px;">${month} ${year}</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:14px;">${cells}</div>
+      <div style="background:rgba(255,107,43,0.08);border:1px solid rgba(255,107,43,0.2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;gap:8px;align-items:center;"><span>📅</span><span style="color:white;font-size:13px;font-weight:600;">${dayName}, ${month} ${dayNum}</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><span>🕐</span><span style="color:white;font-size:13px;font-weight:600;">${fmt}</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><span>${tr}</span><span style="color:white;font-size:13px;font-weight:600;">${trade}</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><span>🏢</span><span style="color:white;font-size:13px;font-weight:600;">${contractorName}</span></div>
+      </div>
+      ${isDone?`<div style="margin-top:10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:50px;padding:7px;text-align:center;font-size:12px;color:#22C55E;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">✅ Job Completed</div>`:''}
+    </div></div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+}
+
+// ── REAL-TIME + AUTO-REASSIGN ─────────────────────────────────
+function subscribeToBookings() {
+  sb.channel('my-bookings')
+    .on('postgres_changes', {
+      event:'UPDATE', schema:'public', table:'bookings',
+      filter:`customer_id=eq.${user.id}`,
+    }, async payload => {
+      const u=payload.new;
+      bkgs=bkgs.map(b=>b.id===u.id?{...b,...u}:b);
+      renderBk('recent-bl',bkgs.slice(0,3));
+      renderBk('all-bl',bkgs);
+      if(u.status==='accepted')    showToast(`✅ ${u.contractor_name||'Contractor'} accepted your booking!`);
+      else if(u.status==='in_progress') showToast(`🔧 ${u.contractor_name||'Contractor'} has started your job!`);
+      else if(u.status==='completed') {
+        showToast('🎉 Job complete! Please rate your experience.');
+        // Show rating prompt after short delay
+        setTimeout(() => promptRating(u.id), 1500);
+      }
+      else if(u.status==='declined'||u.status==='cancelled') {
+        showToast(`⚠️ ${u.contractor_name||'Contractor'} is unavailable. Finding you another…`);
+        setTimeout(()=>autoFindNewContractor(u),1800);
+      }
+    }).subscribe();
+}
+
+async function autoFindNewContractor(booking) {
+  if(!booking.trade) return;
+  const{data:candidates}=await sb.rpc('find_next_contractor',{
+    p_booking_id:booking.id, p_trade:booking.trade,
+    p_location:prof?.location||null,
+    p_exclude_ids:String(booking.contractor_id||''),
+  });
+  if(!candidates||!candidates.length){
+    showToast('😔 No other contractors available right now. Please search manually.');
+    setTimeout(()=>{window.location.href='./tradease.html';},2200);
+    return;
+  }
+  const next=candidates[0];
+  const{error}=await sb.from('bookings').insert({
+    customer_id:user.id, customer_name:prof?.username||user.email.split('@')[0],
+    contractor_id:next.contractor_id, contractor_name:next.company_name,
+    trade:booking.trade, description:booking.description,
+    booking_date:booking.booking_date, booking_time:booking.booking_time,
+    status:'pending', reassigned:true,
+    previous_contractor_ids:String(booking.contractor_id||''),
+  });
+  if(!error){
+    showToast(`🔄 New request sent to ${next.company_name}!`);
+    loadBookings();
+  }
+}
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+let contractorAv = []; // availability rows for active contractor
+
+async function openBook(c) {
+  activeC = c;
+  document.getElementById('bm-av').style.background = c.col;
+  document.getElementById('bm-av').textContent = c.ini;
+  document.getElementById('bm-name').textContent = c.name;
+  document.getElementById('bm-trade').textContent = (c.trade||'Contractor') + ' · ' + c.loc;
+  document.getElementById('bm-desc').value = '';
+  document.getElementById('bm-date').value = '';
+  document.getElementById('bm-time').innerHTML = '<option value="">— pick a date first —</option>';
+  document.getElementById('bm-date-hint').textContent = '';
+  document.getElementById('av-note').style.display = 'none';
+  document.getElementById('av-days-wrap').style.display = 'none';
+  document.getElementById('book-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Load contractor availability
+  document.getElementById('av-loading').style.display = 'block';
+  const { data } = await sb.from('availability')
+    .select('day_of_week, start_time, end_time')
+    .eq('contractor_id', String(c.id));
+  contractorAv = data || [];
+  document.getElementById('av-loading').style.display = 'none';
+
+  if (contractorAv.length > 0) {
+    // Show available days as chips
+    const sorted = [...contractorAv].sort((a, b) =>
+      DAYS.indexOf(a.day_of_week) - DAYS.indexOf(b.day_of_week));
+    document.getElementById('av-days-wrap').style.display = 'block';
+    document.getElementById('av-days-chips').innerHTML = sorted.map(av =>
+      `<span style="background:var(--orange-lt);color:var(--orange);border-radius:50px;padding:4px 12px;font-size:12px;font-weight:700;">${av.day_of_week.substring(0,3)} ${fmt12(av.start_time)}–${fmt12(av.end_time)}</span>`
+    ).join('');
+    // Set min date to tomorrow
+    const tmr = new Date(); tmr.setDate(tmr.getDate()+1);
+    document.getElementById('bm-date').min = tmr.toISOString().split('T')[0];
+    document.getElementById('bm-date-hint').textContent = 'Only available days can be selected.';
+    showAvNote('info', '📅 Select a date to see available time slots.');
+  } else {
+    // No availability set — fall back to generic slots
+    const tmr = new Date(); tmr.setDate(tmr.getDate()+1);
+    document.getElementById('bm-date').value = tmr.toISOString().split('T')[0];
+    populateFallbackTimes();
+    showAvNote('warn', '📋 This contractor hasn\'t set specific hours. Pick any time and they\'ll confirm.');
+  }
+}
+
+function onDateChange() {
+  const dateVal = document.getElementById('bm-date').value;
+  if (!dateVal) return;
+
+  const date    = new Date(dateVal + 'T00:00:00');
+  const dayName = DAYS[date.getDay()];
+  const avRow   = contractorAv.find(a => a.day_of_week === dayName);
+
+  if (contractorAv.length === 0) {
+    populateFallbackTimes();
+    return;
+  }
+
+  if (!avRow) {
+    document.getElementById('bm-time').innerHTML = '<option value="">Not available this day</option>';
+    document.getElementById('bm-date-hint').textContent = '';
+    showAvNote('warn', `⚠️ ${c_name()} is not available on ${dayName}s. Please choose another day.`);
+    return;
+  }
+
+  // Generate 1-hour time slots within contractor's hours
+  const slots = generateSlots(avRow.start_time, avRow.end_time);
+  const sel = document.getElementById('bm-time');
+  sel.innerHTML = slots.map(s => `<option value="${s}">${s}</option>`).join('');
+  document.getElementById('bm-date-hint').textContent = `Available: ${fmt12(avRow.start_time)} – ${fmt12(avRow.end_time)}`;
+  showAvNote('ok', `✅ ${dayName} is available. Choose a time slot below.`);
+}
+
+function generateSlots(startTime, endTime) {
+  const slots = [];
+  let [sh, sm] = startTime.split(':').map(Number);
+  const [eh, em] = endTime.split(':').map(Number);
+  const endMins = eh * 60 + em;
+  while (sh * 60 + sm < endMins) {
+    slots.push(fmt12(`${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}`));
+    sm += 60; if (sm >= 60) { sh += 1; sm -= 60; }
+  }
+  return slots;
+}
+
+function populateFallbackTimes() {
+  document.getElementById('bm-time').innerHTML = [
+    'Morning (8AM–12PM)',
+    'Afternoon (12PM–5PM)',
+    'Evening (5PM–8PM)'
+  ].map(s => `<option>${s}</option>`).join('');
+}
+
+function fmt12(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  return `${h%12||12}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function c_name() { return activeC?.name || 'This contractor'; }
+
+function showAvNote(type, msg) {
+  const el = document.getElementById('av-note');
+  const styles = {
+    ok:   'background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#22C55E;',
+    warn: 'background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:#FBbf24;',
+    info: 'background:var(--orange-lt);border:1px solid rgba(255,107,43,.2);color:var(--orange);',
+  };
+  el.style.cssText = styles[type] || styles.info;
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.borderRadius = 'var(--r)';
+  el.style.padding = '10px 14px';
+  el.style.marginBottom = '12px';
+  el.style.fontSize = '13px';
+}
+
+function closeBook() {
+  document.getElementById('book-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  contractorAv = [];
+}
+
+async function submitBook() {
+  const desc = document.getElementById('bm-desc').value.trim();
+  const date = document.getElementById('bm-date').value;
+  const time = document.getElementById('bm-time').value;
+  if (!desc) { showToast('⚠️ Please describe the job.'); return; }
+  if (!date) { showToast('⚠️ Please pick a date.'); return; }
+  if (!time || time === 'Not available this day') { showToast('⚠️ Please pick an available time slot.'); return; }
+  const btn = document.getElementById('bm-sub');
+  btn.disabled = true; btn.textContent = '⏳ Booking…';
+  const { error } = await sb.from('bookings').insert({
+    customer_id:     user.id,
+    contractor_id:   String(activeC.id),
+    contractor_name: activeC.name,
+    customer_name:   prof?.username || user.email.split('@')[0],
+    trade:           activeC.trade,
+    description:     desc,
+    booking_date:    date,
+    booking_time:    time,
+    status:          'pending',
+  });
+  btn.disabled = false; btn.textContent = 'Confirm Booking →';
+  if (error) { showToast('❌ Could not save: ' + error.message); return; }
+  closeBook();
+  // Show calendar confirmation
+  showBookingCalendarCard({
+    contractorName: activeC.name,
+    trade:          activeC.trade,
+    date,
+    time,
+    status:         'pending',
+  });
+  sendBookingEmail('booking_created', {
+    contractor_name:  activeC.name,
+    customer_name:    prof?.username || user.email.split('@')[0],
+    booking_date:     date,
+    booking_time:     time,
+    trade:            activeC.trade,
+    description:      desc,
+  });
+  loadBookings();
+}
+
+// ── EDIT PROFILE ──
+function openEdit(){
+  document.getElementById('edit-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeEdit(){document.getElementById('edit-modal').classList.remove('open');document.body.style.overflow='';}
+async function saveProfile(){
+  const name=document.getElementById('e-name').value.trim();
+  const phone=document.getElementById('e-phone').value.trim();
+  const loc=document.getElementById('e-loc').value.trim();
+  if(!name){showToast('⚠️ Name is required.');return;}
+  const btn=document.getElementById('e-save');
+  btn.disabled=true;btn.textContent='⏳ Saving…';
+  const{error}=await sb.from('users').update({username:name,phone,location:loc}).eq('id',user.id);
+  btn.disabled=false;btn.textContent='Save Changes';
+  if(error){showToast('❌ Could not save.');return;}
+  prof={...prof,username:name,phone,location:loc};
+  fillUI();closeEdit();showToast('✅ Profile updated!');
+}
+
+// ── PASSWORD RESET ──
+async function sendReset(){
+  const{error}=await sb.auth.resetPasswordForEmail(user.email,{redirectTo:window.location.origin+'/tradease-auth.html'});
+  if(error){showToast('❌ '+error.message);return;}
+  showToast('✉️ Reset link sent to '+user.email+'!');
+}
+
+// ── SEARCH / SIGN OUT / NAV ──
+function runSearch(){
+  const q=document.getElementById('srch').value.trim();
+  if(q) localStorage.setItem('tradease_search',q);
+  localStorage.setItem('tradease_goto','search');
+  window.location.href='./tradease.html';
+}
+// ── NOTIFICATIONS ──────────────────────────────────────────
+let notifications = [];
+
+async function loadNotifications() {
+  const { data } = await sb.from('notifications')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(30);
+  notifications = data || [];
+  renderNotifications();
+  updateNotifBadge();
+}
+
+function renderNotifications() {
+  const el = document.getElementById('notif-list');
+  if (!notifications.length) {
+    el.innerHTML = '<div class="notif-empty">🔔 You\'re all caught up!</div>';
+    return;
+  }
+  el.innerHTML = notifications.map(n => {
+    const ago = timeAgo(n.created_at);
+    return `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="markRead('${n.id}')">
+      <div class="notif-dot"></div>
+      <div>
+        <div class="notif-msg">${n.message}</div>
+        <div class="notif-time">${ago}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateNotifBadge() {
+  const unread = notifications.filter(n => !n.read).length;
+  const badge  = document.getElementById('notif-badge');
+  if (unread > 0) {
+    badge.textContent = unread > 9 ? '9+' : unread;
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    setTimeout(() => {
+      document.addEventListener('click', closeNotifOnOutside, { once: true });
+    }, 0);
+  }
+}
+
+function closeNotifOnOutside(e) {
+  const panel = document.getElementById('notif-panel');
+  const btn   = document.getElementById('notif-btn');
+  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+}
+
+async function markRead(id) {
+  await sb.from('notifications').update({ read: true }).eq('id', id).eq('user_id', user.id);
+  notifications = notifications.map(n => n.id === id ? { ...n, read: true } : n);
+  renderNotifications();
+  updateNotifBadge();
+}
+
+async function markAllRead() {
+  await sb.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+  notifications = notifications.map(n => ({ ...n, read: true }));
+  renderNotifications();
+  updateNotifBadge();
+}
+
+function subscribeToNotifications() {
+  sb.channel('customer-notifs')
+    .on('postgres_changes', {
+      event:  'INSERT',
+      schema: 'public',
+      table:  'notifications',
+      filter: `user_id=eq.${user.id}`,
+    }, payload => {
+      notifications = [payload.new, ...notifications];
+      renderNotifications();
+      updateNotifBadge();
+      showToast(payload.new.message);
+    })
+    .subscribe();
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+  if (diff < 60)    return 'Just now';
+  if (diff < 3600)  return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+// ── EMAIL via Resend Edge Function ─────────────────────────
+async function sendBookingEmail(type, booking) {
+  try {
+    await fetch(`${SUPABASE_URL}/functions/v1/send-booking-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({ type, booking }),
+    });
+  } catch (e) {
+    console.warn('Email send failed (non-fatal):', e.message);
+  }
+}
+
+// ── JOB COMPLETION + RATING FLOW ─────────────────────────────
+let _ratingBooking = null;
+
+function promptRating(bookingId) {
+  _ratingBooking = bkgs.find(b => b.id === bookingId);
+  if (!_ratingBooking) return;
+  // Build and show rating modal
+  const existing = document.getElementById('rating-modal-ov');
+  if (existing) existing.remove();
+
+  const ov = document.createElement('div');
+  ov.id = 'rating-modal-ov';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  ov.innerHTML = `
+    <div style="background:rgba(10,10,14,0.97);border:1px solid rgba(255,107,43,0.3);border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 0 60px rgba(255,107,43,0.2),0 24px 80px rgba(0,0,0,0.8);">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#22C55E,#16A34A);padding:20px 24px;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:32px;">🎉</div>
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.75);">Job Complete!</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;color:white;text-transform:uppercase;">${_ratingBooking.contractor_name || 'Contractor'}</div>
+        </div>
+        <button onclick="document.getElementById('rating-modal-ov').remove()" style="margin-left:auto;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:white;cursor:pointer;font-size:14px;">✕</button>
+      </div>
+      <div style="padding:24px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;color:white;margin-bottom:4px;">How was the job?</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;">Your rating helps other customers and rewards great contractors.</div>
+
+        <!-- Star ratings -->
+        ${[['rating_overall','Overall Quality'],['rating_speed','Speed'],['rating_professionalism','Professionalism']].map(([key,label]) => `
+        <div style="margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px;">${label}</div>
+          <div style="display:flex;gap:6px;" id="stars-${key}">
+            ${[1,2,3,4,5].map(n=>`<div onclick="setRating('${key}',${n})" id="star-${key}-${n}" style="font-size:28px;cursor:pointer;transition:transform .1s;filter:grayscale(1);" onmouseover="hoverStars('${key}',${n})" onmouseout="resetStarHover('${key}')">★</div>`).join('')}
+          </div>
+        </div>`).join('')}
+
+        <!-- Review text -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px;">Leave a comment (optional)</div>
+          <textarea id="review-text" placeholder="Tell others about your experience…" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px 14px;color:white;font-size:13px;min-height:70px;resize:vertical;outline:none;font-family:'Barlow',sans-serif;transition:border-color .15s;" onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='rgba(255,255,255,.12)'"></textarea>
+        </div>
+
+        <!-- Tip -->
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:8px;">Add a tip? (optional)</div>
+          <div style="display:flex;gap:8px;">
+            ${[0,5,10,20].map(t=>`<div onclick="selectTip(${t},this)" data-tip="${t}" style="flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .12s;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:rgba(255,255,255,.6);">${t===0?'No Tip':'$'+t}</div>`).join('')}
+          </div>
+        </div>
+
+        <button onclick="submitRating()" style="
+          width:100%;padding:14px;background:linear-gradient(135deg,#FF6B2B,#E05520);
+          color:white;border:none;border-radius:12px;cursor:pointer;
+          font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;
+          text-transform:uppercase;letter-spacing:.06em;
+          box-shadow:0 0 24px rgba(255,107,43,.3);transition:all .14s;
+        " onmouseover="this.style.boxShadow='0 0 36px rgba(255,107,43,.5)'" onmouseout="this.style.boxShadow='0 0 24px rgba(255,107,43,.3)'">
+          Submit Rating →
+        </button>
+        <button onclick="document.getElementById('rating-modal-ov').remove()" style="display:block;width:100%;background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;padding:8px 0 0;text-align:center;">Skip for now</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+
+  // Init ratings object
+  ov._ratings = { rating_overall: 5, rating_speed: 5, rating_professionalism: 5, tip: 0 };
+  setRating('rating_overall', 5);
+  setRating('rating_speed', 5);
+  setRating('rating_professionalism', 5);
+}
+
+function setRating(key, val) {
+  const ov = document.getElementById('rating-modal-ov');
+  if (!ov) return;
+  if (!ov._ratings) ov._ratings = {};
+  ov._ratings[key] = val;
+  for (let n = 1; n <= 5; n++) {
+    const star = document.getElementById(`star-${key}-${n}`);
+    if (star) {
+      star.style.filter    = n <= val ? 'none' : 'grayscale(1)';
+      star.style.color     = n <= val ? '#FBBC04' : 'rgba(255,255,255,.2)';
+      star.style.textShadow = n <= val ? '0 0 8px rgba(251,188,4,.5)' : 'none';
+    }
+  }
+}
+function hoverStars(key, val) { for (let n=1;n<=5;n++) { const s=document.getElementById(`star-${key}-${n}`); if(s){s.style.color=n<=val?'#FBBC04':'rgba(255,255,255,.2)';s.style.filter=n<=val?'none':'grayscale(1)';} } }
+function resetStarHover(key) { const ov=document.getElementById('rating-modal-ov'); if(ov?._ratings) setRating(key,ov._ratings[key]||5); }
+
+function selectTip(amount, el) {
+  const ov = document.getElementById('rating-modal-ov');
+  if (!ov) return;
+  if (!ov._ratings) ov._ratings = {};
+  ov._ratings.tip = amount;
+  document.querySelectorAll('[data-tip]').forEach(d => {
+    const sel = parseInt(d.dataset.tip) === amount;
+    d.style.background   = sel ? 'rgba(255,107,43,.15)' : 'rgba(255,255,255,.06)';
+    d.style.borderColor  = sel ? 'rgba(255,107,43,.5)'  : 'rgba(255,255,255,.12)';
+    d.style.color        = sel ? 'var(--orange)'        : 'rgba(255,255,255,.6)';
+  });
+}
+
+async function submitRating() {
+  if (!_ratingBooking) return;
+  const ov = document.getElementById('rating-modal-ov');
+  const r  = ov?._ratings || { rating_overall:5, rating_speed:5, rating_professionalism:5, tip:0 };
+  const text = document.getElementById('review-text')?.value?.trim() || '';
+
+  const { error } = await sb.from('reviews').insert({
+    booking_id:            _ratingBooking.id,
+    contractor_id:         String(_ratingBooking.contractor_id),
+    customer_id:           user.id,
+    reviewer_name:         prof?.username || user.email.split('@')[0],
+    rating_overall:        r.rating_overall,
+    rating_speed:          r.rating_speed,
+    rating_professionalism:r.rating_professionalism,
+    review_text:           text || null,
+    tip_amount:            r.tip,
+  });
+
+  if (error) { showToast('❌ Could not save review. Try again.'); return; }
+  ov?.remove();
+  showToast('⭐ Thank you! Your rating has been submitted.');
+}
+
+function findContractors(){
+  // Clear any stale nav flags so tradease.html always lands on home
+  localStorage.removeItem('tradease_goto');
+  window.location.href='./tradease.html';
+}
+async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('./tradease-auth.html');}
+function goHome(){window.location.href='./tradease.html';}
+
+// ── FALLBACK CONTRACTORS ──
+function fallback(){return[
+  {id:1,ini:'MR',name:'Mike Rodriguez',trade:'Master Plumber',loc:'Brooklyn, NY',about:'[Sample] Licensed plumber with broad residential experience.',col:COLS[0],sample:true},
+  {id:2,ini:'SJ',name:'Sarah Johnson',trade:'Licensed Electrician',loc:'Queens, NY',about:'[Sample] NYC-licensed electrician. Panel upgrades and smart home wiring.',col:COLS[1],sample:true},
+  {id:3,ini:'DW',name:'David Wilson',trade:'HVAC Specialist',loc:'Manhattan, NY',about:'[Sample] Certified HVAC tech, 10+ years. Installs, repairs, tune-ups.',col:COLS[2],sample:true},
+  {id:4,ini:'TM',name:'Tony Morales',trade:'Handyman',loc:'The Bronx, NY',about:'[Sample] Your go-to handyman. Drywall, painting, furniture assembly.',col:COLS[3],sample:true},
+  {id:5,ini:'RC',name:'Rosa Chen',trade:'Roofing Expert',loc:'Staten Island, NY',about:'[Sample] Residential roofing. Free inspections and shingle replacements.',col:COLS[4],sample:true},
+  {id:6,ini:'KP',name:'Karen Peters',trade:'Professional Cleaner',loc:'Astoria, NY',about:'[Sample] Deep cleaning, move-in/out, recurring home cleaning.',col:COLS[5],sample:true},
+];}
+
+// ── TOAST ──
+let _tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3800);}
+
+init();
+</script>
+</body>
+</html>

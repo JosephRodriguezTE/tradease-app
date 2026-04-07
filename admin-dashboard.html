@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tradease Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0A0A0C;--bg2:#111114;--bg3:#18181C;--bg4:#222228;
+  --border:rgba(255,255,255,0.08);--border-hi:rgba(255,255,255,0.14);
+  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.12);
+  --white:#fff;--g1:#F0F0EE;--g2:#A0A0A8;--g3:#50505A;
+  --green:#22C55E;--red:#EF4444;--yellow:#FBbf24;--blue:#60A5FA;
+  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:auto;}
+body{font-family:var(--body);background:var(--bg);color:var(--g1);min-height:100vh;font-size:14px;line-height:1.6;opacity:0;transition:opacity .15s;}
+button{cursor:pointer;border:none;font-family:var(--body);}
+
+/* Loader */
+#ls{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px;}
+.sp{width:36px;height:36px;border-radius:50%;border:3px solid var(--bg3);border-top-color:var(--orange);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#ls p{font-family:var(--display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g3);}
+
+/* Layout */
+#app{display:none;min-height:100vh;}
+#app.ready{display:flex;animation:fi .18s ease both;}
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.main{flex:1;overflow-y:auto;background:var(--bg);}
+
+/* Sidebar */
+.sb-logo{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;}
+.sb-logo-text{font-family:var(--display);font-size:19px;font-weight:900;color:var(--orange);text-transform:uppercase;letter-spacing:.03em;-webkit-text-stroke:0.7px #000;paint-order:stroke fill;}
+.sb-logo-badge{font-size:9px;font-weight:800;background:var(--orange);color:white;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;}
+.sb-nav{padding:12px 8px;flex:1;}
+.sb-section{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--g3);padding:8px 10px 4px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:background .1s,color .1s;color:var(--g2);font-size:13px;font-weight:600;margin-bottom:2px;}
+.sb-item:hover{background:var(--bg3);color:var(--white);}
+.sb-item.active{background:var(--orange-lt);color:var(--orange);}
+.sb-item .ic{font-size:16px;width:20px;text-align:center;}
+.sb-item .badge{margin-left:auto;background:var(--orange);color:white;font-size:10px;font-weight:800;padding:2px 6px;border-radius:50px;}
+.sb-bottom{padding:12px;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg3);}
+.sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;}
+.sb-user-info{flex:1;}
+.sb-user-name{font-size:12px;font-weight:700;color:var(--white);}
+.sb-user-role{font-size:10px;color:var(--g3);text-transform:uppercase;letter-spacing:.05em;}
+
+/* Main content */
+.view{display:none;padding:28px;}
+.view.active{display:block;animation:fi .15s ease both;}
+.page-hdr{margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;}
+.page-hdr h1{font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;}
+.page-hdr p{font-size:13px;color:var(--g2);margin-top:2px;}
+
+/* Stats grid */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:18px 20px;transition:border-color .12s;}
+.stat-card:hover{border-color:var(--border-hi);}
+.stat-ic{font-size:20px;margin-bottom:8px;}
+.stat-val{font-family:var(--display);font-size:32px;font-weight:900;color:var(--white);line-height:1;margin-bottom:3px;}
+.stat-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);}
+.stat-sub{font-size:11px;margin-top:6px;display:inline-block;padding:2px 8px;border-radius:50px;}
+.stat-or{background:var(--orange-lt);color:var(--orange);}
+.stat-gn{background:rgba(34,197,94,.12);color:var(--green);}
+.stat-rd{background:rgba(239,68,68,.12);color:var(--red);}
+
+/* Table */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;}
+.panel-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+table{width:100%;border-collapse:collapse;}
+th{padding:10px 16px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g3);border-bottom:1px solid var(--border);background:var(--bg3);}
+td{padding:12px 16px;font-size:13px;color:var(--g1);border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.td-bold{font-weight:700;color:var(--white);}
+.pill{display:inline-block;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;}
+.p-green{background:rgba(34,197,94,.12);color:var(--green);}
+.p-yellow{background:rgba(251,191,36,.12);color:var(--yellow);}
+.p-red{background:rgba(239,68,68,.12);color:var(--red);}
+.p-blue{background:rgba(96,165,250,.12);color:var(--blue);}
+.p-grey{background:rgba(255,255,255,.06);color:var(--g2);}
+.p-or{background:var(--orange-lt);color:var(--orange);}
+
+/* Action buttons */
+.action-btn{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .1s;border:1px solid transparent;}
+.ab-green{background:rgba(34,197,94,.12);color:var(--green);border-color:rgba(34,197,94,.2);}
+.ab-green:hover{background:rgba(34,197,94,.22);}
+.ab-red{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.2);}
+.ab-red:hover{background:rgba(239,68,68,.2);}
+.ab-or{background:var(--orange-lt);color:var(--orange);border-color:rgba(255,107,43,.25);}
+.ab-or:hover{background:rgba(255,107,43,.2);}
+.ab-grey{background:rgba(255,255,255,.06);color:var(--g2);border-color:var(--border);}
+.ab-grey:hover{background:rgba(255,255,255,.1);}
+
+/* Form */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);}
+.fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--g1);font-size:13px;outline:none;transition:border-color .15s;width:100%;font-family:var(--body);}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3);}
+.fg select option{background:var(--bg3);}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-or{padding:10px 20px;background:var(--orange);color:white;border-radius:10px;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:background .1s;box-shadow:0 0 14px rgba(255,107,43,.25);}
+.btn-or:hover{background:var(--orange-dk);}
+.btn-gy{padding:10px 20px;background:var(--bg4);color:var(--g1);border-radius:10px;border:1px solid var(--border);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:background .1s;}
+.btn-gy:hover{background:var(--bg3);}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.filter-input{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--g1);font-size:13px;outline:none;transition:border-color .15s;}
+.filter-input:focus{border-color:var(--orange);}
+.filter-select{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--g1);font-size:13px;outline:none;cursor:pointer;}
+
+/* Empty */
+.empty{padding:40px;text-align:center;color:var(--g3);}
+.empty-ic{font-size:32px;margin-bottom:10px;}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--bg3);color:var(--g1);border:1px solid var(--border);padding:11px 16px;border-radius:10px;font-size:13px;box-shadow:0 6px 28px rgba(0,0,0,.5);transform:translateY(50px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:280px;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr;}.sidebar{display:none;}}
+</style>
+</head>
+<body>
+
+<div id="ls"><div class="sp"></div><p>Loading Admin…</p></div>
+
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo" onclick="window.location.href='./tradease.html'">
+      <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-size:14px;">🔨</div>
+      <div>
+        <div class="sb-logo-text">Tradease</div>
+      </div>
+      <div class="sb-logo-badge">Admin</div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section">Overview</div>
+      <div class="sb-item active" id="nav-dash" onclick="showView('dash')"><span class="ic">📊</span>Dashboard</div>
+
+      <div class="sb-section">Platform</div>
+      <div class="sb-item" id="nav-contractors" onclick="showView('contractors')"><span class="ic">👷</span>Contractors<span class="badge" id="pending-badge" style="display:none;">0</span></div>
+      <div class="sb-item" id="nav-jobs" onclick="showView('jobs')"><span class="ic">📋</span>Jobs</div>
+      <div class="sb-item" id="nav-bookings" onclick="showView('bookings')"><span class="ic">📅</span>Bookings</div>
+      <div class="sb-item" id="nav-users" onclick="showView('users')"><span class="ic">👤</span>Customers</div>
+      <div class="sb-item" id="nav-reviews" onclick="showView('reviews')"><span class="ic">⭐</span>Reviews</div>
+
+      <div class="sb-section">Finance</div>
+      <div class="sb-item" id="nav-payments" onclick="showView('payments')"><span class="ic">💳</span>Payments</div>
+      <div class="sb-item" id="nav-pricing" onclick="showView('pricing')"><span class="ic">💰</span>Pricing</div>
+
+      <div class="sb-section">System</div>
+      <div class="sb-item" id="nav-disputes" onclick="showView('disputes')"><span class="ic">⚖️</span>Disputes</div>
+      <div class="sb-item" id="nav-penalties" onclick="showView('penalties')"><span class="ic">🚨</span>Penalties</div>
+    </div>
+
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-av" id="sb-av">A</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sb-name">Admin</div>
+          <div class="sb-user-role">Super Admin</div>
+        </div>
+        <button onclick="signOut()" style="font-size:11px;color:var(--g3);background:none;padding:4px;border-radius:6px;transition:color .1s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--g3)'">Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dash">
+      <div class="page-hdr">
+        <div><h1>Dashboard</h1><p>Platform overview at a glance.</p></div>
+        <button class="btn-or" onclick="loadAll()">↻ Refresh</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-ic">📋</div><div class="stat-val" id="s-jobs">—</div><div class="stat-lbl">Total Jobs</div><span class="stat-sub stat-or" id="s-jobs-sub">This week</span></div>
+        <div class="stat-card"><div class="stat-ic">👷</div><div class="stat-val" id="s-contractors">—</div><div class="stat-lbl">Contractors</div><span class="stat-sub stat-gn" id="s-cont-sub">Active</span></div>
+        <div class="stat-card"><div class="stat-ic">👤</div><div class="stat-val" id="s-customers">—</div><div class="stat-lbl">Customers</div><span class="stat-sub stat-or">Total</span></div>
+        <div class="stat-card"><div class="stat-ic">💰</div><div class="stat-val" id="s-revenue">—</div><div class="stat-lbl">Revenue</div><span class="stat-sub stat-gn">Platform fees</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Pending Approvals</div><button class="ab-or action-btn" onclick="showView('contractors')">View All →</button></div>
+          <div id="dash-pending-list"><div class="empty"><div class="empty-ic">👷</div><p>Loading…</p></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Recent Jobs</div><button class="ab-or action-btn" onclick="showView('jobs')">View All →</button></div>
+          <div id="dash-recent-jobs"><div class="empty"><div class="empty-ic">📋</div><p>Loading…</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTRACTORS -->
+    <div class="view" id="view-contractors">
+      <div class="page-hdr">
+        <div><h1>Contractors</h1><p>Manage contractor accounts and approvals.</p></div>
+        <div style="display:flex;gap:8px;">
+          <select class="filter-select" id="cont-status-filter" onchange="loadContractors()">
+            <option value="">All Status</option>
+            <option value="pending">Pending Approval</option>
+            <option value="approved">Approved</option>
+            <option value="suspended">Suspended</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title" id="cont-panel-title">All Contractors</div></div>
+        <div id="contractors-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- JOBS -->
+    <div class="view" id="view-jobs">
+      <div class="page-hdr"><div><h1>Jobs</h1><p>All job requests across the platform.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">All Jobs</div></div>
+        <div id="jobs-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="view" id="view-bookings">
+      <div class="page-hdr"><div><h1>Bookings</h1><p>All booking requests and their status.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title">All Bookings</div>
+          <select class="filter-select" id="bk-status-filter" onchange="loadBookings()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="declined">Declined</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div id="bookings-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- USERS / CUSTOMERS -->
+    <div class="view" id="view-users">
+      <div class="page-hdr"><div><h1>Customers</h1><p>All registered customer accounts.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">All Customers</div></div>
+        <div id="users-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="view" id="view-reviews">
+      <div class="page-hdr"><div><h1>Reviews</h1><p>Monitor and moderate customer reviews.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">All Reviews</div></div>
+        <div id="reviews-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="view" id="view-payments">
+      <div class="page-hdr"><div><h1>Payments</h1><p>Transaction history and revenue tracking.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">Transactions</div></div>
+        <div id="payments-table"><div class="empty"><div class="empty-ic">💳</div><p>No payment records yet.<br>Payments appear here after Stripe integration.</p></div></div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="view" id="view-pricing">
+      <div class="page-hdr"><div><h1>Pricing Catalog</h1><p>Set and adjust service pricing.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">Service Prices</div></div>
+        <div id="pricing-table"><div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div></div>
+      </div>
+    </div>
+
+    <!-- DISPUTES -->
+    <div class="view" id="view-disputes">
+      <div class="page-hdr"><div><h1>Disputes</h1><p>Handle customer complaints and refund requests.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">Open Disputes</div></div>
+        <div id="disputes-table"><div class="empty"><div class="empty-ic">⚖️</div><p>No open disputes.</p></div></div>
+      </div>
+    </div>
+
+    <!-- PENALTIES -->
+    <div class="view" id="view-penalties">
+      <div class="page-hdr"><div><h1>Penalties</h1><p>Contractor reliability and penalty tracking.</p></div></div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">Contractor Penalties</div></div>
+        <div id="penalties-table"><div class="empty"><div class="empty-ic">🚨</div><p>No penalties recorded.</p></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL = 'https://linqsojbszglbgpoxgtv.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+let adminUser = null;
+let _activeView = 'dash';
+
+// ── AUTH ──────────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.replace('./tradease-auth.html'); return; }
+  adminUser = session.user;
+  document.getElementById('sb-name').textContent = adminUser.email.split('@')[0];
+  document.getElementById('sb-av').textContent = adminUser.email[0].toUpperCase();
+  document.body.style.opacity = '1';
+  document.getElementById('ls').style.display = 'none';
+  document.getElementById('app').classList.add('ready');
+  loadAll();
+}
+
+// ── VIEW ROUTER ───────────────────────────────────────────────
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v)?.classList.add('active');
+  document.getElementById('nav-' + v)?.classList.add('active');
+  _activeView = v;
+  // Lazy load data
+  const loaders = { contractors: loadContractors, jobs: loadJobs, bookings: loadBookings, users: loadUsers, reviews: loadReviews, pricing: loadPricing, penalties: loadPenalties };
+  if (loaders[v]) loaders[v]();
+}
+
+// ── LOAD ALL (dashboard) ──────────────────────────────────────
+async function loadAll() {
+  const [jobs, contrs, users, payments] = await Promise.all([
+    sb.from('bookings').select('id', { count:'exact', head:true }),
+    sb.from('contractors').select('id', { count:'exact', head:true }),
+    sb.from('users').select('id', { count:'exact', head:true }).eq('role','customer'),
+    sb.from('payments').select('platform_fee').eq('status','captured'),
+  ]);
+  document.getElementById('s-jobs').textContent        = jobs.count || 0;
+  document.getElementById('s-contractors').textContent = contrs.count || 0;
+  document.getElementById('s-customers').textContent   = users.count || 0;
+  const rev = (payments.data||[]).reduce((s,p)=>s+(p.platform_fee||0),0);
+  document.getElementById('s-revenue').textContent = '$' + rev.toFixed(0);
+
+  // Pending contractors
+  const { data: pending } = await sb.from('contractors')
+    .select('id, company_name, trade_type, created_at')
+    .eq('approval_status','pending').order('created_at',{ascending:false}).limit(5);
+  const pbadge = document.getElementById('pending-badge');
+  if (pending?.length) { pbadge.textContent = pending.length; pbadge.style.display='block'; }
+  document.getElementById('dash-pending-list').innerHTML = pending?.length
+    ? `<table><thead><tr><th>Business</th><th>Trade</th><th>Applied</th><th>Action</th></tr></thead><tbody>${
+      pending.map(c=>`<tr>
+        <td class="td-bold">${c.company_name||'—'}</td>
+        <td>${c.trade_type||'—'}</td>
+        <td>${new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+        <td><button class="action-btn ab-green" onclick="approveContractor('${c.id}')">Approve</button> <button class="action-btn ab-red" onclick="rejectContractor('${c.id}')">Reject</button></td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">✅</div><p>No pending approvals</p></div>`;
+
+  // Recent jobs
+  const { data: recentJobs } = await sb.from('bookings')
+    .select('id, contractor_name, customer_name, trade, status, created_at')
+    .order('created_at',{ascending:false}).limit(5);
+  document.getElementById('dash-recent-jobs').innerHTML = recentJobs?.length
+    ? `<table><thead><tr><th>Customer</th><th>Trade</th><th>Status</th><th>Date</th></tr></thead><tbody>${
+      recentJobs.map(j=>`<tr>
+        <td class="td-bold">${j.customer_name||'—'}</td>
+        <td>${j.trade||'—'}</td>
+        <td><span class="pill ${statusPill(j.status)}">${j.status}</span></td>
+        <td>${new Date(j.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">📋</div><p>No jobs yet</p></div>`;
+}
+
+// ── CONTRACTORS ───────────────────────────────────────────────
+async function loadContractors() {
+  const status = document.getElementById('cont-status-filter')?.value || '';
+  let q = sb.from('contractors').select('id, company_name, trade_type, location, rating, review_count, approval_status, approved, verified, plan, reliability_score, created_at').order('created_at',{ascending:false});
+  if (status) q = q.eq('approval_status', status);
+  const { data } = await q.limit(100);
+  document.getElementById('cont-panel-title').textContent = status ? status.charAt(0).toUpperCase()+status.slice(1)+' Contractors' : 'All Contractors';
+  document.getElementById('contractors-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Business</th><th>Trade</th><th>Location</th><th>Rating</th><th>Reliability</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead><tbody>${
+      data.map(c=>`<tr>
+        <td class="td-bold">${c.company_name||'—'}</td>
+        <td>${c.trade_type||'—'}</td>
+        <td>${c.location||'—'}</td>
+        <td>${c.rating?'★'+parseFloat(c.rating).toFixed(1):'New'} ${c.review_count?`(${c.review_count})`:''}  </td>
+        <td><span style="color:${(c.reliability_score||100)>=80?'var(--green)':(c.reliability_score||100)>=50?'var(--yellow)':'var(--red)'};">${c.reliability_score||100}%</span></td>
+        <td><span class="pill ${c.plan==='pro'?'p-or':'p-grey'}">${c.plan||'free'}</span></td>
+        <td><span class="pill ${c.approval_status==='approved'?'p-green':c.approval_status==='pending'?'p-yellow':c.approval_status==='suspended'?'p-red':'p-grey'}">${c.approval_status||'pending'}</span></td>
+        <td style="display:flex;gap:4px;flex-wrap:wrap;">
+          ${c.approval_status!=='approved'?`<button class="action-btn ab-green" onclick="approveContractor('${c.id}')">Approve</button>`:''}
+          ${c.approval_status!=='suspended'?`<button class="action-btn ab-red" onclick="suspendContractor('${c.id}')">Suspend</button>`:`<button class="action-btn ab-green" onclick="approveContractor('${c.id}')">Reinstate</button>`}
+        </td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">👷</div><p>No contractors found</p></div>`;
+}
+
+async function approveContractor(id) {
+  const { error } = await sb.from('contractors').update({ approval_status:'approved', approved:true }).eq('id',id);
+  if (error) { showToast('❌ Error: '+error.message); return; }
+  showToast('✅ Contractor approved!');
+  loadContractors(); loadAll();
+}
+async function rejectContractor(id) {
+  const { error } = await sb.from('contractors').update({ approval_status:'rejected', approved:false }).eq('id',id);
+  if (error) { showToast('❌ Error: '+error.message); return; }
+  showToast('❌ Contractor rejected.');
+  loadContractors(); loadAll();
+}
+async function suspendContractor(id) {
+  if (!confirm('Suspend this contractor? They will not appear in search results.')) return;
+  const { error } = await sb.from('contractors').update({ approval_status:'suspended', approved:false }).eq('id',id);
+  if (error) { showToast('❌ Error: '+error.message); return; }
+  showToast('⛔ Contractor suspended.');
+  loadContractors();
+}
+
+// ── JOBS ─────────────────────────────────────────────────────
+async function loadJobs() {
+  const { data } = await sb.from('bookings').select('*').order('created_at',{ascending:false}).limit(100);
+  document.getElementById('jobs-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Customer</th><th>Contractor</th><th>Trade</th><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody>${
+      data.map(j=>`<tr>
+        <td class="td-bold">${j.customer_name||'—'}</td>
+        <td>${j.contractor_name||'—'}</td>
+        <td>${j.trade||'—'}</td>
+        <td>${j.booking_date||'—'}</td>
+        <td>${j.booking_time||'—'}</td>
+        <td><span class="pill ${statusPill(j.status)}">${j.status}</span></td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">📋</div><p>No bookings yet</p></div>`;
+}
+
+// ── BOOKINGS ─────────────────────────────────────────────────
+async function loadBookings() {
+  const status = document.getElementById('bk-status-filter')?.value || '';
+  let q = sb.from('bookings').select('*').order('created_at',{ascending:false});
+  if (status) q = q.eq('status',status);
+  const { data } = await q.limit(200);
+  document.getElementById('bookings-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>ID</th><th>Customer</th><th>Contractor</th><th>Trade</th><th>Date</th><th>Status</th><th>Fee%</th></tr></thead><tbody>${
+      data.map(b=>`<tr>
+        <td style="font-size:10px;color:var(--g3);">${b.id.substring(0,8)}…</td>
+        <td class="td-bold">${b.customer_name||'—'}</td>
+        <td>${b.contractor_name||'—'}</td>
+        <td>${b.trade||'—'}</td>
+        <td>${b.booking_date||'—'}</td>
+        <td><span class="pill ${statusPill(b.status)}">${b.status}</span></td>
+        <td>${b.fee_percent||0}%</td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">📅</div><p>No bookings</p></div>`;
+}
+
+// ── USERS ────────────────────────────────────────────────────
+async function loadUsers() {
+  const { data } = await sb.from('users').select('*').eq('role','customer').order('created_at',{ascending:false}).limit(200);
+  document.getElementById('users-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Name</th><th>Email</th><th>Location</th><th>Joined</th></tr></thead><tbody>${
+      data.map(u=>`<tr>
+        <td class="td-bold">${u.username||'—'}</td>
+        <td>${u.email||'—'}</td>
+        <td>${u.location||'—'}</td>
+        <td>${u.created_at?new Date(u.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—'}</td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">👤</div><p>No customers yet</p></div>`;
+}
+
+// ── REVIEWS ──────────────────────────────────────────────────
+async function loadReviews() {
+  const { data } = await sb.from('reviews').select('*').order('created_at',{ascending:false}).limit(100);
+  document.getElementById('reviews-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Reviewer</th><th>Contractor</th><th>Rating</th><th>Review</th><th>Date</th><th>Action</th></tr></thead><tbody>${
+      data.map(r=>`<tr>
+        <td class="td-bold">${r.reviewer_name||'Customer'}</td>
+        <td>${r.contractor_id?.substring(0,8)||'—'}…</td>
+        <td><span style="color:var(--yellow);">${'★'.repeat(r.rating_overall||r.rating||5)}</span> ${r.rating_overall||r.rating||5}/5</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.review_text||'—'}</td>
+        <td>${r.created_at?new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</td>
+        <td>${!r.flagged?`<button class="action-btn ab-red" onclick="flagReview('${r.id}')">Flag</button>`:`<span class="pill p-red">Flagged</span>`}</td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">⭐</div><p>No reviews yet</p></div>`;
+}
+
+async function flagReview(id) {
+  await sb.from('reviews').update({ flagged:true }).eq('id',id);
+  showToast('🚩 Review flagged for moderation.');
+  loadReviews();
+}
+
+// ── PRICING ──────────────────────────────────────────────────
+async function loadPricing() {
+  const { data } = await sb.from('pricing_catalog').select('*').order('service').order('job_type');
+  document.getElementById('pricing-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Service</th><th>Job Type</th><th>Min Price</th><th>Max Price</th><th>Unit</th><th>Status</th></tr></thead><tbody>${
+      data.map(p=>`<tr>
+        <td class="td-bold">${p.service}</td>
+        <td>${p.job_type}</td>
+        <td>$${p.price_min}</td>
+        <td>$${p.price_max}</td>
+        <td>${p.unit||'job'}</td>
+        <td><span class="pill ${p.is_active?'p-green':'p-grey'}">${p.is_active?'Active':'Inactive'}</span></td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">💰</div><p>No pricing data. Run tradease-platform-v3.sql first.</p></div>`;
+}
+
+// ── PENALTIES ─────────────────────────────────────────────────
+async function loadPenalties() {
+  const { data } = await sb.from('contractor_penalties').select('*').order('created_at',{ascending:false}).limit(100);
+  document.getElementById('penalties-table').innerHTML = data?.length
+    ? `<table><thead><tr><th>Contractor</th><th>Type</th><th>Points</th><th>Date</th><th>Reviewed</th></tr></thead><tbody>${
+      data.map(p=>`<tr>
+        <td class="td-bold">${p.contractor_id?.substring(0,8)||'—'}…</td>
+        <td><span class="pill p-red">${p.type?.replace(/_/g,' ')}</span></td>
+        <td>${p.points}</td>
+        <td>${p.created_at?new Date(p.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</td>
+        <td>${p.reviewed?'<span class="pill p-green">Yes</span>':'<span class="pill p-yellow">Pending</span>'}</td>
+      </tr>`).join('')}</tbody></table>`
+    : `<div class="empty"><div class="empty-ic">🚨</div><p>No penalties recorded yet.</p></div>`;
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function statusPill(s) {
+  return {pending:'p-yellow',accepted:'p-green',in_progress:'p-blue',completed:'p-green',declined:'p-red',cancelled:'p-red',matching:'p-or',offered:'p-blue',expired:'p-grey'}[s]||'p-grey';
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  sessionStorage.setItem('auth_intentional','1');
+  window.location.replace('./tradease-auth.html');
+}
+
+let _tt;
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3800);
+}
+
+init();
+</script>
+</body>
+</html>

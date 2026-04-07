@@ -1,0 +1,14 @@
+# Tradease — Netlify Redirects
+# This file MUST be in the root of your deployed folder
+
+# Direct file access — serve each page at its clean path
+/dashboard          /customer-dashboard.html    200
+/contractor         /contractor-dashboard.html  200
+/admin              /admin-dashboard.html        200
+/login              /tradease-auth.html          200
+/signup             /tradease-auth.html          200
+/callback           /auth-callback.html          200
+
+# Catch-all — send everything else to index.html (the main SPA)
+# This fixes "Cannot GET /tradease.html" and any other unknown paths
+/*                  /index.html                  200

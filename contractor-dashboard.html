@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tradease — Contractor Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--bg4:#252525;--bg5:#2E2E2E;
+  --border:#2A2A2A;--border-hi:#3D3D3D;
+  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.12);--orange-glow:rgba(255,107,43,.25);
+  --white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;--g4:#333333;
+  --green:#22C55E;--green-lt:rgba(34,197,94,.12);
+  --yellow:#FBbf24;--yellow-lt:rgba(251,191,36,.12);
+  --red:#EF4444;--red-lt:rgba(239,68,68,.12);
+  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
+  --r:12px;--r-lg:18px;--r-xl:24px;--r-2xl:32px;
+  --sh:0 4px 20px rgba(0,0,0,.4);--sh-or:0 6px 24px rgba(255,107,43,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:auto;}
+body{font-family:var(--body);background:var(--bg);color:var(--g1);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;opacity:0;transition:opacity .15s ease;}
+button{cursor:pointer;border:none;font-family:var(--body);}
+input,select,textarea{font-family:var(--body);}
+
+/* ── LOADER ── */
+#ls{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;}
+.sp{width:40px;height:40px;border-radius:50%;border:3px solid var(--bg3);border-top-color:var(--orange);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#ls p{font-family:var(--display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g3);}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.ready{display:flex;animation:fi .18s ease both;}
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
+.view{display:none;}
+.view.active{display:block;animation:fi .15s ease both;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);height:64px;padding:0 28px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:9px;cursor:pointer;transition:opacity .12s;flex-shrink:0;}
+.logo:hover{opacity:.8;}
+.logo-img{width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.logo-txt{font-family:var(--display);font-size:21px;font-weight:900;color:var(--orange);text-transform:uppercase;letter-spacing:.03em;-webkit-text-stroke:0.8px #000;paint-order:stroke fill;}
+.logo-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;}
+.tnav-wrap{display:flex;align-items:center;gap:2px;margin-left:18px;flex:1;}
+.tnav{font-size:13px;font-weight:600;color:var(--g2);padding:7px 12px;border-radius:8px;cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;}
+.tnav:hover,.tnav.on{color:var(--white);background:var(--bg3);}
+.tbr{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.pro-pill{background:var(--orange);color:white;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:7px 14px;border-radius:8px;cursor:pointer;transition:background .1s;border:none;}
+.pro-pill:hover{background:var(--orange-dk);}
+.pro-pill.active{background:var(--green);}
+.av-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;cursor:pointer;border:2px solid transparent;transition:border-color .12s;}
+.av-btn:hover,.av-btn.on{border-color:var(--orange);}
+.so-btn{font-size:12px;font-weight:700;color:var(--g3);padding:6px 12px;border-radius:8px;background:none;transition:color .1s,background .1s;text-transform:uppercase;letter-spacing:.04em;border:none;}
+.so-btn:hover{color:var(--white);background:var(--bg3);}
+
+/* ── PAGE ── */
+.pg{flex:1;padding:32px 28px;max-width:1100px;margin:0 auto;width:100%;}
+.pg-hdr{margin-bottom:24px;}
+.pg-hdr h1{font-family:var(--display);font-size:clamp(24px,4vw,36px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:3px;}
+.pg-hdr p{font-size:14px;color:var(--g2);}
+
+/* ── INCOMPLETE BANNER ── */
+.inc{background:var(--yellow-lt);border:1px solid rgba(251,191,36,.25);border-radius:var(--r-lg);padding:14px 18px;display:none;align-items:center;gap:12px;margin-bottom:20px;}
+.inc.show{display:flex;}
+.inc p{font-size:13px;color:var(--yellow);flex:1;}
+.inc-btn{background:rgba(251,191,36,.15);color:var(--yellow);font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:7px 13px;border-radius:8px;cursor:pointer;border:none;transition:background .1s;flex-shrink:0;}
+.inc-btn:hover{background:rgba(251,191,36,.25);}
+
+/* ── PROFILE HEADER CARD ── */
+.ph{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border:1px solid var(--border);border-radius:var(--r-2xl);padding:30px 34px;display:flex;align-items:center;gap:22px;margin-bottom:22px;position:relative;overflow:hidden;}
+.ph::after{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);pointer-events:none;}
+.ph-av{width:76px;height:76px;border-radius:18px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:white;flex-shrink:0;box-shadow:var(--sh-or);}
+.ph-info h2{font-family:var(--display);font-size:24px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:3px;}
+.ph-sub{font-size:14px;color:var(--g2);margin-bottom:4px;}
+.ph-loc{font-size:13px;color:var(--g3);}
+.ph-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.bdg{font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:50px;}
+.bdg-or{background:var(--orange);color:white;}
+.bdg-gn{background:var(--green-lt);color:var(--green);}
+.bdg-gy{background:var(--bg4);color:var(--g3);}
+.ph-acts{margin-left:auto;display:flex;flex-direction:column;gap:8px;flex-shrink:0;}
+.btn-or{padding:10px 18px;border-radius:var(--r);background:var(--orange);color:white;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s;box-shadow:var(--sh-or);border:none;cursor:pointer;white-space:nowrap;}
+.btn-or:hover{background:var(--orange-dk);}
+.btn-gy{padding:10px 18px;border-radius:var(--r);background:var(--bg4);color:var(--g1);border:1px solid var(--border);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s,border-color .1s;cursor:pointer;white-space:nowrap;}
+.btn-gy:hover{background:var(--bg3);border-color:var(--border-hi);}
+.btn-red{padding:10px 18px;border-radius:var(--r);background:var(--bg4);color:var(--red);border:1px solid var(--red-lt);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s,border-color .1s;cursor:pointer;white-space:nowrap;}
+.btn-red:hover{background:var(--red-lt);border-color:var(--red);}
+
+/* ── UPGRADE BANNER ── */
+.up-ban{background:var(--orange-lt);border:1px solid rgba(255,107,43,.25);border-radius:var(--r-lg);padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+.up-ban h4{font-family:var(--display);font-size:16px;font-weight:900;text-transform:uppercase;color:var(--orange);margin-bottom:2px;}
+.up-ban p{font-size:13px;color:var(--g2);}
+.up-ban-btn{margin-left:auto;padding:10px 18px;background:var(--orange);color:white;border-radius:var(--r);font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;border:none;cursor:pointer;transition:background .1s;flex-shrink:0;box-shadow:var(--sh-or);}
+.up-ban-btn:hover{background:var(--orange-dk);}
+
+/* ── STATS ── */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;transition:border-color .12s;}
+.sc:hover{border-color:var(--border-hi);}
+.sc-ic{font-size:17px;margin-bottom:8px;}
+.sc-val{font-family:var(--display);font-size:34px;font-weight:900;color:var(--white);line-height:1;margin-bottom:3px;}
+.sc-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);}
+.sc-sub{display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:50px;margin-top:6px;}
+.ss-or{background:var(--orange-lt);color:var(--orange);}
+.ss-gn{background:var(--green-lt);color:var(--green);}
+
+/* ── COMPLETION ── */
+.cw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:22px;}
+.cw-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cw-top h4{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.cw-pct{font-family:var(--display);font-size:26px;font-weight:900;color:var(--orange);}
+.cw-bar{height:5px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:14px;}
+.cw-fill{height:100%;background:linear-gradient(90deg,var(--orange),#FF9A5C);border-radius:4px;transition:width .6s ease;}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ct{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g2);padding:8px 10px;border-radius:8px;background:var(--bg3);cursor:pointer;transition:background .1s;}
+.ct:hover{background:var(--bg4);}
+.ct.done{color:var(--g3);text-decoration:line-through;cursor:default;}
+.ct.done:hover{background:var(--bg3);}
+.ct-ic{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.ct-bonus{color:var(--orange);font-weight:700;margin-left:auto;font-size:11px;flex-shrink:0;}
+
+/* ── TWO COL ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:24px;}
+.st{font-family:var(--display);font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.sa{font-size:13px;color:var(--orange);cursor:pointer;font-weight:600;transition:opacity .1s;}
+.sa:hover{opacity:.75;}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;}
+
+/* ── BOOKING ROWS ── */
+.br{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.br:last-child{border-bottom:none;padding-bottom:0;}
+.br-ic{width:34px;height:34px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.br-info{flex:1;}
+.br-name{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;color:var(--white);}
+.br-meta{font-size:12px;color:var(--g2);margin-top:1px;}
+.bst{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;padding:3px 8px;border-radius:50px;}
+.sp{background:var(--yellow-lt);color:var(--yellow);}
+.sco{background:var(--green-lt);color:var(--green);}
+.sdn{background:var(--bg4);color:var(--g3);}
+
+/* ── REVIEWS ── */
+.rv{padding:12px 0;border-bottom:1px solid var(--border);}
+.rv:last-child{border-bottom:none;padding-bottom:0;}
+.rv-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.rv-name{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;color:var(--white);}
+.rv-stars{color:var(--yellow);font-size:13px;}
+.rv-txt{font-size:13px;color:var(--g2);line-height:1.6;}
+.rv-date{font-size:11px;color:var(--g3);margin-top:3px;}
+
+/* ── PORTFOLIO VIEW ── */
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.port-img{aspect-ratio:1;border-radius:var(--r-lg);object-fit:cover;width:100%;background:var(--bg3);border:1px solid var(--border);position:relative;overflow:hidden;}
+.port-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.port-del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.7);color:white;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;opacity:0;transition:opacity .15s;}
+.port-img:hover .port-del{opacity:1;}
+.port-add{aspect-ratio:1;border-radius:var(--r-lg);background:var(--bg3);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border-color .14s,background .14s;}
+.port-add:hover{border-color:var(--orange);background:var(--orange-lt);}
+.port-add-ic{font-size:28px;color:var(--g3);}
+.port-add-lbl{font-size:12px;font-weight:600;color:var(--g3);font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;}
+.port-add:hover .port-add-ic,.port-add:hover .port-add-lbl{color:var(--orange);}
+.port-loading{opacity:.5;pointer-events:none;}
+
+/* ── PROFILE PAGE (public preview) ── */
+.pub-hero{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:var(--r-2xl);padding:36px;margin-bottom:20px;position:relative;overflow:hidden;}
+.pub-hero::after{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);pointer-events:none;}
+.pub-av{width:90px;height:90px;border-radius:22px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:34px;font-weight:900;color:white;flex-shrink:0;box-shadow:var(--sh-or);margin-bottom:20px;}
+.pub-name{font-family:var(--display);font-size:clamp(28px,5vw,44px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:6px;}
+.pub-trade{font-size:16px;color:var(--orange);font-weight:600;margin-bottom:6px;}
+.pub-loc{font-size:14px;color:var(--g2);margin-bottom:14px;}
+.pub-meta{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;}
+.pub-meta-item{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--g2);}
+.pub-meta-item strong{color:var(--white);font-weight:700;}
+.pub-desc{font-size:15px;color:var(--g2);line-height:1.75;max-width:680px;}
+.pub-book-btn{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:white;border:none;border-radius:var(--r-lg);padding:14px 28px;font-family:var(--display);font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:background .1s,transform .1s;box-shadow:var(--sh-or);margin-top:20px;}
+.pub-book-btn:hover{background:var(--orange-dk);transform:translateY(-2px);}
+.pub-book-btn:active{transform:translateY(0);}
+
+.pub-section{margin-bottom:24px;}
+.pub-section-title{font-family:var(--display);font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--white);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.pub-port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.pub-port-img{aspect-ratio:1;border-radius:var(--r-lg);overflow:hidden;background:var(--bg3);}
+.pub-port-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease;}
+.pub-port-img:hover img{transform:scale(1.05);}
+.pub-pricing-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;display:flex;align-items:center;justify-content:space-between;}
+.pub-price-val{font-family:var(--display);font-size:32px;font-weight:900;color:var(--orange);}
+.pub-price-lbl{font-size:13px;color:var(--g2);margin-top:2px;}
+.pub-preview-note{background:var(--orange-lt);border:1px solid rgba(255,107,43,.3);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--orange);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+
+/* ── SETTINGS (profile tab) ── */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+.ii{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;}
+.il{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);margin-bottom:4px;}
+.iv{font-family:var(--display);font-size:17px;font-weight:800;color:var(--white);}
+.iv.sm{font-size:14px;font-weight:500;font-family:var(--body);}
+.acct-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+.al{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--g3);margin-bottom:12px;}
+.ar{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.ar:last-child{border-bottom:none;padding-bottom:0;}
+.ar-t{font-weight:600;font-size:14px;color:var(--g1);margin-bottom:2px;}
+.ar-s{font-size:12px;color:var(--g3);}
+
+/* ── BANNER + PFP ── */
+.pub-banner{width:100%;height:180px;background:linear-gradient(135deg,#1a1a1e,#2a1a0e);border-radius:var(--r-2xl) var(--r-2xl) 0 0;overflow:hidden;position:relative;cursor:pointer;}
+.pub-banner img{width:100%;height:100%;object-fit:cover;}
+.pub-banner-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .15s;gap:8px;font-size:13px;font-weight:700;color:white;opacity:0;pointer-events:none;}
+.pub-banner:hover .pub-banner-overlay{background:rgba(0,0,0,.45);opacity:1;pointer-events:auto;}
+.pub-banner-upload{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.pub-av-wrap{position:relative;display:inline-block;}
+.pub-av-edit-overlay{position:absolute;inset:0;border-radius:22px;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;opacity:0;transition:all .15s;cursor:pointer;}
+.pub-av-wrap:hover .pub-av-edit-overlay{background:rgba(0,0,0,.55);opacity:1;}
+.pub-av-edit-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border-radius:22px;}
+
+/* ── PRICING TAB ── */
+.price-svc-row{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.price-svc-name{font-size:14px;font-weight:600;color:var(--g1);flex:1;}
+.price-svc-val{font-family:var(--display);font-size:15px;font-weight:800;color:var(--orange);}
+.price-svc-type{font-size:11px;color:var(--g3);margin-top:2px;}
+.price-svc-actions{display:flex;gap:6px;}
+.price-add-btn{background:var(--orange-lt);border:1px solid rgba(255,107,43,.25);border-radius:var(--r);padding:8px 16px;color:var(--orange);font-size:13px;font-weight:700;cursor:pointer;transition:background .1s;}
+.price-add-btn:hover{background:rgba(255,107,43,.2);}
+.plan-gate{background:rgba(255,107,43,.07);border:1px solid rgba(255,107,43,.2);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px;font-size:13px;color:var(--g2);}
+.plan-gate strong{color:var(--orange);}
+
+/* ── PRICE EDIT MODAL ── */
+#price-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+#price-modal.open{display:flex;}
+#price-modal .mdl{max-width:480px;}
+.fb-wrap{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.fb{padding:7px 13px;border-radius:var(--r);font-size:12px;font-weight:600;background:var(--bg2);color:var(--g2);border:1px solid var(--border);cursor:pointer;transition:all .12s;}
+.fb:hover{color:var(--white);border-color:var(--border-hi);}
+.fb.on{background:var(--orange);color:white;border-color:var(--orange);}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:36px 20px;color:var(--g3);}
+.empty-ic{font-size:32px;margin-bottom:10px;}
+.empty p{font-size:13px;}
+
+/* ── MODAL ── */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.mbg.open{display:flex;}
+.mdl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-2xl);width:100%;max-width:560px;overflow:hidden;animation:fi .18s ease both;margin:auto;}
+.mh{background:linear-gradient(135deg,var(--orange),var(--orange-dk));padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.mh h3{font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;color:white;letter-spacing:.02em;}
+.mc{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:white;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:background .1s;}
+.mc:hover{background:rgba(255,255,255,.3);}
+.mb{padding:24px;}
+.mb-scroll{padding:24px;max-height:70vh;overflow-y:auto;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);}
+.fg input,.fg textarea,.fg select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;color:var(--g1);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-lt);}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3);}
+.fg select option{background:var(--bg3);}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg textarea{min-height:90px;resize:vertical;}
+.fg-hint{font-size:12px;color:var(--g3);margin-top:4px;}
+.ms{width:100%;padding:13px;background:var(--orange);color:white;border-radius:var(--r);font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;transition:background .1s;margin-top:6px;border:none;cursor:pointer;}
+.ms:hover{background:var(--orange-dk);}
+.ms:disabled{opacity:.6;cursor:not-allowed;}
+.mdl-section{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g3);margin:18px 0 10px;padding-top:16px;border-top:1px solid var(--border);}
+.mdl-section:first-child{margin-top:0;border-top:none;padding-top:0;}
+
+/* ── PORTFOLIO UPLOAD IN MODAL ── */
+.port-upload-area{border:2px dashed var(--border);border-radius:var(--r-lg);padding:28px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative;}
+.port-upload-area:hover{border-color:var(--orange);background:var(--orange-lt);}
+.port-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.port-upload-ic{font-size:32px;margin-bottom:8px;}
+.port-upload-txt{font-size:13px;color:var(--g2);}
+.port-upload-sub{font-size:11px;color:var(--g3);margin-top:4px;}
+.port-modal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+.port-modal-thumb{aspect-ratio:1;border-radius:var(--r);overflow:hidden;background:var(--bg3);position:relative;}
+.port-modal-thumb img{width:100%;height:100%;object-fit:cover;}
+.port-modal-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.85);color:white;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg3);color:var(--g1);border:1px solid var(--border);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:var(--sh);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:300px;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ── RESPONSIVE ── */
+/* ── NOTIFICATIONS ── */
+.notif-btn{position:relative;width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,border-color .12s;font-size:16px;flex-shrink:0;}
+.notif-btn:hover{background:var(--bg4);border-color:var(--border-hi);}
+.notif-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:var(--orange);color:white;border-radius:50px;font-size:10px;font-weight:800;font-family:var(--display);display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg2);display:none;}
+.notif-badge.show{display:flex;}
+.notif-panel{position:fixed;top:72px;right:20px;width:340px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:0 16px 48px rgba(0,0,0,.6);z-index:500;display:none;overflow:hidden;animation:fi .15s ease both;}
+.notif-panel.open{display:block;}
+.notif-hdr{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.notif-hdr-title{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.notif-mark-all{font-size:12px;color:var(--orange);cursor:pointer;font-weight:600;background:none;border:none;transition:opacity .12s;}
+.notif-mark-all:hover{opacity:.75;}
+.notif-list{max-height:380px;overflow-y:auto;}
+.notif-item{padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;display:flex;gap:12px;align-items:flex-start;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--bg3);}
+.notif-item.unread{background:rgba(255,107,43,.04);}
+.notif-item.unread .notif-dot{opacity:1;}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px;opacity:0;transition:opacity .15s;}
+.notif-msg{font-size:13px;color:var(--g1);line-height:1.5;flex:1;}
+.notif-time{font-size:11px;color:var(--g3);margin-top:3px;}
+.notif-empty{padding:32px;text-align:center;color:var(--g3);font-size:13px;}
+
+/* ── BOOKING ROWS (upgraded) ── */
+.bk-row{background:rgba(15,15,18,0.72);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;transition:border-color .12s;margin-bottom:10px;}
+.bk-row:last-child{margin-bottom:0;}
+.bk-row:hover{border-color:rgba(255,255,255,0.15);}
+.bk-ic{font-size:20px;flex-shrink:0;margin-top:2px;}
+.bk-info{flex:1;}
+.bk-name{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+.bk-meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--g2);flex-wrap:wrap;margin-bottom:4px;}
+.bk-tag{background:var(--orange-lt);color:var(--orange);padding:2px 8px;border-radius:50px;font-size:11px;font-weight:700;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;}
+.bk-desc{font-size:13px;color:var(--g3);font-style:italic;margin-top:4px;}
+.bk-actions{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
+.bk-status{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:4px 9px;border-radius:50px;}
+.bst-p  {background:rgba(251,191,36,.12);color:#FBbf24;}
+.bst-a  {background:rgba(34,197,94,.12); color:#22C55E;}
+.bst-ip {background:rgba(59,130,246,.12);color:#60A5FA;}
+.bst-d  {background:rgba(239,68,68,.12); color:#EF4444;}
+.bst-c  {background:rgba(96,96,96,.2);   color:#A8A8A8;}
+.bk-btn{font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:5px 12px;border-radius:8px;cursor:pointer;transition:all .12s;border:none;}
+.bk-accept  {background:rgba(34,197,94,.15); color:#22C55E;border:1px solid rgba(34,197,94,.3);}
+.bk-accept:hover{background:rgba(34,197,94,.25);}
+.bk-start   {background:rgba(59,130,246,.15);color:#60A5FA;border:1px solid rgba(59,130,246,.3);}
+.bk-start:hover{background:rgba(59,130,246,.25);}
+.bk-decline {background:rgba(239,68,68,.12); color:#EF4444;border:1px solid rgba(239,68,68,.25);}
+.bk-decline:hover{background:rgba(239,68,68,.22);}
+.bk-complete{background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);}
+.bk-complete:hover{background:rgba(255,107,43,.2);}
+
+/* ── AVAILABILITY ── */
+.av-day-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;display:flex;align-items:center;gap:14px;transition:border-color .12s;}
+.av-day-card:hover{border-color:var(--border-hi);}
+.av-day-pill{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--orange-lt);color:var(--orange);padding:5px 13px;border-radius:50px;min-width:96px;text-align:center;flex-shrink:0;}
+.av-times{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;}
+.av-time-badge{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:5px 11px;font-size:13px;color:var(--g1);font-weight:600;}
+.av-arrow{color:var(--g3);font-size:13px;}
+.av-edit-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--g2);font-size:12px;font-weight:600;padding:5px 11px;cursor:pointer;transition:all .12s;white-space:nowrap;}
+.av-edit-btn:hover{border-color:var(--orange);color:var(--orange);}
+.av-del-btn{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);color:var(--g3);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;flex-shrink:0;}
+.av-del-btn:hover{background:var(--red-lt);border-color:var(--red);color:var(--red);}
+.av-add-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px 24px;}
+.av-add-title{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:14px;}
+.av-add-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;}
+.av-add-row .fg{margin:0;flex:1;min-width:120px;}
+.av-add-btn{padding:11px 20px;background:var(--orange);color:white;border:none;border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:background .1s;white-space:nowrap;flex-shrink:0;}
+.av-add-btn:hover{background:var(--orange-dk);}
+.av-add-btn:disabled{opacity:.6;cursor:not-allowed;}
+.av-empty{background:var(--bg2);border:1px dashed var(--border);border-radius:var(--r-xl);padding:40px;text-align:center;color:var(--g3);}
+.av-empty-ic{font-size:32px;margin-bottom:10px;}
+.av-empty p{font-size:13px;}
+
+@media(max-width:960px){.sg{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}.ig{grid-template-columns:1fr 1fr;}.ct-grid{grid-template-columns:1fr;}.port-grid,.pub-port-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){
+  .sg{grid-template-columns:1fr 1fr;}.ph,.pub-hero{padding:20px;}.ph-acts{margin-left:0;flex-direction:row;flex-wrap:wrap;}
+  .ig{grid-template-columns:1fr;}.port-grid,.pub-port-grid{grid-template-columns:1fr 1fr;}.pg{padding:20px 14px;}
+  .fgr{grid-template-columns:1fr;}.tnav-wrap .tnav:not(.on){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="ls">
+  <div style="font-family:var(--display);font-size:24px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;">Tradease<span style="color:var(--orange);">.</span></div>
+  <div class="sp"></div>
+  <p>Loading dashboard…</p>
+</div>
+
+<div id="app">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="logo" onclick="goHome()">
+      <img class="logo-img" src="./tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+      <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
+    </div>
+    <div class="tnav-wrap">
+      <span class="tnav" id="t-d" onclick="showV('d')">Dashboard</span>
+      <span class="tnav" id="t-b" onclick="showV('b')">Bookings</span>
+      <span class="tnav" id="t-r" onclick="showV('r')">Reviews</span>
+      <span class="tnav" id="t-pricing" onclick="showV('pricing')">Pricing</span>
+      <span class="tnav" id="t-pub" onclick="showV('pub')">My Profile</span>
+      <span class="tnav" id="t-av" onclick="showV('av')">Availability</span>
+      <span class="tnav" id="t-f" onclick="findContractors()">View on Tradease</span>
+    </div>
+    <div class="tbr">
+      <button class="pro-pill" id="pro-btn" onclick="showToast('💳 Stripe checkout coming soon!')">⚡ Upgrade to Pro</button>
+      <div class="notif-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
+        🔔<span class="notif-badge" id="notif-badge"></span>
+      </div>
+      <div class="av-btn" id="nav-av" onclick="showV('settings')" title="Settings"></div>
+      <button class="so-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-hdr">
+      <span class="notif-hdr-title">Notifications</span>
+      <button class="notif-mark-all" onclick="markAllRead()">Mark all read</button>
+    </div>
+    <div class="notif-list" id="notif-list">
+      <div class="notif-empty">No notifications yet</div>
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: DASHBOARD ═══ -->
+  <div class="view active" id="view-d">
+    <div class="pg">
+
+      <!-- ── LIVE TRACKING + ONLINE TOGGLE ─────────────────── -->
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+
+        <!-- Online/Offline toggle -->
+        <div id="online-toggle-card" style="
+          flex:1;min-width:200px;
+          background:rgba(15,15,18,0.85);border:1px solid rgba(255,255,255,0.1);
+          border-radius:16px;padding:16px 20px;
+          display:flex;align-items:center;gap:14px;cursor:pointer;
+          transition:border-color .15s,box-shadow .15s;
+        " onclick="toggleOnlineStatus()">
+          <div id="online-indicator" style="
+            width:44px;height:44px;border-radius:50%;
+            background:rgba(96,96,96,.3);
+            display:flex;align-items:center;justify-content:center;
+            font-size:20px;transition:background .2s,box-shadow .2s;
+          ">⚫</div>
+          <div>
+            <div id="online-label" style="font-family:var(--display);font-size:16px;font-weight:800;text-transform:uppercase;color:var(--g2);letter-spacing:.04em;">Offline</div>
+            <div style="font-size:12px;color:var(--g3);margin-top:1px;">Tap to go online and receive jobs</div>
+          </div>
+          <div id="online-toggle-sw" style="
+            margin-left:auto;width:44px;height:24px;border-radius:12px;
+            background:var(--g3);position:relative;transition:background .2s;flex-shrink:0;
+          ">
+            <div id="online-toggle-knob" style="
+              position:absolute;top:3px;left:3px;
+              width:18px;height:18px;border-radius:50%;
+              background:white;transition:left .2s,transform .1s;
+            "></div>
+          </div>
+        </div>
+
+        <!-- Live location tracking toggle -->
+        <div id="tracking-card" style="
+          flex:1;min-width:200px;
+          background:rgba(15,15,18,0.85);border:1px solid rgba(255,255,255,0.1);
+          border-radius:16px;padding:16px 20px;
+          display:flex;align-items:center;gap:14px;cursor:pointer;
+          transition:border-color .15s;
+        " onclick="toggleLocationTracking()">
+          <div id="tracking-indicator" style="
+            width:44px;height:44px;border-radius:50%;
+            background:rgba(96,96,96,.2);
+            display:flex;align-items:center;justify-content:center;
+            font-size:20px;
+          ">📍</div>
+          <div>
+            <div id="tracking-label" style="font-family:var(--display);font-size:16px;font-weight:800;text-transform:uppercase;color:var(--g2);letter-spacing:.04em;">Location Off</div>
+            <div style="font-size:12px;color:var(--g3);margin-top:1px;">Share location to rank higher in nearby searches</div>
+          </div>
+          <div id="tracking-toggle-sw" style="
+            margin-left:auto;width:44px;height:24px;border-radius:12px;
+            background:var(--g3);position:relative;transition:background .2s;flex-shrink:0;
+          ">
+            <div id="tracking-toggle-knob" style="
+              position:absolute;top:3px;left:3px;
+              width:18px;height:18px;border-radius:50%;
+              background:white;transition:left .2s;
+            "></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── INCOMING JOB OFFER BANNER ──────────────────────── -->
+      <div id="job-offer-banner" style="display:none;
+        background:linear-gradient(135deg,rgba(255,107,43,0.15),rgba(224,85,32,0.08));
+        border:2px solid rgba(255,107,43,0.5);
+        border-radius:18px;padding:20px 24px;margin-bottom:16px;
+        box-shadow:0 0 32px rgba(255,107,43,0.2);
+        animation:pulse-border 1.5s ease-in-out infinite;
+      ">
+        <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+          <div style="font-size:28px;filter:drop-shadow(0 0 8px rgba(255,107,43,.6));">🔔</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
+              <div style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;color:var(--white);">New Job Request!</div>
+              <!-- Countdown timer -->
+              <div id="offer-countdown" style="
+                background:rgba(255,107,43,0.2);border:1px solid rgba(255,107,43,0.4);
+                border-radius:50px;padding:3px 12px;
+                font-family:var(--display);font-size:13px;font-weight:800;color:var(--orange);
+                letter-spacing:.04em;
+              ">⏱ 60s</div>
+            </div>
+            <div id="offer-trade" style="font-size:13px;color:var(--orange);font-weight:700;margin-bottom:4px;"></div>
+            <div id="offer-desc"  style="font-size:13px;color:var(--g2);margin-bottom:4px;"></div>
+            <div id="offer-location" style="font-size:12px;color:var(--g3);"></div>
+            <div id="offer-price" style="font-size:13px;color:var(--green);font-weight:700;margin-top:4px;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;">
+            <button id="offer-accept-btn" onclick="acceptJobOffer()" style="
+              padding:10px 22px;background:linear-gradient(135deg,#22C55E,#16A34A);
+              color:white;border:none;border-radius:10px;cursor:pointer;
+              font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;
+              letter-spacing:.05em;box-shadow:0 0 16px rgba(34,197,94,.3);
+              transition:all .12s;
+            " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+              ✓ Accept
+            </button>
+            <button onclick="declineJobOffer()" style="
+              padding:10px 22px;background:rgba(239,68,68,.15);
+              color:var(--red);border:1px solid rgba(239,68,68,.25);border-radius:10px;cursor:pointer;
+              font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;
+              letter-spacing:.05em;transition:all .12s;
+            " onmouseover="this.style.background='rgba(239,68,68,.25)'" onmouseout="this.style.background='rgba(239,68,68,.15)'">
+              ✗ Decline
+            </button>
+          </div>
+        </div>
+      </div>
+      <style>@keyframes pulse-border{0%,100%{box-shadow:0 0 32px rgba(255,107,43,.2);}50%{box-shadow:0 0 48px rgba(255,107,43,.4),0 0 0 3px rgba(255,107,43,.1);}}</style>
+
+      <div class="inc" id="inc-banner">
+        <span style="font-size:16px;">⚠️</span>
+        <p><strong>Your profile is incomplete.</strong> Add more details to rank higher and get more bookings.</p>
+        <button class="inc-btn" onclick="openEditModal()">Complete Now</button>
+      </div>
+
+      <!-- Profile header -->
+      <div class="ph">
+        <div class="ph-av" id="ph-av">TR</div>
+        <div class="ph-info">
+          <h2 id="ph-name">Your Business</h2>
+          <div class="ph-sub" id="ph-trade">Contractor</div>
+          <div class="ph-loc" id="ph-loc"></div>
+          <div class="ph-badges">
+            <span class="bdg" id="plan-bdg" style="background:var(--bg4);color:var(--g3);">Free Plan</span>
+            <span class="bdg bdg-gn" id="ver-bdg" style="display:none;">✓ Verified</span>
+          </div>
+        </div>
+        <div class="ph-acts">
+          <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile</button>
+          <button class="btn-gy" onclick="showV('pub')">👁️ Preview Listing</button>
+          <button class="btn-gy" id="dash-up-btn" onclick="showToast('💳 Stripe checkout coming soon!')">⚡ Upgrade to Pro</button>
+        </div>
+      </div>
+
+      <!-- Upgrade banner for free users -->
+      <div class="up-ban" id="up-banner">
+        <div style="font-size:26px;">⚡</div>
+        <div>
+          <h4>Unlock Tradease Pro</h4>
+          <p>Top search placement · verified badge · more leads · analytics — only $19/month.</p>
+        </div>
+        <button class="up-ban-btn" onclick="showToast('💳 Stripe checkout coming soon!')">Upgrade Now →</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="sg">
+        <div class="sc"><div class="sc-ic">👁️</div><div class="sc-val" id="s-v">0</div><div class="sc-lbl">Profile Views</div><span class="sc-sub ss-or">This month</span></div>
+        <div class="sc"><div class="sc-ic">📅</div><div class="sc-val" id="s-b">0</div><div class="sc-lbl">Bookings</div><span class="sc-sub ss-or" id="b-sub">Start getting jobs</span></div>
+        <div class="sc"><div class="sc-ic">⭐</div><div class="sc-val" id="s-rt">—</div><div class="sc-lbl">Avg. Rating</div><span class="sc-sub ss-or" id="rt-sub">No reviews yet</span></div>
+        <div class="sc"><div class="sc-ic">🖼️</div><div class="sc-val" id="s-p">0</div><div class="sc-lbl">Portfolio Photos</div><span class="sc-sub ss-or">Add up to 25</span></div>
+      </div>
+
+      <!-- Profile completion -->
+      <div class="cw">
+        <div class="cw-top">
+          <h4>Profile Completion</h4>
+          <div class="cw-pct" id="cw-pct">0%</div>
+        </div>
+        <div class="cw-bar"><div class="cw-fill" id="cw-fill" style="width:0%"></div></div>
+        <div class="ct-grid" id="ct-list"></div>
+      </div>
+
+      <!-- Two column: bookings + reviews -->
+      <div class="two">
+        <div>
+          <div class="sh"><div class="st">Recent Bookings</div><span class="sa" onclick="showV('b')">View all →</span></div>
+          <div class="panel" id="dash-bk"></div>
+        </div>
+        <div>
+          <div class="sh"><div class="st">Recent Reviews</div><span class="sa" onclick="showV('r')">View all →</span></div>
+          <div class="panel" id="dash-rv"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: BOOKINGS ═══ -->
+  <div class="view" id="view-b">
+    <div class="pg">
+      <div class="pg-hdr"><h1>Bookings</h1><p>All incoming customer booking requests.</p></div>
+      <div class="fb-wrap">
+        <button class="fb on" onclick="filterBk('all',this)">All</button>
+        <button class="fb" onclick="filterBk('pending',this)">Pending</button>
+        <button class="fb" onclick="filterBk('confirmed',this)">Confirmed</button>
+        <button class="fb" onclick="filterBk('completed',this)">Completed</button>
+      </div>
+      <div class="panel" id="all-bk"></div>
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: REVIEWS ═══ -->
+  <div class="view" id="view-r">
+    <div class="pg">
+      <div class="pg-hdr"><h1>Customer Reviews</h1><p>What your customers are saying.</p></div>
+      <div class="panel" id="all-rv"></div>
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: PUBLIC PROFILE PREVIEW ═══ -->
+  <div class="view" id="view-pub">
+    <div class="pg">
+      <div class="pub-preview-note">
+        <span>👁️</span>
+        <span>This is how customers see your profile. <strong style="color:var(--orange);cursor:pointer;" onclick="openEditModal()">Edit Profile</strong> to improve it.</span>
+      </div>
+
+      <!-- Banner + avatar -->
+      <div style="border-radius:var(--r-2xl);overflow:hidden;border:1px solid var(--border);margin-bottom:20px;">
+        <!-- Banner -->
+        <div class="pub-banner" id="pub-banner-wrap" title="Click to change banner">
+          <img id="pub-banner-img" src="" alt="" style="display:none;"/>
+          <div id="pub-banner-empty" style="width:100%;height:100%;background:linear-gradient(135deg,rgba(255,107,43,.15),rgba(10,10,14,.9));display:flex;align-items:center;justify-content:center;color:var(--g3);font-size:13px;">📷 Add a banner photo</div>
+          <div class="pub-banner-overlay">📷 Change Banner</div>
+          <input class="pub-banner-upload" type="file" accept="image/*" onchange="uploadBanner(this)" id="banner-file-input"/>
+        </div>
+
+        <!-- Profile info below banner -->
+        <div style="background:var(--bg2);padding:0 28px 28px;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
+            <!-- PFP (overlaps banner) -->
+            <div class="pub-av-wrap" style="margin-top:-45px;">
+              <div class="pub-av" id="pub-av" style="border:4px solid var(--bg2);">TR</div>
+              <div class="pub-av-edit-overlay" onclick="document.getElementById('pfp-file-input').click()">✏️ Edit</div>
+              <input class="pub-av-edit-input" type="file" accept="image/*" onchange="uploadPFP(this)" id="pfp-file-input"/>
+            </div>
+            <button class="pub-book-btn" onclick="showToast('📅 Booking available to customers on the main site!')">📅 Book Now</button>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+            <div>
+              <div class="pub-name" id="pub-name">Your Business</div>
+              <div class="pub-trade" id="pub-trade">Contractor</div>
+              <div class="pub-loc" id="pub-loc"></div>
+              <div class="pub-meta">
+                <div class="pub-meta-item">⭐ <strong id="pub-rating">—</strong> <span id="pub-rc"></span></div>
+                <div class="pub-meta-item" id="pub-exp-wrap" style="display:none;">🏅 <strong id="pub-exp"></strong> experience</div>
+                <div class="pub-meta-item" id="pub-insured-wrap" style="display:none;">🛡️ <strong>Insured</strong></div>
+                <div class="pub-meta-item" id="pub-price-wrap" style="display:none;">💲 <strong id="pub-price"></strong>/hr</div>
+              </div>
+              <div class="pub-desc" id="pub-desc"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="pub-section" id="pub-port-section" style="display:none;">
+        <div class="pub-section-title">Portfolio</div>
+        <div class="pub-port-grid" id="pub-port-grid"></div>
+      </div>
+
+      <!-- Services & Pricing -->
+      <div class="pub-section" id="pub-pricing-section" style="display:none;">
+        <div class="pub-section-title">Services & Pricing</div>
+        <div id="pub-services-list"></div>
+      </div>
+
+      <!-- Service areas -->
+      <div class="pub-section" id="pub-areas-section" style="display:none;">
+        <div class="pub-section-title">Service Areas</div>
+        <div class="panel" id="pub-areas-txt" style="font-size:14px;color:var(--g2);padding:14px;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: AVAILABILITY ═══ -->
+  <div class="view" id="view-av">
+    <div class="pg">
+      <div class="pg-hdr">
+        <h1>Availability</h1>
+        <p>Set the days and hours you're available to accept bookings.</p>
+      </div>
+
+      <!-- Day schedule cards -->
+      <div id="av-grid" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+        <!-- Rendered by JS -->
+        <div style="text-align:center;padding:40px;color:var(--g3);font-size:13px;">
+          <div class="sp" style="margin:0 auto 12px;"></div>Loading availability…
+        </div>
+      </div>
+
+      <!-- Add / edit a day -->
+      <div class="av-add-card" id="av-add-card">
+        <div class="av-add-title">Add a Working Day</div>
+        <div class="av-add-row">
+          <div class="fg" style="margin:0;flex:1;">
+            <label>Day</label>
+            <select id="av-day">
+              <option value="">Select day…</option>
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+            </select>
+          </div>
+          <div class="fg" style="margin:0;flex:1;">
+            <label>Start Time</label>
+            <input type="time" id="av-start" value="08:00"/>
+          </div>
+          <div class="fg" style="margin:0;flex:1;">
+            <label>End Time</label>
+            <input type="time" id="av-end" value="18:00"/>
+          </div>
+          <button class="av-add-btn" id="av-save-btn" onclick="saveAvailability()">Add Day</button>
+        </div>
+        <div id="av-status" style="font-size:13px;color:var(--g2);margin-top:10px;min-height:18px;"></div>
+      </div>
+
+      <div style="background:var(--orange-lt);border:1px solid rgba(255,107,43,.2);border-radius:var(--r-lg);padding:14px 18px;font-size:13px;color:var(--g2);margin-top:20px;display:flex;gap:10px;align-items:flex-start;">
+        <span style="font-size:16px;flex-shrink:0;">💡</span>
+        <span>Customers will see your available days and times when booking. Click any saved day to edit its hours, or hit the ✕ to remove it.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ VIEW: SETTINGS / PROFILE ═══ -->
+  <div class="view" id="view-settings">
+    <div class="pg">
+      <div class="pg-hdr"><h1>Profile & Settings</h1><p>Manage your contractor account.</p></div>
+
+      <div class="ph" style="margin-bottom:20px;">
+        <div class="ph-av" id="set-av">TR</div>
+        <div class="ph-info">
+          <h2 id="set-name">—</h2>
+          <div class="ph-sub" id="set-trade">—</div>
+          <div class="ph-loc" id="set-loc"></div>
+        </div>
+        <div class="ph-acts">
+          <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile</button>
+          <button class="btn-gy" onclick="showV('pub')">👁️ Preview Listing</button>
+          <button class="btn-red" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="ig">
+        <div class="ii"><div class="il">Business Name</div><div class="iv" id="si-co">—</div></div>
+        <div class="ii"><div class="il">Trade</div><div class="iv" id="si-tr">—</div></div>
+        <div class="ii"><div class="il">Email</div><div class="iv sm" id="si-em">—</div></div>
+        <div class="ii"><div class="il">Phone</div><div class="iv" id="si-ph">—</div></div>
+        <div class="ii"><div class="il">Location</div><div class="iv" id="si-lo">—</div></div>
+        <div class="ii"><div class="il">Experience</div><div class="iv sm" id="si-ex">—</div></div>
+        <div class="ii"><div class="il">Hourly Rate</div><div class="iv" id="si-pr">—</div></div>
+        <div class="ii"><div class="il">Plan</div><div class="iv" id="si-pl">Free</div></div>
+      </div>
+
+      <!-- Portfolio manager -->
+      <div class="sh" style="margin-top:8px;"><div class="st">Portfolio</div><span class="sa" onclick="openEditModal('portfolio')">Manage →</span></div>
+      <div class="port-grid" id="settings-port-grid" style="margin-bottom:24px;"></div>
+
+      <div class="acct-card">
+        <div class="al">Account</div>
+        <div class="ar">
+          <div><div class="ar-t">Change Password</div><div class="ar-s">Send a reset link to your email</div></div>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="sendReset()">Send Link</button>
+        </div>
+        <div class="ar">
+          <div><div class="ar-t" style="color:var(--red);">Sign Out</div><div class="ar-s">Sign out of this device</div></div>
+          <button class="btn-red" onclick="signOut()">Sign Out</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+  <!-- ═══ VIEW: PRICING ═══ -->
+  <div class="view" id="view-pricing">
+    <div class="pg">
+      <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h1>Services &amp; Pricing</h1>
+          <p>Set what you charge per service. Customers see this on your profile.</p>
+        </div>
+        <button class="price-add-btn" onclick="openAddPrice()">+ Add Service</button>
+      </div>
+
+      <!-- Plan gate banner -->
+      <div class="plan-gate" id="pricing-plan-banner" style="display:none;">
+        <span style="font-size:20px;">⚡</span>
+        <div><strong>Free plan:</strong> List up to 5 services. <a onclick="showToast('💳 Pro upgrade coming soon!')" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Upgrade to Pro</a> to list unlimited services with priority ranking.</div>
+      </div>
+
+      <div id="pricing-services-list">
+        <div class="empty"><div class="empty-ic">💰</div><p>No services added yet.<br>Click "+ Add Service" to get started.</p></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ═══ PRICE EDIT MODAL ═══ -->
+<div id="price-modal" onclick="if(event.target===this)closePriceModal()">
+  <div class="mdl">
+    <div class="mh">
+      <h3 id="pm-title">Add Service</h3>
+      <button class="mc" onclick="closePriceModal()">✕</button>
+    </div>
+    <div class="mb-scroll">
+      <input type="hidden" id="pm-idx" value="-1"/>
+      <div class="fg"><label>Service Name *</label><input type="text" id="pm-name" placeholder="e.g. Drain Cleaning"/></div>
+      <div class="fgr">
+        <div class="fg"><label>Base Price ($) *</label><input type="number" id="pm-base" placeholder="120" min="0"/></div>
+        <div class="fg"><label>Max Price ($)</label><input type="number" id="pm-max" placeholder="180" min="0"/><div class="fg-hint">Leave blank for fixed price</div></div>
+      </div>
+      <div class="fg"><label>Pricing Type</label>
+        <select id="pm-type">
+          <option value="flat">Flat rate</option>
+          <option value="hourly">Hourly</option>
+          <option value="unit">Per unit</option>
+        </select>
+      </div>
+      <div class="fg"><label>Description (optional)</label><textarea id="pm-desc" placeholder="What's included? Parts, labor, travel?"></textarea></div>
+      <button class="ms" onclick="savePriceEntry()">Save Service</button>
+    </div>
+  </div>
+</div>
+<div class="mbg" id="edit-modal" onclick="if(event.target===this)closeEdit()">
+  <div class="mdl">
+    <div class="mh">
+      <h3 id="modal-title">Edit Profile</h3>
+      <button class="mc" onclick="closeEdit()">✕</button>
+    </div>
+    <div class="mb-scroll">
+
+      <div class="mdl-section">Banner &amp; Profile Photo</div>
+      <!-- Banner upload in modal -->
+      <div class="port-upload-area" style="margin-bottom:12px;height:80px;display:flex;align-items:center;justify-content:center;gap:10px;" onclick="document.getElementById('modal-banner-input').click()">
+        <input type="file" id="modal-banner-input" accept="image/*" onchange="uploadBanner(this)" style="display:none;"/>
+        <span style="font-size:20px;">🖼️</span>
+        <div><div class="port-upload-txt">Upload Banner Photo</div><div class="port-upload-sub">Recommended: 1200×400px · Max 5MB</div></div>
+      </div>
+      <!-- PFP upload in modal -->
+      <div class="port-upload-area" style="margin-bottom:12px;height:80px;display:flex;align-items:center;justify-content:center;gap:10px;" onclick="document.getElementById('modal-pfp-input').click()">
+        <input type="file" id="modal-pfp-input" accept="image/*" onchange="uploadPFP(this)" style="display:none;"/>
+        <span style="font-size:20px;">🙂</span>
+        <div><div class="port-upload-txt">Upload Profile Photo</div><div class="port-upload-sub">Square image recommended · Max 5MB</div></div>
+      </div>
+
+      <div class="mdl-section">Business Information</div>
+      <div class="fgr">
+        <div class="fg"><label>Business Name *</label><input type="text" id="e-co" placeholder="Rodriguez Plumbing LLC"/></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="e-ph" placeholder="(917) 555-0000"/></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Trade / Specialty *</label>
+          <select id="e-tr">
+            <option value="">Select trade…</option>
+            <option>Plumbing</option><option>Electrical</option><option>HVAC</option>
+            <option>Handyman</option><option>Roofing</option><option>Cleaning</option>
+            <option>Landscaping</option><option>Painting</option><option>Carpentry</option>
+            <option>Flooring</option><option>General Contracting</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fg"><label>Location</label><input type="text" id="e-lo" placeholder="Brooklyn, NY"/></div>
+      </div>
+      <div class="fgr">
+        <div class="fg"><label>Service Areas</label><input type="text" id="e-ar" placeholder="Brooklyn, Queens, Manhattan"/><div class="fg-hint">Separate with commas</div></div>
+        <div class="fg"><label>Years of Experience</label>
+          <select id="e-ex">
+            <option value="">Select…</option>
+            <option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option>
+            <option>5–10 years</option><option>10–15 years</option><option>15+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>About Your Services</label><textarea id="e-dc" placeholder="Tell customers what you do, what makes you the best choice, and what areas you specialize in…"></textarea></div>
+      <div class="fgr">
+        <div class="fg"><label>Business License #</label><input type="text" id="e-li" placeholder="NYC-PLB-00012345"/><div class="fg-hint">Optional but builds trust</div></div>
+        <div class="fg"><label>Insured?</label>
+          <select id="e-in">
+            <option value="">Select…</option>
+            <option value="true">Yes — I carry insurance</option>
+            <option value="false">Not yet</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mdl-section">Pricing (Optional)</div>
+      <div class="fgr">
+        <div class="fg"><label>Hourly Rate ($)</label><input type="number" id="e-pr" placeholder="e.g. 95" min="0"/><div class="fg-hint">Leave blank to hide pricing</div></div>
+        <div class="fg"><label>Pricing Note</label><input type="text" id="e-pn" placeholder="e.g. Free estimates · Min. 1 hr"/></div>
+      </div>
+      <div class="fg"><label>Pricing Description</label><input type="text" id="e-pd" placeholder="e.g. Service call $75 · Hourly rate varies by job type"/></div>
+
+      <div class="mdl-section">Portfolio Images</div>
+      <div class="port-upload-area" id="upload-area">
+        <input type="file" id="port-file-input" accept="image/*" multiple onchange="handlePortfolioUpload(this)"/>
+        <div class="port-upload-ic">📸</div>
+        <div class="port-upload-txt">Click or drag images here to upload</div>
+        <div class="port-upload-sub">JPG, PNG, WEBP · Max 5MB per image · Up to <span id="port-limit">5</span> total</div>
+      </div>
+      <div class="port-modal-grid" id="port-modal-grid"></div>
+      <div id="upload-status" style="font-size:12px;color:var(--g2);margin-top:8px;text-align:center;"></div>
+
+      <button class="ms" id="e-save" onclick="saveProfile()">Save All Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL = 'https://linqsojbszglbgpoxgtv.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+let user = null, cProf = null, bkgs = [], revs = [], portfolio = [], avData = [];
+let pricingServices = []; // [{name, base, max, type, desc}]
+const TABS  = { d:'t-d', b:'t-b', r:'t-r', pricing:'t-pricing', pub:'t-pub', av:'t-av', settings:null };
+const VIEWS = ['d','b','r','pricing','pub','av','settings'];
+
+// ── VIEW ROUTER ────────────────────────────────────────────
+function showV(v) {
+  VIEWS.forEach(x => {
+    document.getElementById('view-'+x).classList.remove('active');
+    if(TABS[x]) document.getElementById(TABS[x])?.classList.remove('active');
+  });
+  document.getElementById('view-'+v).classList.add('active');
+  if(TABS[v]) document.getElementById(TABS[v])?.classList.add('active');
+  document.getElementById('nav-av').classList.toggle('on', v==='settings');
+  window.scrollTo(0,0);
+}
+
+// ── INIT ───────────────────────────────────────────────────
+let _redirecting = false; // guard against double-redirect
+
+async function init() {
+  const { data:{ session }, error: sessionErr } = await sb.auth.getSession();
+  if (sessionErr || !session) {
+    if (!_redirecting) { _redirecting = true; window.location.replace('./tradease-auth.html'); }
+    return;
+  }
+  user = session.user;
+
+  // Check users table for role — but handle missing row gracefully
+  const { data: ur } = await sb.from('users').select('role').eq('id', user.id).single();
+
+  // If the row exists and they're a customer, redirect them
+  if (ur?.role === 'customer') {
+    if (!_redirecting) { _redirecting = true; window.location.replace('./customer-dashboard.html'); }
+    return;
+  }
+
+  // If no row yet (new signup), upsert a basic contractor row in users
+  if (!ur) {
+    await sb.from('users').upsert({
+      id:    user.id,
+      email: user.email,
+      role:  'contractor',
+      username: user.user_metadata?.display_name || user.email.split('@')[0],
+    }, { onConflict: 'id' });
+  }
+
+  // Load contractor profile (may not exist yet for brand-new signups)
+  const { data: p } = await sb.from('contractors').select('*').eq('id', user.id).single();
+  cProf = p || null;
+  portfolio = Array.isArray(p?.portfolio) ? p.portfolio : [];
+
+  document.body.style.opacity = '1';
+  fillUI();
+  document.getElementById('ls').style.display = 'none';
+  document.getElementById('app').classList.add('ready');
+
+  // Brand new contractor with no services → open pricing tab to set up
+  const isNewContractor = !p || !p.company_name;
+  const hasNoPricing    = !p || !Array.isArray(p.pricing_services) || p.pricing_services.length === 0;
+  if (isNewContractor || hasNoPricing) {
+    showV('pricing');
+    // Show a welcome toast pointing to pricing
+    setTimeout(() => showToast('👋 Welcome! Set your services and pricing so customers can find you.'), 800);
+  } else {
+    showV('d');
+  }
+
+  await Promise.all([loadBookings(), loadReviews(), loadAvailability(), loadNotifications()]);
+  subscribeToBookings();
+  subscribeToNotifications();
+}
+
+// ── FILL UI ────────────────────────────────────────────────
+function fillUI() {
+  if (!cProf) { renderEmpty(); return; }
+  const p = cProf;
+  const name = p.company_name || 'Your Business';
+  const ini = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const isPro = p.plan === 'pro';
+
+  // Topbar + dashboard header
+  document.getElementById('nav-av').textContent = ini;
+  document.getElementById('ph-av').textContent = ini;
+  document.getElementById('ph-name').textContent = name;
+  document.getElementById('ph-trade').textContent = p.trade_type || 'Contractor';
+  document.getElementById('ph-loc').textContent = p.location ? '📍 '+p.location : '';
+
+  // Plan badges
+  const planBdg = document.getElementById('plan-bdg');
+  planBdg.textContent = isPro ? '⚡ Pro' : 'Free Plan';
+  planBdg.className = isPro ? 'bdg bdg-or' : 'bdg bdg-gy';
+  if (isPro) {
+    document.getElementById('pro-btn').textContent = '✓ Pro Active';
+    document.getElementById('pro-btn').classList.add('active');
+    document.getElementById('up-banner').style.display = 'none';
+    document.getElementById('dash-up-btn').textContent = '✓ Pro Active';
+    document.getElementById('dash-up-btn').onclick = () => showToast('✅ You are on Tradease Pro!');
+  }
+  if (p.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
+
+  // Stats
+  document.getElementById('s-v').textContent = p.profile_views || 0;
+  document.getElementById('s-b').textContent = p.total_bookings || 0;
+  document.getElementById('s-p').textContent = portfolio.length;
+  if (p.review_count > 0 && p.rating) {
+    document.getElementById('s-rt').textContent = p.rating.toFixed(1) + ' ⭐';
+    document.getElementById('rt-sub').textContent = p.review_count + ' reviews';
+  }
+  if (p.total_bookings > 0) document.getElementById('b-sub').textContent = p.total_bookings + ' total';
+
+  // Completion
+  buildCompletion(p);
+
+  // Settings view
+  document.getElementById('set-av').textContent = ini;
+  document.getElementById('set-name').textContent = name;
+  document.getElementById('set-trade').textContent = p.trade_type || 'Contractor';
+  document.getElementById('set-loc').textContent = p.location ? '📍 '+p.location : '';
+  document.getElementById('si-co').textContent = name;
+  document.getElementById('si-tr').textContent = p.trade_type || '—';
+  document.getElementById('si-em').textContent = user.email || '—';
+  document.getElementById('si-ph').textContent = p.phone || '—';
+  document.getElementById('si-lo').textContent = p.location || '—';
+  document.getElementById('si-ex').textContent = p.experience || '—';
+  document.getElementById('si-pr').textContent = p.hourly_rate ? '$'+p.hourly_rate+'/hr' : '—';
+  document.getElementById('si-pl').textContent = isPro ? 'Tradease Pro ⚡' : 'Free';
+
+  // Banner + PFP
+  applyBanner(p.banner_url || '');
+  if (p.avatar_url) applyPFP(p.avatar_url);
+  else {
+    ['nav-av','ph-av','pf-av','set-av','pub-av'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = ini; el.style.backgroundImage = ''; }
+    });
+  }
+
+  // Pricing services
+  pricingServices = Array.isArray(p.pricing_services) ? p.pricing_services : [];
+  renderPricingView();
+
+  // Public profile
+  fillPublicProfile(p);
+
+  // Settings portfolio grid
+  renderPortfolioGrid('settings-port-grid', true);
+
+  // Modal prefill
+  prefillModal(p);
+
+  // Limit label
+  document.getElementById('port-limit').textContent = isPro ? '25' : '5';
+}
+
+function buildCompletion(p) {
+  const tasks = [
+    { done: true,              ic:'✅', label:'Account created' },
+    { done: !!p.company_name,  ic:'🏢', label:'Business name',       bonus:'+10%', action:"openEditModal()" },
+    { done: !!p.trade_type,    ic:'🔧', label:'Trade selected',       bonus:'+10%', action:"openEditModal()" },
+    { done: !!p.description,   ic:'📝', label:'Service description',  bonus:'+15%', action:"openEditModal()" },
+    { done: portfolio.length>0,ic:'🖼️', label:'Portfolio photo',      bonus:'+20%', action:"openEditModal('portfolio')" },
+    { done: !!p.license_url || !!p.license_number, ic:'📄', label:'License number', bonus:'+15%', action:"openEditModal()" },
+    { done: p.insured === true, ic:'🛡️', label:'Insurance added',     bonus:'+10%', action:"openEditModal()" },
+    { done: p.review_count > 0, ic:'⭐', label:'First review earned', bonus:'+20%', action:null },
+  ];
+  const done = tasks.filter(t=>t.done).length;
+  const pct  = Math.round((done/tasks.length)*100);
+  document.getElementById('cw-pct').textContent = pct+'%';
+  document.getElementById('cw-fill').style.width = pct+'%';
+  if (pct < 70) document.getElementById('inc-banner').classList.add('show');
+  else document.getElementById('inc-banner').classList.remove('show');
+  document.getElementById('ct-list').innerHTML = tasks.map(t =>
+    `<div class="ct ${t.done?'done':''}" ${!t.done&&t.action?`onclick="${t.action}"`:''}>
+      <span class="ct-ic">${t.ic}</span>
+      <span>${t.label}</span>
+      ${!t.done&&t.bonus?`<span class="ct-bonus">${t.bonus}</span>`:''}
+    </div>`
+  ).join('');
+}
+
+function fillPublicProfile(p) {
+  const name = p.company_name || 'Your Business';
+  const ini  = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('pub-av').textContent = ini;
+  document.getElementById('pub-name').textContent = name;
+  document.getElementById('pub-trade').textContent = p.trade_type || 'Contractor';
+  document.getElementById('pub-loc').textContent = p.location ? '📍 '+p.location : '';
+
+  if (p.review_count > 0 && p.rating) {
+    document.getElementById('pub-rating').textContent = p.rating.toFixed(1) + ' ⭐';
+    document.getElementById('pub-rc').textContent = '('+p.review_count+' reviews)';
+  } else {
+    document.getElementById('pub-rating').textContent = 'New';
+    document.getElementById('pub-rc').textContent = '— be the first to review';
+  }
+
+  if (p.experience) {
+    document.getElementById('pub-exp').textContent = p.experience;
+    document.getElementById('pub-exp-wrap').style.display = 'flex';
+  }
+  if (p.insured) document.getElementById('pub-insured-wrap').style.display = 'flex';
+  if (p.hourly_rate) {
+    document.getElementById('pub-price').textContent = '$'+p.hourly_rate;
+    document.getElementById('pub-price-wrap').style.display = 'flex';
+  }
+
+  document.getElementById('pub-desc').textContent = p.description || 'No description added yet. Click "Edit Profile" to add one.';
+
+  // Portfolio
+  if (portfolio.length > 0) {
+    document.getElementById('pub-port-section').style.display = 'block';
+    document.getElementById('pub-port-grid').innerHTML = portfolio.map(url =>
+      `<div class="pub-port-img"><img src="${url}" alt="Portfolio" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`
+    ).join('');
+  }
+
+  // Pricing section
+  if (p.hourly_rate) {
+    document.getElementById('pub-pricing-section').style.display = 'block';
+    document.getElementById('pub-price-big').textContent = '$'+p.hourly_rate;
+    document.getElementById('pub-price-note').textContent = p.pricing_note || 'Contact for quote';
+    document.getElementById('pub-price-desc').textContent = p.pricing_desc || '';
+  }
+
+  // Service areas
+  if (p.service_areas) {
+    document.getElementById('pub-areas-section').style.display = 'block';
+    document.getElementById('pub-areas-txt').textContent = p.service_areas;
+  }
+}
+
+function renderEmpty() {
+  const ini = (user.email||'TR').substring(0,2).toUpperCase();
+  ['nav-av','ph-av','pf-av','set-av','pub-av'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = ini;
+  });
+  document.getElementById('inc-banner').classList.add('show');
+  buildCompletion({});
+}
+
+// ── PORTFOLIO ──────────────────────────────────────────────
+function renderPortfolioGrid(containerId, showDelete) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const isPro = cProf?.plan === 'pro';
+  const limit = isPro ? 25 : 5;
+  let html = portfolio.map((url, i) => `
+    <div class="port-img">
+      <img src="${url}" alt="Portfolio" loading="lazy" onerror="this.parentElement.style.display='none'"/>
+      ${showDelete ? `<button class="port-del" onclick="deletePortfolioImg(${i})">✕</button>` : ''}
+    </div>`).join('');
+  if (showDelete && portfolio.length < limit) {
+    html += `<div class="port-add" onclick="document.getElementById('port-file-input').click()">
+      <div class="port-add-ic">+</div>
+      <div class="port-add-lbl">Add Photo</div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderModalPortfolio() {
+  const el = document.getElementById('port-modal-grid');
+  if (!el) return;
+  el.innerHTML = portfolio.map((url, i) => `
+    <div class="port-modal-thumb">
+      <img src="${url}" alt="Portfolio"/>
+      <button class="port-modal-del" onclick="deletePortfolioImg(${i})">✕</button>
+    </div>`).join('');
+}
+
+async function handlePortfolioUpload(input) {
+  const isPro = cProf?.plan === 'pro';
+  const limit = isPro ? 25 : 5;
+  const files = Array.from(input.files).slice(0, limit - portfolio.length);
+  if (!files.length) { showToast(`⚠️ Portfolio limit is ${limit} images.`); return; }
+
+  const status = document.getElementById('upload-status');
+  status.textContent = `⏳ Uploading ${files.length} image${files.length>1?'s':''}…`;
+
+  const uploaded = [];
+  for (const file of files) {
+    if (file.size > 5 * 1024 * 1024) { showToast(`⚠️ ${file.name} is over 5MB — skipped.`); continue; }
+    const ext  = file.name.split('.').pop();
+    const path = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(2,8)}.${ext}`;
+
+    // Try Supabase Storage
+    const { data, error } = await sb.storage.from('portfolio').upload(path, file, { upsert: true });
+    if (error) {
+      // Storage bucket may not exist — fall back to base64 data URL
+      const reader = new FileReader();
+      const b64 = await new Promise(res => { reader.onload = e => res(e.target.result); reader.readAsDataURL(file); });
+      uploaded.push(b64);
+    } else {
+      const { data: urlData } = sb.storage.from('portfolio').getPublicUrl(path);
+      uploaded.push(urlData.publicUrl);
+    }
+  }
+
+  portfolio = [...portfolio, ...uploaded];
+  status.textContent = `✅ ${uploaded.length} image${uploaded.length!==1?'s':''} added.`;
+  renderModalPortfolio();
+  renderPortfolioGrid('settings-port-grid', true);
+  document.getElementById('s-p').textContent = portfolio.length;
+  input.value = '';
+
+  // Auto-save portfolio to Supabase
+  await sb.from('contractors').update({ portfolio }).eq('id', user.id);
+  if (cProf) cProf.portfolio = portfolio;
+  showToast('✅ Portfolio updated!');
+}
+
+async function deletePortfolioImg(index) {
+  portfolio.splice(index, 1);
+  renderModalPortfolio();
+  renderPortfolioGrid('settings-port-grid', true);
+  document.getElementById('s-p').textContent = portfolio.length;
+  await sb.from('contractors').update({ portfolio }).eq('id', user.id);
+  if (cProf) cProf.portfolio = portfolio;
+  showToast('🗑️ Photo removed.');
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+function openEditModal(section) {
+  document.getElementById('edit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderModalPortfolio();
+  if (section === 'portfolio') {
+    setTimeout(() => {
+      document.getElementById('port-file-input').scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 200);
+  }
+}
+
+function closeEdit() {
+  document.getElementById('edit-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('upload-status').textContent = '';
+}
+
+function prefillModal(p) {
+  if (!p) return;
+  document.getElementById('e-co').value = p.company_name || '';
+  document.getElementById('e-ph').value = p.phone || '';
+  document.getElementById('e-lo').value = p.location || '';
+  document.getElementById('e-ar').value = p.service_areas || '';
+  document.getElementById('e-dc').value = p.description || '';
+  document.getElementById('e-li').value = p.license_url || p.license_number || '';
+  document.getElementById('e-pr').value = p.hourly_rate || '';
+  document.getElementById('e-pn').value = p.pricing_note || '';
+  document.getElementById('e-pd').value = p.pricing_desc || '';
+  const trSel = document.getElementById('e-tr');
+  [...trSel.options].forEach(o => { o.selected = o.value === (p.trade_type || ''); });
+  const exSel = document.getElementById('e-ex');
+  [...exSel.options].forEach(o => { o.selected = o.value === (p.experience || ''); });
+  const inSel = document.getElementById('e-in');
+  [...inSel.options].forEach(o => { o.selected = o.value === String(p.insured ?? ''); });
+}
+
+async function saveProfile() {
+  const co = document.getElementById('e-co').value.trim();
+  const ph = document.getElementById('e-ph').value.trim();
+  const tr = document.getElementById('e-tr').value;
+  const lo = document.getElementById('e-lo').value.trim();
+  const ar = document.getElementById('e-ar').value.trim();
+  const dc = document.getElementById('e-dc').value.trim();
+  const li = document.getElementById('e-li').value.trim();
+  const pr = document.getElementById('e-pr').value;
+  const pn = document.getElementById('e-pn').value.trim();
+  const pd = document.getElementById('e-pd').value.trim();
+  const ex = document.getElementById('e-ex').value;
+  const ins = document.getElementById('e-in').value;
+
+  if (!co) { showToast('⚠️ Business name is required.'); return; }
+
+  const btn = document.getElementById('e-save');
+  btn.disabled = true; btn.textContent = '⏳ Saving…';
+
+  const updates = {
+    company_name:  co,
+    phone:         ph,
+    trade_type:    tr,
+    location:      lo,
+    service_areas: ar,
+    description:   dc,
+    license_url:   li,
+    experience:    ex,
+    hourly_rate:   pr ? parseInt(pr) : null,
+    pricing_note:  pn,
+    pricing_desc:  pd,
+    portfolio,
+  };
+  if (ins !== '') updates.insured = ins === 'true';
+
+  const { error } = await sb.from('contractors').update(updates).eq('id', user.id);
+  btn.disabled = false; btn.textContent = 'Save All Changes';
+
+  if (error) { showToast('❌ Could not save. Try again.'); return; }
+  cProf = { ...cProf, ...updates };
+  fillUI();
+  closeEdit();
+  showToast('✅ Profile saved!');
+}
+
+// ── BOOKINGS ──────────────────────────────────────────────
+async function loadBookings() {
+  const { data } = await sb.from('bookings').select('*').eq('contractor_id', user.id.toString()).order('created_at', { ascending: false });
+  bkgs = data || [];
+  renderBk('dash-bk', bkgs.slice(0,4));
+  renderBk('all-bk', bkgs);
+  // Update pending count badge
+  const pending = bkgs.filter(b => b.status === 'pending').length;
+  const tabEl = document.getElementById('t-b');
+  if (tabEl) tabEl.textContent = pending > 0 ? `Bookings (${pending})` : 'Bookings';
+}
+
+function bkStatusStyle(s) {
+  if (s==='pending')     return { cls:'bst-p', label:'Pending',     ic:'🕐' };
+  if (s==='accepted')    return { cls:'bst-a', label:'Accepted',    ic:'✅' };
+  if (s==='in_progress') return { cls:'bst-ip',label:'In Progress', ic:'🔧' };
+  if (s==='declined')    return { cls:'bst-d', label:'Declined',    ic:'❌' };
+  if (s==='completed')   return { cls:'bst-c', label:'Completed',   ic:'🎉' };
+  return { cls:'bst-p', label:s, ic:'🕐' };
+}
+
+function renderBk(elId, list) {
+  const el = document.getElementById(elId);
+  if (!list.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-ic">📅</div><p>No bookings yet.<br>Complete your profile to start getting jobs.</p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(b => {
+    const { cls, label, ic } = bkStatusStyle(b.status);
+    const dt = b.booking_date ? new Date(b.booking_date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}) : '—';
+    const isPending    = b.status === 'pending';
+    const isAccepted   = b.status === 'accepted';
+    const isInProgress = b.status === 'in_progress';
+    return `<div class="bk-row" id="bk-${b.id}">
+      <div class="bk-ic">${ic}</div>
+      <div class="bk-info">
+        <div class="bk-name">${b.customer_name || 'Customer'}</div>
+        <div class="bk-meta">
+          ${b.trade ? `<span class="bk-tag">${b.trade}</span>` : ''}
+          <span>${dt}</span>
+          ${b.booking_time ? `<span>· ${b.booking_time}</span>` : ''}
+        </div>
+        ${b.description ? `<div class="bk-desc">"${b.description.substring(0,80)}${b.description.length>80?'…':''}"</div>` : ''}
+      </div>
+      <div class="bk-actions">
+        <span class="bk-status ${cls}">${label}</span>
+        ${isPending ? `
+          <button class="bk-btn bk-accept"  onclick="updateBooking('${b.id}','accepted')">Accept</button>
+          <button class="bk-btn bk-decline" onclick="updateBooking('${b.id}','declined')">Decline</button>
+        ` : ''}
+        ${isAccepted ? `
+          <button class="bk-btn bk-start"   onclick="updateBooking('${b.id}','in_progress')">Start Job</button>
+          <button class="bk-btn bk-decline" onclick="updateBooking('${b.id}','declined')">Cancel</button>
+        ` : ''}
+        ${isInProgress ? `
+          <button class="bk-btn bk-complete" onclick="updateBooking('${b.id}','completed')">Mark Done ✓</button>
+        ` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterBk(s, btn) {
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
+  renderBk('all-bk', s==='all' ? bkgs : bkgs.filter(b=>b.status===s));
+}
+
+async function updateBooking(id, newStatus) {
+  const row = document.getElementById('bk-'+id);
+  if (row) row.style.opacity = '0.5';
+
+  const { error } = await sb.from('bookings')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .eq('contractor_id', user.id.toString());
+
+  if (error) {
+    if (row) row.style.opacity = '1';
+    showToast('❌ Could not update. Try again.');
+    return;
+  }
+
+  // Update local state
+  bkgs = bkgs.map(b => b.id === id ? { ...b, status: newStatus } : b);
+  renderBk('dash-bk', bkgs.slice(0,4));
+  renderBk('all-bk', bkgs);
+
+  const msgs = {
+    accepted:    '✅ Booking accepted! The customer has been notified.',
+    in_progress: '🔧 Job started! Customer has been notified.',
+    declined:    '❌ Booking declined.',
+    completed:   '🎉 Booking marked as completed!',
+  };
+  showToast(msgs[newStatus] || '✅ Updated.');
+
+  // Send email notification (non-blocking)
+  const booking = bkgs.find(b => b.id === id);
+  if (booking && (newStatus === 'accepted' || newStatus === 'declined')) {
+    sendBookingEmail('booking_' + newStatus, {
+      ...booking,
+      contractor_email: user.email,
+    });
+  }
+
+  // Refresh pending count
+  const pending = bkgs.filter(b => b.status === 'pending').length;
+  const tabEl = document.getElementById('t-b');
+  if (tabEl) tabEl.textContent = pending > 0 ? `Bookings (${pending})` : 'Bookings';
+}
+
+// ── REAL-TIME: listen for new bookings coming in ──
+function subscribeToBookings() {
+  sb.channel('contractor-bookings')
+    .on('postgres_changes', {
+      event:  'INSERT',
+      schema: 'public',
+      table:  'bookings',
+      filter: `contractor_id=eq.${user.id}`,
+    }, payload => {
+      bkgs = [payload.new, ...bkgs];
+      renderBk('dash-bk', bkgs.slice(0,4));
+      renderBk('all-bk', bkgs);
+      const pending = bkgs.filter(b=>b.status==='pending').length;
+      const tabEl = document.getElementById('t-b');
+      if (tabEl) tabEl.textContent = `Bookings (${pending})`;
+      showToast(`🔔 New booking request from ${payload.new.customer_name || 'a customer'}!`);
+    })
+    .subscribe();
+}
+
+// ── REVIEWS ────────────────────────────────────────────────
+async function loadReviews() {
+  const { data } = await sb.from('reviews').select('*').eq('contractor_id', user.id).order('created_at', { ascending: false }).limit(20);
+  revs = data || [];
+  renderRv('dash-rv', revs.slice(0,3));
+  renderRv('all-rv', revs);
+}
+function renderRv(elId, list) {
+  const el = document.getElementById(elId);
+  if (!list.length) { el.innerHTML = `<div class="empty"><div class="empty-ic">⭐</div><p>No reviews yet.<br>Complete your first job to earn one.</p></div>`; return; }
+  el.innerHTML = list.map(r => {
+    const stars = '★'.repeat(r.rating||5)+'☆'.repeat(5-(r.rating||5));
+    const dt = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    return `<div class="rv"><div class="rv-hdr"><span class="rv-name">${r.reviewer_name||'Customer'}</span><span class="rv-stars">${stars}</span></div>
+      <div class="rv-txt">${r.review_text||''}</div><div class="rv-date">${dt}</div></div>`;
+  }).join('');
+}
+
+// ── PASSWORD RESET ─────────────────────────────────────────
+async function sendReset() {
+  const { error } = await sb.auth.resetPasswordForEmail(user.email, { redirectTo: window.location.origin+'/tradease-auth.html' });
+  if (error) { showToast('❌ '+error.message); return; }
+  showToast('✉️ Reset link sent to '+user.email+'!');
+}
+
+// ── AVAILABILITY ──────────────────────────────────────────
+const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+async function loadAvailability() {
+  const { data } = await sb.from('availability')
+    .select('*')
+    .eq('contractor_id', user.id)
+    .order('created_at', { ascending: true });
+  avData = data || [];
+  renderAvGrid();
+}
+
+function renderAvGrid() {
+  const el = document.getElementById('av-grid');
+  if (!el) return;
+
+  if (!avData.length) {
+    el.innerHTML = `
+      <div class="av-empty">
+        <div class="av-empty-ic">📅</div>
+        <p>No availability set yet.<br>Add your working days below.</p>
+      </div>`;
+    return;
+  }
+
+  // Sort by day order
+  const sorted = [...avData].sort((a, b) =>
+    DAY_ORDER.indexOf(a.day_of_week) - DAY_ORDER.indexOf(b.day_of_week));
+
+  el.innerHTML = sorted.map(av => {
+    const start = formatTime(av.start_time);
+    const end   = formatTime(av.end_time);
+    return `
+      <div class="av-day-card">
+        <div class="av-day-pill">${av.day_of_week.substring(0,3)}</div>
+        <div class="av-times">
+          <span class="av-time-badge">${start}</span>
+          <span class="av-arrow">→</span>
+          <span class="av-time-badge">${end}</span>
+        </div>
+        <button class="av-edit-btn" onclick="editAvDay('${av.day_of_week}','${av.start_time}','${av.end_time}')">Edit</button>
+        <button class="av-del-btn" onclick="deleteAvDay('${av.day_of_week}')" title="Remove">✕</button>
+      </div>`;
+  }).join('');
+}
+
+function formatTime(t) {
+  if (!t) return '—';
+  const [h, m] = t.split(':');
+  const hr = parseInt(h);
+  const ampm = hr >= 12 ? 'PM' : 'AM';
+  const hr12 = hr % 12 || 12;
+  return `${hr12}:${m} ${ampm}`;
+}
+
+function editAvDay(day, start, end) {
+  document.getElementById('av-day').value   = day;
+  document.getElementById('av-start').value = start.substring(0, 5);
+  document.getElementById('av-end').value   = end.substring(0, 5);
+  document.getElementById('av-save-btn').textContent = 'Update Day';
+  document.getElementById('av-status').textContent = `Editing ${day} — change times and click Update.`;
+  document.getElementById('av-add-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function saveAvailability() {
+  const day   = document.getElementById('av-day').value;
+  const start = document.getElementById('av-start').value;
+  const end   = document.getElementById('av-end').value;
+  const status = document.getElementById('av-status');
+  const btn    = document.getElementById('av-save-btn');
+
+  if (!day)   { status.textContent = '⚠️ Please select a day.'; status.style.color = 'var(--yellow)'; return; }
+  if (!start) { status.textContent = '⚠️ Please set a start time.'; status.style.color = 'var(--yellow)'; return; }
+  if (!end)   { status.textContent = '⚠️ Please set an end time.'; status.style.color = 'var(--yellow)'; return; }
+  if (start >= end) { status.textContent = '⚠️ End time must be after start time.'; status.style.color = 'var(--yellow)'; return; }
+
+  btn.disabled = true; btn.textContent = '⏳ Saving…';
+  status.textContent = ''; status.style.color = 'var(--g2)';
+
+  // Upsert — inserts or updates if day already exists
+  const { error } = await sb.from('availability').upsert({
+    contractor_id: user.id,
+    day_of_week:   day,
+    start_time:    start,
+    end_time:      end,
+  }, { onConflict: 'contractor_id,day_of_week' });
+
+  btn.disabled = false; btn.textContent = 'Add Day';
+
+  if (error) {
+    status.textContent = '❌ Could not save. Try again.';
+    status.style.color = 'var(--red)';
+    return;
+  }
+
+  // Update local state
+  const existing = avData.findIndex(a => a.day_of_week === day);
+  if (existing >= 0) avData[existing] = { ...avData[existing], start_time: start, end_time: end };
+  else avData.push({ contractor_id: user.id, day_of_week: day, start_time: start, end_time: end });
+
+  renderAvGrid();
+  document.getElementById('av-day').value   = '';
+  document.getElementById('av-start').value = '08:00';
+  document.getElementById('av-end').value   = '18:00';
+  status.textContent = `✅ ${day} saved!`;
+  status.style.color = 'var(--green)';
+  setTimeout(() => { status.textContent = ''; }, 3000);
+}
+
+async function deleteAvDay(day) {
+  const { error } = await sb.from('availability')
+    .delete()
+    .eq('contractor_id', user.id)
+    .eq('day_of_week', day);
+
+  if (error) { showToast('❌ Could not remove. Try again.'); return; }
+  avData = avData.filter(a => a.day_of_week !== day);
+  renderAvGrid();
+  showToast(`🗑️ ${day} removed.`);
+}
+
+// ── NOTIFICATIONS ──────────────────────────────────────────
+let notifications = [];
+
+async function loadNotifications() {
+  const { data } = await sb.from('notifications')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(30);
+  notifications = data || [];
+  renderNotifications();
+  updateNotifBadge();
+}
+
+function renderNotifications() {
+  const el = document.getElementById('notif-list');
+  if (!notifications.length) {
+    el.innerHTML = '<div class="notif-empty">🔔 You\'re all caught up!</div>';
+    return;
+  }
+  el.innerHTML = notifications.map(n => {
+    const ago = timeAgo(n.created_at);
+    return `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="markRead('${n.id}')">
+      <div class="notif-dot"></div>
+      <div>
+        <div class="notif-msg">${n.message}</div>
+        <div class="notif-time">${ago}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateNotifBadge() {
+  const unread = notifications.filter(n => !n.read).length;
+  const badge  = document.getElementById('notif-badge');
+  if (unread > 0) {
+    badge.textContent = unread > 9 ? '9+' : unread;
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('open');
+  // Close when clicking outside
+  if (panel.classList.contains('open')) {
+    setTimeout(() => {
+      document.addEventListener('click', closeNotifOnOutside, { once: true });
+    }, 0);
+  }
+}
+
+function closeNotifOnOutside(e) {
+  const panel = document.getElementById('notif-panel');
+  const btn   = document.getElementById('notif-btn');
+  if (!panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+}
+
+async function markRead(id) {
+  await sb.from('notifications').update({ read: true }).eq('id', id).eq('user_id', user.id);
+  notifications = notifications.map(n => n.id === id ? { ...n, read: true } : n);
+  renderNotifications();
+  updateNotifBadge();
+}
+
+async function markAllRead() {
+  await sb.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+  notifications = notifications.map(n => ({ ...n, read: true }));
+  renderNotifications();
+  updateNotifBadge();
+}
+
+function subscribeToNotifications() {
+  sb.channel('contractor-notifs')
+    .on('postgres_changes', {
+      event:  'INSERT',
+      schema: 'public',
+      table:  'notifications',
+      filter: `user_id=eq.${user.id}`,
+    }, payload => {
+      notifications = [payload.new, ...notifications];
+      renderNotifications();
+      updateNotifBadge();
+      // Also show toast for immediate visibility
+      showToast(payload.new.message);
+    })
+    .subscribe();
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+  if (diff < 60)   return 'Just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400)return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+// ── EMAIL via Resend Edge Function ─────────────────────────
+async function sendBookingEmail(type, booking) {
+  try {
+    await fetch(`${SB_URL}/functions/v1/send-booking-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SB_KEY}`,
+      },
+      body: JSON.stringify({ type, booking }),
+    });
+  } catch (e) {
+    console.warn('Email send failed (non-fatal):', e.message);
+  }
+}
+
+// ── SIGN OUT / NAV ─────────────────────────────────────────
+async function signOut() { await sb.auth.signOut(); sessionStorage.setItem('auth_intentional','1'); window.location.replace('./tradease-auth.html'); }
+// ── ONLINE / OFFLINE TOGGLE ───────────────────────────────────
+let _isOnline   = false;
+let _trackingOn = false;
+let _geoWatcher = null;
+let _currentJobOffer = null;
+let _offerTimer  = null;
+
+async function initOnlineStatus() {
+  const { data } = await sb.from('contractor_locations')
+    .select('is_online').eq('contractor_id', String(user.id)).single();
+  _isOnline = data?.is_online || false;
+  renderOnlineToggle();
+}
+
+function renderOnlineToggle() {
+  const sw    = document.getElementById('online-toggle-sw');
+  const knob  = document.getElementById('online-toggle-knob');
+  const label = document.getElementById('online-label');
+  const indic = document.getElementById('online-indicator');
+  const card  = document.getElementById('online-toggle-card');
+
+  if (_isOnline) {
+    sw.style.background    = 'var(--green)';
+    knob.style.left        = '23px';
+    label.textContent      = 'Online';
+    label.style.color      = 'var(--green)';
+    indic.textContent      = '🟢';
+    indic.style.background = 'rgba(34,197,94,.15)';
+    indic.style.boxShadow  = '0 0 14px rgba(34,197,94,.4)';
+    card.style.borderColor = 'rgba(34,197,94,.3)';
+  } else {
+    sw.style.background    = 'var(--g3)';
+    knob.style.left        = '3px';
+    label.textContent      = 'Offline';
+    label.style.color      = 'var(--g2)';
+    indic.textContent      = '⚫';
+    indic.style.background = 'rgba(96,96,96,.3)';
+    indic.style.boxShadow  = 'none';
+    card.style.borderColor = 'rgba(255,255,255,.1)';
+  }
+}
+
+async function toggleOnlineStatus() {
+  _isOnline = !_isOnline;
+  renderOnlineToggle();
+  // Upsert to contractor_locations
+  await sb.from('contractor_locations').upsert({
+    contractor_id: String(user.id),
+    is_online:     _isOnline,
+    updated_at:    new Date().toISOString(),
+  }, { onConflict: 'contractor_id' });
+  // Also update contractors table
+  await sb.from('contractors').update({ is_online: _isOnline }).eq('id', user.id);
+  showToast(_isOnline ? '🟢 You are now online and receiving job requests!' : '⚫ You are now offline.');
+}
+
+// ── LOCATION TRACKING ─────────────────────────────────────────
+function renderTrackingToggle() {
+  const sw    = document.getElementById('tracking-toggle-sw');
+  const knob  = document.getElementById('tracking-toggle-knob');
+  const label = document.getElementById('tracking-label');
+  const indic = document.getElementById('tracking-indicator');
+  const card  = document.getElementById('tracking-card');
+
+  if (_trackingOn) {
+    sw.style.background    = 'var(--orange)';
+    knob.style.left        = '23px';
+    label.textContent      = 'Live Location On';
+    label.style.color      = 'var(--orange)';
+    indic.style.background = 'rgba(255,107,43,.12)';
+    indic.style.boxShadow  = '0 0 12px rgba(255,107,43,.3)';
+    card.style.borderColor = 'rgba(255,107,43,.3)';
+  } else {
+    sw.style.background    = 'var(--g3)';
+    knob.style.left        = '3px';
+    label.textContent      = 'Location Off';
+    label.style.color      = 'var(--g2)';
+    indic.style.background = 'rgba(96,96,96,.2)';
+    indic.style.boxShadow  = 'none';
+    card.style.borderColor = 'rgba(255,255,255,.1)';
+  }
+}
+
+function toggleLocationTracking() {
+  if (_trackingOn) {
+    // Stop tracking
+    if (_geoWatcher !== null) { navigator.geolocation.clearWatch(_geoWatcher); _geoWatcher = null; }
+    _trackingOn = false;
+    renderTrackingToggle();
+    showToast('📍 Location tracking disabled.');
+  } else {
+    // Start tracking
+    if (!navigator.geolocation) { showToast('❌ Geolocation not supported on this device.'); return; }
+    _trackingOn = true;
+    renderTrackingToggle();
+    showToast('📍 Location tracking enabled. You\'ll rank higher in nearby searches!');
+    _geoWatcher = navigator.geolocation.watchPosition(
+      async pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        await sb.from('contractor_locations').upsert({
+          contractor_id: String(user.id),
+          lat, lng,
+          is_online:   _isOnline,
+          updated_at:  new Date().toISOString(),
+        }, { onConflict: 'contractor_id' });
+        await sb.from('contractors').update({ lat, lng }).eq('id', user.id);
+      },
+      err => { showToast('⚠️ Location error: ' + err.message); },
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
+    );
+  }
+}
+
+// ── INCOMING JOB OFFER ────────────────────────────────────────
+function subscribeToJobOffers() {
+  sb.channel('job-offers-' + user.id)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'job_offers',
+      filter: `contractor_id=eq.${user.id}`,
+    }, async payload => {
+      const offer = payload.new;
+      if (offer.status !== 'pending') return;
+      // Fetch job details
+      const { data: job } = await sb.from('bookings').select('*').eq('id', offer.job_id).single()
+        .catch(() => ({ data: null }));
+      if (!job) return;
+      showJobOfferBanner({ ...offer, ...job });
+    }).subscribe();
+
+  // Also subscribe to new bookings assigned directly
+  sb.channel('new-bookings-' + user.id)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'bookings',
+      filter: `contractor_id=eq.${user.id}`,
+    }, payload => {
+      const bk = payload.new;
+      if (bk.status === 'pending') {
+        showJobOfferBanner(bk);
+        showToast('🔔 New booking request from ' + (bk.customer_name || 'a customer') + '!');
+      }
+    }).subscribe();
+}
+
+function showJobOfferBanner(job) {
+  _currentJobOffer = job;
+  const banner = document.getElementById('job-offer-banner');
+  banner.style.display = 'block';
+  document.getElementById('offer-trade').textContent    = '🔧 ' + (job.trade || job.service_type || 'Service');
+  document.getElementById('offer-desc').textContent     = job.description ? '"' + job.description.substring(0, 80) + (job.description.length > 80 ? '…' : '') + '"' : '';
+  document.getElementById('offer-location').textContent = job.location ? '📍 ' + job.location : '';
+  document.getElementById('offer-price').textContent    = (job.price_min && job.price_max) ? `💰 Estimated: $${job.price_min}–$${job.price_max}` : '';
+
+  // Countdown timer — 60 seconds to accept
+  let secondsLeft = 60;
+  clearInterval(_offerTimer);
+  _offerTimer = setInterval(() => {
+    secondsLeft--;
+    const el = document.getElementById('offer-countdown');
+    if (el) {
+      el.textContent = `⏱ ${secondsLeft}s`;
+      if (secondsLeft <= 10) { el.style.color = '#EF4444'; el.style.background = 'rgba(239,68,68,.2)'; }
+    }
+    if (secondsLeft <= 0) {
+      clearInterval(_offerTimer);
+      hideJobOfferBanner();
+      showToast('⏰ Job offer expired — auto-assigning to next contractor.');
+      // Mark offer expired
+      if (job.id) sb.from('job_offers').update({ status: 'expired' }).eq('id', job.id);
+    }
+  }, 1000);
+
+  // Scroll to top so contractor sees it
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function hideJobOfferBanner() {
+  document.getElementById('job-offer-banner').style.display = 'none';
+  clearInterval(_offerTimer);
+  _currentJobOffer = null;
+  // Reset countdown color
+  const el = document.getElementById('offer-countdown');
+  if (el) { el.style.color = 'var(--orange)'; el.style.background = 'rgba(255,107,43,0.2)'; el.textContent = '⏱ 60s'; }
+}
+
+async function acceptJobOffer() {
+  if (!_currentJobOffer) return;
+  const btn = document.getElementById('offer-accept-btn');
+  btn.disabled = true; btn.textContent = '⏳ Accepting…';
+
+  const { error } = await sb.from('bookings').update({ status: 'accepted' })
+    .eq('id', _currentJobOffer.id || _currentJobOffer.booking_id);
+
+  btn.disabled = false; btn.textContent = '✓ Accept';
+  if (error) { showToast('❌ Could not accept. Try again.'); return; }
+
+  hideJobOfferBanner();
+  showToast('✅ Job accepted! Customer has been notified.');
+  loadBkgs();
+  showV('b'); // Switch to bookings tab
+}
+
+async function declineJobOffer() {
+  if (!_currentJobOffer) return;
+  const confirmed = confirm('Decline this job request? It will be sent to the next available contractor.\n\nNote: Repeated declines affect your reliability score.');
+  if (!confirmed) return;
+
+  await sb.from('bookings').update({ status: 'declined', cancelled_by: 'contractor' })
+    .eq('id', _currentJobOffer.id || _currentJobOffer.booking_id);
+
+  // Log reliability penalty
+  await sb.from('contractor_penalties').insert({
+    contractor_id: String(user.id),
+    type:          'decline_after_accept',
+    points:        5,
+    description:   'Declined incoming job offer',
+  });
+
+  hideJobOfferBanner();
+  showToast('❌ Job declined. Finding next contractor for the customer.');
+}
+
+// ── BANNER UPLOAD ─────────────────────────────────────────────
+async function uploadBanner(input) {
+  const file = input.files[0]; if (!file) return;
+  if (file.size > 5*1024*1024) { showToast('⚠️ Banner must be under 5MB.'); return; }
+  showToast('⏳ Uploading banner…');
+  const path = `${user.id}/banner-${Date.now()}.${file.name.split('.').pop()}`;
+  let url = '';
+  const { data, error } = await sb.storage.from('portfolio').upload(path, file, { upsert: true });
+  if (error) {
+    // Fallback: base64
+    url = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result);
+      r.readAsDataURL(file);
+    });
+  } else {
+    url = sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
+  }
+  await sb.from('contractors').update({ banner_url: url }).eq('id', user.id);
+  if (cProf) cProf.banner_url = url;
+  applyBanner(url);
+  input.value = '';
+  showToast('✅ Banner updated!');
+}
+
+function applyBanner(url) {
+  const img   = document.getElementById('pub-banner-img');
+  const empty = document.getElementById('pub-banner-empty');
+  if (!url) { if(img) img.style.display='none'; if(empty) empty.style.display='flex'; return; }
+  if (img) { img.src = url; img.style.display = 'block'; }
+  if (empty) empty.style.display = 'none';
+}
+
+// ── PFP UPLOAD ────────────────────────────────────────────────
+async function uploadPFP(input) {
+  const file = input.files[0]; if (!file) return;
+  if (file.size > 5*1024*1024) { showToast('⚠️ Photo must be under 5MB.'); return; }
+  showToast('⏳ Uploading photo…');
+  const path = `${user.id}/pfp-${Date.now()}.${file.name.split('.').pop()}`;
+  let url = '';
+  const { data, error } = await sb.storage.from('portfolio').upload(path, file, { upsert: true });
+  if (error) {
+    url = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result);
+      r.readAsDataURL(file);
+    });
+  } else {
+    url = sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
+  }
+  await sb.from('contractors').update({ avatar_url: url }).eq('id', user.id);
+  if (cProf) cProf.avatar_url = url;
+  applyPFP(url);
+  input.value = '';
+  showToast('✅ Profile photo updated!');
+}
+
+function applyPFP(url) {
+  if (!url) return;
+  const ids = ['nav-av','ph-av','pf-av','set-av','pub-av'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = '';
+    el.style.backgroundImage = `url('${url}')`;
+    el.style.backgroundSize  = 'cover';
+    el.style.backgroundPosition = 'center';
+  });
+}
+
+// ── PRICING CRUD ──────────────────────────────────────────────
+const PRICE_TYPE_LABELS = { flat:'Flat rate', hourly:'Hourly', unit:'Per unit' };
+const FREE_PLAN_LIMIT = 5;
+
+function renderPricingView() {
+  const isPro = cProf?.plan === 'pro';
+  const banner = document.getElementById('pricing-plan-banner');
+  if (banner) banner.style.display = isPro ? 'none' : 'block';
+
+  const list = document.getElementById('pricing-services-list');
+  if (!pricingServices.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-ic">💰</div><p>No services added yet.<br>Click "+ Add Service" to get started.</p></div>`;
+    return;
+  }
+  list.innerHTML = pricingServices.map((s,i) => `
+    <div class="price-svc-row">
+      <div style="flex:1;">
+        <div class="price-svc-name">${s.name}</div>
+        <div class="price-svc-type">${PRICE_TYPE_LABELS[s.type]||s.type}${s.desc?' · '+s.desc.substring(0,50)+(s.desc.length>50?'…':''):''}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="price-svc-val">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</div>
+        <div class="price-svc-type">${PRICE_TYPE_LABELS[s.type]||s.type}</div>
+      </div>
+      <div class="price-svc-actions">
+        <button class="btn-gy" style="padding:5px 10px;font-size:11px;" onclick="openEditPrice(${i})">Edit</button>
+        <button class="btn-red" style="padding:5px 10px;font-size:11px;" onclick="deletePriceEntry(${i})">✕</button>
+      </div>
+    </div>`).join('');
+
+  // Also update the public profile pricing section
+  renderPubPricing();
+}
+
+function renderPubPricing() {
+  const sec  = document.getElementById('pub-pricing-section');
+  const list = document.getElementById('pub-services-list');
+  if (!pricingServices.length) { if(sec) sec.style.display='none'; return; }
+  if (sec) sec.style.display='block';
+  if (list) list.innerHTML = pricingServices.map(s=>`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--g1);">${s.name}</div>
+        ${s.desc?`<div style="font-size:12px;color:var(--g3);margin-top:2px;">${s.desc}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-family:var(--display);font-size:15px;font-weight:800;color:var(--orange);">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</div>
+        <div style="font-size:11px;color:var(--g3);">${PRICE_TYPE_LABELS[s.type]||s.type}</div>
+      </div>
+    </div>`).join('');
+}
+
+function openAddPrice() {
+  const isPro = cProf?.plan === 'pro';
+  if (!isPro && pricingServices.length >= FREE_PLAN_LIMIT) {
+    showToast(`⚠️ Free plan allows up to ${FREE_PLAN_LIMIT} services. Upgrade to Pro for unlimited.`);
+    return;
+  }
+  document.getElementById('pm-title').textContent = 'Add Service';
+  document.getElementById('pm-idx').value  = '-1';
+  document.getElementById('pm-name').value = '';
+  document.getElementById('pm-base').value = '';
+  document.getElementById('pm-max').value  = '';
+  document.getElementById('pm-type').value = 'flat';
+  document.getElementById('pm-desc').value = '';
+  document.getElementById('price-modal').classList.add('open');
+}
+
+function openEditPrice(idx) {
+  const s = pricingServices[idx];
+  if (!s) return;
+  document.getElementById('pm-title').textContent = 'Edit Service';
+  document.getElementById('pm-idx').value  = idx;
+  document.getElementById('pm-name').value = s.name;
+  document.getElementById('pm-base').value = s.base;
+  document.getElementById('pm-max').value  = s.max || '';
+  document.getElementById('pm-type').value = s.type || 'flat';
+  document.getElementById('pm-desc').value = s.desc || '';
+  document.getElementById('price-modal').classList.add('open');
+}
+
+function closePriceModal() {
+  document.getElementById('price-modal').classList.remove('open');
+}
+
+async function savePriceEntry() {
+  const name = document.getElementById('pm-name').value.trim();
+  const base = parseInt(document.getElementById('pm-base').value) || 0;
+  const max  = parseInt(document.getElementById('pm-max').value)  || 0;
+  const type = document.getElementById('pm-type').value;
+  const desc = document.getElementById('pm-desc').value.trim();
+  const idx  = parseInt(document.getElementById('pm-idx').value);
+
+  if (!name) { showToast('⚠️ Service name is required.'); return; }
+  if (!base)  { showToast('⚠️ Base price is required.');  return; }
+
+  const entry = { name, base, max: max || base, type, desc };
+  if (idx >= 0) {
+    pricingServices[idx] = entry;
+  } else {
+    pricingServices.push(entry);
+  }
+
+  await sb.from('contractors').update({ pricing_services: pricingServices }).eq('id', user.id);
+  if (cProf) cProf.pricing_services = pricingServices;
+  closePriceModal();
+  renderPricingView();
+  showToast('✅ Service saved!');
+}
+
+async function deletePriceEntry(idx) {
+  if (!confirm('Remove this service?')) return;
+  pricingServices.splice(idx, 1);
+  await sb.from('contractors').update({ pricing_services: pricingServices }).eq('id', user.id);
+  if (cProf) cProf.pricing_services = pricingServices;
+  renderPricingView();
+  showToast('🗑️ Service removed.');
+}
+
+initOnlineStatus();
+subscribeToJobOffers();
+
+function goHome() { window.location.href='./tradease.html'; }
+function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='./tradease.html'; }
+
+// ── TOAST ──────────────────────────────────────────────────
+let _tt;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(()=>t.classList.remove('show'), 3800);
+}
+
+init();
+</script>
+</body>
+</html>

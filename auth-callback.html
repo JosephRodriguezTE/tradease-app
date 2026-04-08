@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tradease — Confirming your account…</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--border:#2A2A2A;
+    --orange:#FF6B2B;--orange-dk:#E05520;
+    --white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;
+    --green:#22C55E;--red:#EF4444;
+  }
+  body{
+    font-family:'Barlow',sans-serif;
+    background:var(--bg);color:var(--g1);
+    min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:20px;text-align:center;
+  }
+  .logo{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:28px;font-weight:900;color:white;
+    text-transform:uppercase;letter-spacing:.04em;
+    margin-bottom:48px;display:flex;align-items:center;gap:8px;
+  }
+  .logo-dot{width:9px;height:9px;background:var(--orange);border-radius:50%;}
+  .logo img{width:36px;height:36px;border-radius:10px;object-fit:cover;}
+
+  .card{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:24px;padding:48px 40px;
+    max-width:460px;width:100%;
+  }
+  .icon{font-size:52px;margin-bottom:20px;line-height:1;}
+  h1{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:30px;font-weight:900;text-transform:uppercase;
+    color:var(--white);letter-spacing:-.01em;margin-bottom:10px;
+  }
+  p{font-size:15px;color:var(--g2);line-height:1.7;margin-bottom:24px;}
+
+  .spinner{
+    width:44px;height:44px;border-radius:50%;
+    border:3px solid var(--bg3);border-top-color:var(--orange);
+    animation:spin .7s linear infinite;margin:0 auto 20px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .btn{
+    display:inline-block;padding:13px 28px;border-radius:12px;
+    font-family:'Barlow Condensed',sans-serif;font-size:15px;
+    font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+    cursor:pointer;border:none;transition:background .12s,transform .1s;
+    text-decoration:none;
+  }
+  .btn-or{background:var(--orange);color:white;box-shadow:0 4px 16px rgba(255,107,43,.3);}
+  .btn-or:hover{background:var(--orange-dk);transform:translateY(-1px);}
+  .btn-gy{background:var(--bg3);color:var(--g1);border:1px solid var(--border);margin-top:10px;}
+  .btn-gy:hover{background:var(--bg);border-color:var(--g3);}
+
+  .state{display:none;}
+  .state.active{display:block;}
+
+  /* Progress bar at top */
+  .progress{
+    position:fixed;top:0;left:0;width:100%;height:3px;
+    background:var(--bg3);
+  }
+  .progress-fill{
+    height:100%;background:var(--orange);
+    width:0%;transition:width .4s ease;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+
+<div class="logo" onclick="window.location.href='/'" style="cursor:pointer;transition:opacity .12s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+  <img src="./tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+  Tradease<span class="logo-dot"></span>
+</div>
+
+<div class="card">
+
+  <!-- STATE: Loading -->
+  <div class="state active" id="state-loading">
+    <div class="spinner"></div>
+    <h1>Confirming your account…</h1>
+    <p>Please wait while we verify your email and set up your account.</p>
+  </div>
+
+  <!-- STATE: Success -->
+  <div class="state" id="state-success">
+    <div class="icon">✅</div>
+    <h1>Email Confirmed!</h1>
+    <p>Your Tradease account is verified and ready. You're being redirected to your dashboard now…</p>
+    <div class="spinner" style="margin:0 auto;"></div>
+  </div>
+
+  <!-- STATE: Already logged in -->
+  <div class="state" id="state-already">
+    <div class="icon">👋</div>
+    <h1>Welcome Back!</h1>
+    <p>You're already logged in. Taking you to your dashboard…</p>
+    <div class="spinner" style="margin:0 auto;"></div>
+  </div>
+
+  <!-- STATE: Error -->
+  <div class="state" id="state-error">
+    <div class="icon">❌</div>
+    <h1>Something went wrong</h1>
+    <p id="error-msg">The confirmation link may have expired or already been used. Please try signing up again or request a new link.</p>
+    <a href="./tradease-auth.html" class="btn btn-or">Go to Login →</a><br/>
+    <a href="/" class="btn btn-gy">Back to Homepage</a>
+  </div>
+
+  <!-- STATE: No token -->
+  <div class="state" id="state-notoken">
+    <div class="icon">🔗</div>
+    <h1>Invalid Link</h1>
+    <p>This confirmation link is invalid or has expired. Please sign up again to get a new one.</p>
+    <a href="./tradease-auth.html" class="btn btn-or">Sign Up Again →</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL      = 'https://linqsojbszglbgpoxgtv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const fill = document.getElementById('progress-fill');
+
+function showState(id) {
+  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setProgress(pct) {
+  fill.style.width = pct + '%';
+}
+
+async function handleCallback() {
+  setProgress(20);
+
+  const hash   = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+
+  // Check for OAuth error
+  const errorDesc = params.get('error_description') || new URLSearchParams(hash.substring(1)).get('error_description');
+  if (errorDesc) {
+    showState('state-error');
+    document.getElementById('error-msg').textContent = errorDesc;
+    return;
+  }
+
+  setProgress(40);
+
+  // Supabase PKCE flow — exchange the code in the URL for a session
+  // This handles both email confirmation and Google OAuth redirects
+  const code = params.get('code');
+  if (code) {
+    const { data, error } = await sb.auth.exchangeCodeForSession(code);
+    if (error) {
+      showState('state-error');
+      document.getElementById('error-msg').textContent = error.message;
+      return;
+    }
+    if (data.session) {
+      setProgress(90);
+      showState('state-success');
+      await redirectToDashboard(data.session.user);
+      return;
+    }
+  }
+
+  setProgress(60);
+
+  // Check existing session (implicit flow / already logged in)
+  const { data: { session }, error } = await sb.auth.getSession();
+
+  setProgress(70);
+
+  if (error) {
+    showState('state-error');
+    document.getElementById('error-msg').textContent = error.message;
+    return;
+  }
+
+  if (session) {
+    setProgress(90);
+    showState('state-success');
+    await redirectToDashboard(session.user);
+    return;
+  }
+
+  // Legacy implicit flow — token in URL hash
+  const hashParams    = new URLSearchParams(hash.substring(1));
+  const accessToken   = hashParams.get('access_token');
+  const refreshToken  = hashParams.get('refresh_token');
+
+  if (!accessToken) {
+    showState('state-notoken');
+    return;
+  }
+
+  const { data: { session: newSession }, error: sessionErr } = await sb.auth.setSession({
+    access_token:  accessToken,
+    refresh_token: refreshToken,
+  });
+
+  setProgress(90);
+
+  if (sessionErr || !newSession) {
+    showState('state-error');
+    document.getElementById('error-msg').textContent = sessionErr?.message || 'Could not verify session.';
+    return;
+  }
+
+  showState('state-success');
+  await redirectToDashboard(newSession.user);
+}
+
+async function redirectToDashboard(user) {
+  setProgress(100);
+
+  // Check if this came from contractor OAuth signup (role hint in URL or sessionStorage)
+  const urlRole = new URLSearchParams(window.location.search).get('role');
+  const ssRole  = sessionStorage.getItem('oauth_role');
+  const hintedRole = urlRole || ssRole || null;
+  if (ssRole) sessionStorage.removeItem('oauth_role');
+
+  // Fetch role from DB
+  const { data: profile } = await sb.from('users')
+    .select('role, username')
+    .eq('id', user.id)
+    .single();
+
+  // Determine final role — DB wins, hint used for new users
+  let role = profile?.role || hintedRole || 'customer';
+
+  // Create profile row if it doesn't exist yet (new OAuth user)
+  if (!profile) {
+    await sb.from('users').upsert({
+      id:       user.id,
+      email:    user.email,
+      username: user.user_metadata?.full_name || user.user_metadata?.name || user.user_metadata?.user_name || user.email.split('@')[0],
+      role,
+    }, { onConflict: 'id' });
+
+    // If they're a new contractor via OAuth, create a starter contractors row
+    if (role === 'contractor') {
+      await sb.from('contractors').upsert({
+        id:           user.id,
+        company_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+        email:        user.email,
+        plan:         'free',
+        verified:     false,
+        approved:     false,
+        approval_status: 'pending',
+        rating:       0,
+        review_count: 0,
+      }, { onConflict: 'id' });
+    }
+  }
+
+  setTimeout(() => {
+    window.location.replace(role === 'contractor' ? './contractor-dashboard.html' : './customer-dashboard.html');
+  }, 1200);
+}
+
+// Run on load
+handleCallback();
+</script>
+</body>
+</html>

@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
 <title>Tradease – Book Trusted Local Contractors</title>
+=======
+<title>Tradease — Sign In</title>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -1007,17 +1011,25 @@ ul{list-style:none;}
             <div class="radio-opt selected" onclick="selectPlan(this,'free')">
               <input type="radio" name="plan" value="free" checked/>
               <div class="radio-opt-title">Free</div>
+<<<<<<< HEAD
               <div class="radio-opt-desc">Basic listing · Receive bookings · 5 portfolio images · 15% fee</div>
             </div>
             <div class="radio-opt" onclick="selectPlan(this,'leads')" style="border-color:rgba(96,165,250,.25);">
               <input type="radio" name="plan" value="leads"/>
               <div class="radio-opt-title" style="color:#60A5FA;">📋 Just Leads — $5/mo</div>
               <div class="radio-opt-desc">Profile visibility · AI recommended · No booking system · Zero fees</div>
+=======
+              <div class="radio-opt-desc">Basic listing · Standard visibility · 5 portfolio images</div>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
             </div>
             <div class="radio-opt" onclick="selectPlan(this,'pro')">
               <input type="radio" name="plan" value="pro"/>
               <div class="radio-opt-title">⚡ Pro — $19/mo</div>
+<<<<<<< HEAD
               <div class="radio-opt-desc">Top ranking · Verified badge · 25 images · Analytics · 10% fee</div>
+=======
+              <div class="radio-opt-desc">Top ranking · Verified badge · 25 images · Analytics · Lower fees</div>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
             </div>
           </div>
 
@@ -1386,7 +1398,11 @@ async function handleLogin() {
 
   showToast('✅ Welcome back, ' + (profile?.username || email.split('@')[0]).split(' ')[0] + '!');
   setTimeout(() => {
+<<<<<<< HEAD
     window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
+=======
+    window.location.replace(role === 'contractor' ? './contractor-dashboard.html' : './customer-dashboard.html');
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   }, 900);
 }
 
@@ -1416,7 +1432,11 @@ async function handleCustomerSignup() {
     password: pw,
     options: {
       data: { display_name: name, role: 'customer' },
+<<<<<<< HEAD
       emailRedirectTo: window.location.origin + '/auth-callback.html',
+=======
+      emailRedirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html',
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     }
   });
 
@@ -1445,7 +1465,11 @@ async function handleCustomerSignup() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     showToast('🎉 Account created! Welcome to Tradease!');
+<<<<<<< HEAD
     setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 300);
+=======
+    setTimeout(() => { window.location.replace('./customer-dashboard.html'); }, 300);
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   } else {
     // Email confirmation required — show screen
     goScreen('screen-customer-success');
@@ -1561,7 +1585,11 @@ async function handleContractorSignup() {
     password: pw,
     options: {
       data: { display_name: companyName, role: 'contractor' },
+<<<<<<< HEAD
       emailRedirectTo: window.location.origin + '/auth-callback.html',
+=======
+      emailRedirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html',
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     }
   });
 
@@ -1627,7 +1655,11 @@ async function handleContractorSignup() {
 
   showToast('🎉 Welcome to Tradease, ' + fn + '!');
   // Always redirect regardless of any DOM errors above
+<<<<<<< HEAD
   setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 500);
+=======
+  setTimeout(() => { window.location.replace('./contractor-dashboard.html'); }, 500);
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 async function launchDashboard() {
@@ -1721,7 +1753,11 @@ async function resendConfirmation() {
     type: 'signup',
     email,
     options: {
+<<<<<<< HEAD
       emailRedirectTo: window.location.origin + '/auth-callback.html',
+=======
+      emailRedirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html',
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     }
   });
   if (error) { showToast('❌ ' + error.message); return; }
@@ -1733,7 +1769,11 @@ async function resendConfirmation() {
 async function signInWithGoogle() {
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'google',
+<<<<<<< HEAD
     options: { redirectTo: window.location.origin + '/auth-callback.html' }
+=======
+    options: { redirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html' }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   });
   if (error) showToast('❌ Google sign-in failed: ' + error.message);
 }
@@ -1742,7 +1782,11 @@ async function signInWithGoogle() {
 async function signInWithGitHub() {
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'github',
+<<<<<<< HEAD
     options: { redirectTo: window.location.origin + '/auth-callback.html' }
+=======
+    options: { redirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html' }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   });
   if (error) showToast('❌ GitHub sign-in failed: ' + error.message);
 }
@@ -1753,7 +1797,11 @@ async function signInWithOAuthContractor(provider) {
   sessionStorage.setItem('oauth_role', 'contractor');
   const { error } = await sb.auth.signInWithOAuth({
     provider,
+<<<<<<< HEAD
     options: { redirectTo: window.location.origin + '/auth-callback.html?role=contractor' }
+=======
+    options: { redirectTo: 'https://stirring-begonia-2563c8.netlify.app/auth-callback.html?role=contractor' }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   });
   if (error) showToast('❌ ' + provider + ' sign-in failed: ' + error.message);
 }
@@ -1791,7 +1839,11 @@ async function checkExistingSession() {
     // DB query failed — use metadata role as fallback
   }
 
+<<<<<<< HEAD
   window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
+=======
+  window.location.replace(role === 'contractor' ? './contractor-dashboard.html' : './customer-dashboard.html');
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 // ═══════════════════════════════════════════
@@ -1800,7 +1852,11 @@ async function checkExistingSession() {
 async function signOut() {
   await sb.auth.signOut();
   sessionStorage.setItem('auth_intentional', '1');
+<<<<<<< HEAD
   window.location.replace('/tradease-auth.html');
+=======
+  window.location.replace('./tradease-auth.html');
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 // ═══════════════════════════════════════════

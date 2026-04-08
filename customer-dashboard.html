@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
 <title>Tradease – Book Trusted Local Contractors</title>
+=======
+<title>Tradease — My Dashboard</title>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -241,13 +245,20 @@ button{cursor:pointer;border:none;font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
+<<<<<<< HEAD
       <img class="logo-img" src="/tradease-logo.png" alt="Tradease"/>
+=======
+      <img class="logo-img" src="./tradease-logo.png" alt="Tradease"/>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="logo-text">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="topbar-nav">
       <span class="tnav" id="tab-d" onclick="showView('d')">Dashboard</span>
       <span class="tnav" id="tab-b" onclick="showView('b')">My Bookings</span>
+<<<<<<< HEAD
       <span class="tnav" id="tab-p" onclick="showView('p')">My Profile</span>
+=======
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="tnav" id="tab-f" onclick="findContractors()">Find Contractors</span>
     </div>
     <div class="topbar-right">
@@ -458,13 +469,21 @@ const COLS=['linear-gradient(135deg,#FF6B2B,#E05520)','linear-gradient(135deg,#3
 let user=null,prof=null,bkgs=[],activeC=null;
 
 // ── VIEWS ──
+<<<<<<< HEAD
 const TABS={d:'tab-d',b:'tab-b',p:'tab-p'};
+=======
+const TABS={d:'tab-d',b:'tab-b',p:null};
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 function showView(v){
   ['d','b','p'].forEach(x=>{
     document.getElementById('view-'+x).classList.remove('active');
     if(TABS[x])document.getElementById(TABS[x])?.classList.remove('active');
   });
+<<<<<<< HEAD
   document.getElementById('view-'+v)?.classList.add('active');
+=======
+  document.getElementById('view-'+v).classList.add('active');
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   if(TABS[v])document.getElementById(TABS[v])?.classList.add('active');
   document.getElementById('nav-av').classList.toggle('on',v==='p');
   window.scrollTo(0,0);
@@ -477,7 +496,11 @@ async function init(){
   const{data:{session},error:sessionErr}=await sb.auth.getSession();
 
   if(sessionErr || !session){
+<<<<<<< HEAD
     if(!_redirecting){ _redirecting=true; window.location.replace('/tradease-auth.html'); }
+=======
+    if(!_redirecting){ _redirecting=true; window.location.replace('./tradease-auth.html'); }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -503,7 +526,11 @@ async function init(){
 
   // Role check — contractors go to their dashboard
   if(prof?.role === 'contractor'){
+<<<<<<< HEAD
     if(!_redirecting){ _redirecting=true; window.location.replace('/contractor-dashboard.html'); }
+=======
+    if(!_redirecting){ _redirecting=true; window.location.replace('./contractor-dashboard.html'); }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -553,7 +580,11 @@ function fillUI(){
 
 // ── CONTRACTORS ──
 async function loadContractors(){
+<<<<<<< HEAD
   const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating,plan,accepts_bookings').order('rating',{ascending:false}).limit(6);
+=======
+  const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating').order('rating',{ascending:false}).limit(6);
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   const isLive = data && data.length > 0;
   const list = isLive ? data.map((c,i)=>({
     id:c.id, name:c.company_name,
@@ -562,6 +593,7 @@ async function loadContractors(){
     about:(c.description||'Professional contractor serving New York.').substring(0,80)+'…',
     col:COLS[i%COLS.length],
     sample:false,
+<<<<<<< HEAD
     plan:c.plan||'free',
     acceptsBookings: c.accepts_bookings !== false && c.plan !== 'leads',
   })) : fallback();
@@ -582,14 +614,30 @@ async function loadContractors(){
         <div class="cc-av" style="background:${c.col};">${c.ini}</div>
         <div>
           <div class="cc-name">${c.name}${sampleBadge}${leadsBadge}</div>
+=======
+  })) : fallback();
+
+  document.getElementById('cg').innerHTML = list.map(c=>`
+    <div class="cc">
+      <div class="cc-top">
+        <div class="cc-av" style="background:${c.col};">${c.ini}</div>
+        <div>
+          <div class="cc-name">${c.name}${c.sample?` <span style="font-size:9px;background:rgba(255,107,43,.12);color:var(--orange);border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;">Sample</span>`:''}
+          </div>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
           <div class="cc-trade">${c.trade||'Contractor'}</div>
         </div>
       </div>
       <div class="cc-loc">📍 ${c.loc}</div>
       <div class="cc-about">${c.about}</div>
+<<<<<<< HEAD
       ${btn}
     </div>`;
   }).join('');
+=======
+      <button class="cc-btn" onclick='openBook(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Book Now</button>
+    </div>`).join('');
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 // ── BOOKINGS ──
@@ -773,7 +821,11 @@ async function autoFindNewContractor(booking) {
   });
   if(!candidates||!candidates.length){
     showToast('😔 No other contractors available right now. Please search manually.');
+<<<<<<< HEAD
     setTimeout(()=>{window.location.href='/';},2200);
+=======
+    setTimeout(()=>{window.location.href='./tradease.html';},2200);
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
   const next=candidates[0];
@@ -988,9 +1040,16 @@ async function sendReset(){
 
 // ── SEARCH / SIGN OUT / NAV ──
 function runSearch(){
+<<<<<<< HEAD
   const q = document.getElementById('srch').value.trim();
   // Pass search query via URL hash so tradease.html can pick it up
   window.location.href = q ? '/?q=' + encodeURIComponent(q) : '/';
+=======
+  const q=document.getElementById('srch').value.trim();
+  if(q) localStorage.setItem('tradease_search',q);
+  localStorage.setItem('tradease_goto','search');
+  window.location.href='./tradease.html';
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 // ── NOTIFICATIONS ──────────────────────────────────────────
 let notifications = [];
@@ -1236,10 +1295,17 @@ async function submitRating() {
 function findContractors(){
   // Clear any stale nav flags so tradease.html always lands on home
   localStorage.removeItem('tradease_goto');
+<<<<<<< HEAD
   window.location.href='/';
 }
 async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('/tradease-auth.html');}
 function goHome(){window.location.href='/';}
+=======
+  window.location.href='./tradease.html';
+}
+async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('./tradease-auth.html');}
+function goHome(){window.location.href='./tradease.html';}
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 
 // ── FALLBACK CONTRACTORS ──
 function fallback(){return[

@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
 <title>Tradease – Book Trusted Local Contractors</title>
+=======
+<title>Tradease — Contractor Dashboard</title>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -375,7 +379,11 @@ input,select,textarea{font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
+<<<<<<< HEAD
       <img class="logo-img" src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+=======
+      <img class="logo-img" src="./tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="tnav-wrap">
@@ -946,7 +954,11 @@ let _redirecting = false; // guard against double-redirect
 async function init() {
   const { data:{ session }, error: sessionErr } = await sb.auth.getSession();
   if (sessionErr || !session) {
+<<<<<<< HEAD
     if (!_redirecting) { _redirecting = true; window.location.replace('/tradease-auth.html'); }
+=======
+    if (!_redirecting) { _redirecting = true; window.location.replace('./tradease-auth.html'); }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
   user = session.user;
@@ -956,7 +968,11 @@ async function init() {
 
   // If the row exists and they're a customer, redirect them
   if (ur?.role === 'customer') {
+<<<<<<< HEAD
     if (!_redirecting) { _redirecting = true; window.location.replace('/customer-dashboard.html'); }
+=======
+    if (!_redirecting) { _redirecting = true; window.location.replace('./customer-dashboard.html'); }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -1002,6 +1018,7 @@ function fillUI() {
   const p = cProf;
   const name = p.company_name || 'Your Business';
   const ini = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+<<<<<<< HEAD
   const isPro   = p.plan === 'pro';
   const isLeads = p.plan === 'leads';
   const acceptsBookings = !isLeads; // leads plan = no booking system
@@ -1012,12 +1029,28 @@ function fillUI() {
   else if (isLeads) { planBdg.textContent = '📋 Just Leads'; planBdg.className = 'bdg'; planBdg.style.background='rgba(96,165,250,.15)'; planBdg.style.color='#60A5FA'; }
   else              { planBdg.textContent = 'Free Plan';     planBdg.className = 'bdg bdg-gy'; }
 
+=======
+  const isPro = p.plan === 'pro';
+
+  // Topbar + dashboard header
+  document.getElementById('nav-av').textContent = ini;
+  document.getElementById('ph-av').textContent = ini;
+  document.getElementById('ph-name').textContent = name;
+  document.getElementById('ph-trade').textContent = p.trade_type || 'Contractor';
+  document.getElementById('ph-loc').textContent = p.location ? '📍 '+p.location : '';
+
+  // Plan badges
+  const planBdg = document.getElementById('plan-bdg');
+  planBdg.textContent = isPro ? '⚡ Pro' : 'Free Plan';
+  planBdg.className = isPro ? 'bdg bdg-or' : 'bdg bdg-gy';
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   if (isPro) {
     document.getElementById('pro-btn').textContent = '✓ Pro Active';
     document.getElementById('pro-btn').classList.add('active');
     document.getElementById('up-banner').style.display = 'none';
     document.getElementById('dash-up-btn').textContent = '✓ Pro Active';
     document.getElementById('dash-up-btn').onclick = () => showToast('✅ You are on Tradease Pro!');
+<<<<<<< HEAD
   } else if (isLeads) {
     document.getElementById('pro-btn').textContent = '📋 Just Leads';
     document.getElementById('up-banner').style.display = 'none';
@@ -1029,6 +1062,11 @@ function fillUI() {
   const bkTab = document.getElementById('t-b');
   if (bkTab) bkTab.style.display = acceptsBookings ? '' : 'none';
 
+=======
+  }
+  if (p.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
+
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   // Stats
   document.getElementById('s-v').textContent = p.profile_views || 0;
   document.getElementById('s-b').textContent = p.total_bookings || 0;
@@ -1054,7 +1092,11 @@ function fillUI() {
   document.getElementById('si-lo').textContent = p.location || '—';
   document.getElementById('si-ex').textContent = p.experience || '—';
   document.getElementById('si-pr').textContent = p.hourly_rate ? '$'+p.hourly_rate+'/hr' : '—';
+<<<<<<< HEAD
   document.getElementById('si-pl').textContent = isPro ? 'Tradease Pro ⚡' : isLeads ? 'Just Leads 📋' : 'Free';
+=======
+  document.getElementById('si-pl').textContent = isPro ? 'Tradease Pro ⚡' : 'Free';
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 
   // Banner + PFP
   applyBanner(p.banner_url || '');
@@ -1080,7 +1122,11 @@ function fillUI() {
   prefillModal(p);
 
   // Limit label
+<<<<<<< HEAD
   const portLim = isPro ? 25 : isLeads ? 10 : 5; document.getElementById('port-limit').textContent = portLim;
+=======
+  document.getElementById('port-limit').textContent = isPro ? '25' : '5';
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 function buildCompletion(p) {
@@ -1174,7 +1220,11 @@ function renderPortfolioGrid(containerId, showDelete) {
   const el = document.getElementById(containerId);
   if (!el) return;
   const isPro = cProf?.plan === 'pro';
+<<<<<<< HEAD
   const limit = isPro ? 25 : (cProf?.plan === 'leads' ? 10 : 5);
+=======
+  const limit = isPro ? 25 : 5;
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   let html = portfolio.map((url, i) => `
     <div class="port-img">
       <img src="${url}" alt="Portfolio" loading="lazy" onerror="this.parentElement.style.display='none'"/>
@@ -1201,7 +1251,11 @@ function renderModalPortfolio() {
 
 async function handlePortfolioUpload(input) {
   const isPro = cProf?.plan === 'pro';
+<<<<<<< HEAD
   const limit = isPro ? 25 : (cProf?.plan === 'leads' ? 10 : 5);
+=======
+  const limit = isPro ? 25 : 5;
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   const files = Array.from(input.files).slice(0, limit - portfolio.length);
   if (!files.length) { showToast(`⚠️ Portfolio limit is ${limit} images.`); return; }
 
@@ -1726,7 +1780,11 @@ async function sendBookingEmail(type, booking) {
 }
 
 // ── SIGN OUT / NAV ─────────────────────────────────────────
+<<<<<<< HEAD
 async function signOut() { await sb.auth.signOut(); sessionStorage.setItem('auth_intentional','1'); window.location.replace('/tradease-auth.html'); }
+=======
+async function signOut() { await sb.auth.signOut(); sessionStorage.setItem('auth_intentional','1'); window.location.replace('./tradease-auth.html'); }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 // ── ONLINE / OFFLINE TOGGLE ───────────────────────────────────
 let _isOnline   = false;
 let _trackingOn = false;
@@ -2141,8 +2199,13 @@ async function deletePriceEntry(idx) {
 initOnlineStatus();
 subscribeToJobOffers();
 
+<<<<<<< HEAD
 function goHome() { window.location.href='/'; }
 function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='/'; }
+=======
+function goHome() { window.location.href='./tradease.html'; }
+function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='./tradease.html'; }
+>>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 
 // ── TOAST ──────────────────────────────────────────────────
 let _tt;

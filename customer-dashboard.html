@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tradease — My Dashboard</title>
+<title>Tradease – Book Trusted Local Contractors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -241,12 +241,13 @@ button{cursor:pointer;border:none;font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-      <img class="logo-img" src="./tradease-logo.png" alt="Tradease"/>
+      <img class="logo-img" src="/tradease-logo.png" alt="Tradease"/>
       <span class="logo-text">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="topbar-nav">
       <span class="tnav" id="tab-d" onclick="showView('d')">Dashboard</span>
       <span class="tnav" id="tab-b" onclick="showView('b')">My Bookings</span>
+      <span class="tnav" id="tab-p" onclick="showView('p')">My Profile</span>
       <span class="tnav" id="tab-f" onclick="findContractors()">Find Contractors</span>
     </div>
     <div class="topbar-right">
@@ -457,13 +458,13 @@ const COLS=['linear-gradient(135deg,#FF6B2B,#E05520)','linear-gradient(135deg,#3
 let user=null,prof=null,bkgs=[],activeC=null;
 
 // ── VIEWS ──
-const TABS={d:'tab-d',b:'tab-b',p:null};
+const TABS={d:'tab-d',b:'tab-b',p:'tab-p'};
 function showView(v){
   ['d','b','p'].forEach(x=>{
     document.getElementById('view-'+x).classList.remove('active');
     if(TABS[x])document.getElementById(TABS[x])?.classList.remove('active');
   });
-  document.getElementById('view-'+v).classList.add('active');
+  document.getElementById('view-'+v)?.classList.add('active');
   if(TABS[v])document.getElementById(TABS[v])?.classList.add('active');
   document.getElementById('nav-av').classList.toggle('on',v==='p');
   window.scrollTo(0,0);
@@ -476,7 +477,7 @@ async function init(){
   const{data:{session},error:sessionErr}=await sb.auth.getSession();
 
   if(sessionErr || !session){
-    if(!_redirecting){ _redirecting=true; window.location.replace('./tradease-auth.html'); }
+    if(!_redirecting){ _redirecting=true; window.location.replace('/tradease-auth.html'); }
     return;
   }
 
@@ -502,7 +503,7 @@ async function init(){
 
   // Role check — contractors go to their dashboard
   if(prof?.role === 'contractor'){
-    if(!_redirecting){ _redirecting=true; window.location.replace('./contractor-dashboard.html'); }
+    if(!_redirecting){ _redirecting=true; window.location.replace('/contractor-dashboard.html'); }
     return;
   }
 
@@ -552,7 +553,7 @@ function fillUI(){
 
 // ── CONTRACTORS ──
 async function loadContractors(){
-  const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating').order('rating',{ascending:false}).limit(6);
+  const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating,plan,accepts_bookings').order('rating',{ascending:false}).limit(6);
   const isLive = data && data.length > 0;
   const list = isLive ? data.map((c,i)=>({
     id:c.id, name:c.company_name,
@@ -561,22 +562,34 @@ async function loadContractors(){
     about:(c.description||'Professional contractor serving New York.').substring(0,80)+'…',
     col:COLS[i%COLS.length],
     sample:false,
+    plan:c.plan||'free',
+    acceptsBookings: c.accepts_bookings !== false && c.plan !== 'leads',
   })) : fallback();
 
-  document.getElementById('cg').innerHTML = list.map(c=>`
-    <div class="cc">
+  document.getElementById('cg').innerHTML = list.map(c=>{
+    const sampleBadge = c.sample
+      ? ` <span style="font-size:9px;background:rgba(255,107,43,.12);color:var(--orange);border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;">Sample</span>`
+      : '';
+    const leadsBadge = c.plan === 'leads'
+      ? ` <span style="font-size:9px;background:rgba(96,165,250,.12);color:#60A5FA;border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle;">📋 Leads</span>`
+      : '';
+    const isLeads = c.plan === 'leads' || !c.acceptsBookings;
+    const btn = isLeads
+      ? `<button class="cc-btn" style="background:rgba(96,165,250,.15);color:#60A5FA;border:1px solid rgba(96,165,250,.3);" onclick='window.location.href="/"'>View Profile</button>`
+      : `<button class="cc-btn" onclick='openBook(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Book Now</button>`;
+    return `<div class="cc" style="${isLeads ? 'border-color:rgba(96,165,250,.15);' : ''}">
       <div class="cc-top">
         <div class="cc-av" style="background:${c.col};">${c.ini}</div>
         <div>
-          <div class="cc-name">${c.name}${c.sample?` <span style="font-size:9px;background:rgba(255,107,43,.12);color:var(--orange);border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;">Sample</span>`:''}
-          </div>
+          <div class="cc-name">${c.name}${sampleBadge}${leadsBadge}</div>
           <div class="cc-trade">${c.trade||'Contractor'}</div>
         </div>
       </div>
       <div class="cc-loc">📍 ${c.loc}</div>
       <div class="cc-about">${c.about}</div>
-      <button class="cc-btn" onclick='openBook(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Book Now</button>
-    </div>`).join('');
+      ${btn}
+    </div>`;
+  }).join('');
 }
 
 // ── BOOKINGS ──
@@ -760,7 +773,7 @@ async function autoFindNewContractor(booking) {
   });
   if(!candidates||!candidates.length){
     showToast('😔 No other contractors available right now. Please search manually.');
-    setTimeout(()=>{window.location.href='./tradease.html';},2200);
+    setTimeout(()=>{window.location.href='/';},2200);
     return;
   }
   const next=candidates[0];
@@ -975,10 +988,9 @@ async function sendReset(){
 
 // ── SEARCH / SIGN OUT / NAV ──
 function runSearch(){
-  const q=document.getElementById('srch').value.trim();
-  if(q) localStorage.setItem('tradease_search',q);
-  localStorage.setItem('tradease_goto','search');
-  window.location.href='./tradease.html';
+  const q = document.getElementById('srch').value.trim();
+  // Pass search query via URL hash so tradease.html can pick it up
+  window.location.href = q ? '/?q=' + encodeURIComponent(q) : '/';
 }
 // ── NOTIFICATIONS ──────────────────────────────────────────
 let notifications = [];
@@ -1224,10 +1236,10 @@ async function submitRating() {
 function findContractors(){
   // Clear any stale nav flags so tradease.html always lands on home
   localStorage.removeItem('tradease_goto');
-  window.location.href='./tradease.html';
+  window.location.href='/';
 }
-async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('./tradease-auth.html');}
-function goHome(){window.location.href='./tradease.html';}
+async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('/tradease-auth.html');}
+function goHome(){window.location.href='/';}
 
 // ── FALLBACK CONTRACTORS ──
 function fallback(){return[

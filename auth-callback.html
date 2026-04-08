@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tradease — Confirming your account…</title>
+<title>Tradease – Book Trusted Local Contractors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -81,7 +81,7 @@
 <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
 
 <div class="logo" onclick="window.location.href='/'" style="cursor:pointer;transition:opacity .12s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-  <img src="./tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+  <img src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
   Tradease<span class="logo-dot"></span>
 </div>
 
@@ -115,7 +115,7 @@
     <div class="icon">❌</div>
     <h1>Something went wrong</h1>
     <p id="error-msg">The confirmation link may have expired or already been used. Please try signing up again or request a new link.</p>
-    <a href="./tradease-auth.html" class="btn btn-or">Go to Login →</a><br/>
+    <a href="/tradease-auth.html" class="btn btn-or">Go to Login →</a><br/>
     <a href="/" class="btn btn-gy">Back to Homepage</a>
   </div>
 
@@ -124,7 +124,7 @@
     <div class="icon">🔗</div>
     <h1>Invalid Link</h1>
     <p>This confirmation link is invalid or has expired. Please sign up again to get a new one.</p>
-    <a href="./tradease-auth.html" class="btn btn-or">Sign Up Again →</a>
+    <a href="/tradease-auth.html" class="btn btn-or">Sign Up Again →</a>
   </div>
 
 </div>
@@ -271,7 +271,7 @@ async function redirectToDashboard(user) {
   }
 
   setTimeout(() => {
-    window.location.replace(role === 'contractor' ? './contractor-dashboard.html' : './customer-dashboard.html');
+    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
   }, 1200);
 }
 

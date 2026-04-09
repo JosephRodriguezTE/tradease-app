@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<<<<<<< HEAD
 <title>Tradease – Book Trusted Local Contractors</title>
-=======
-<title>Tradease — Contractor Dashboard</title>
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -282,6 +278,25 @@ input,select,textarea{font-family:var(--body);}
 .port-modal-thumb img{width:100%;height:100%;object-fit:cover;}
 .port-modal-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.85);color:white;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
 
+/* ── CHAT ── */
+.c-conv-item{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.c-conv-item:hover,.c-conv-item.active{background:var(--bg3);}
+.c-conv-av{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;font-weight:900;color:white;flex-shrink:0;}
+.c-conv-info{flex:1;min-width:0;}
+.c-conv-name{font-size:14px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c-conv-preview{font-size:12px;color:var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.c-conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.c-conv-time{font-size:11px;color:var(--g3);}
+.c-pending-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;}
+.c-msg-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.55;word-break:break-word;}
+.c-msg-mine{background:var(--orange);color:white;align-self:flex-end;border-bottom-right-radius:4px;}
+.c-msg-theirs{background:var(--bg3);color:var(--g1);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border);}
+.c-msg-time{font-size:11px;color:var(--g3);margin-top:2px;}
+.c-msg-time.mine{text-align:right;}
+.c-msg-time.theirs{text-align:left;}
+.c-msg-wrap{display:flex;flex-direction:column;}
+.c-msg-wrap.mine{align-items:flex-end;}
+.c-msg-wrap.theirs{align-items:flex-start;}
 /* ── TOAST ── */
 .toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg3);color:var(--g1);border:1px solid var(--border);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:var(--sh);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:300px;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
@@ -379,16 +394,13 @@ input,select,textarea{font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-<<<<<<< HEAD
       <img class="logo-img" src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
-=======
-      <img class="logo-img" src="./tradease-logo.png" alt="" onerror="this.style.display='none'"/>
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="tnav-wrap">
       <span class="tnav" id="t-d" onclick="showV('d')">Dashboard</span>
       <span class="tnav" id="t-b" onclick="showV('b')">Bookings</span>
+      <span class="tnav" id="t-msgs" onclick="showV('msgs')">Messages <span id="c-msg-badge" style="display:none;background:var(--orange);color:white;font-size:10px;font-weight:800;padding:1px 6px;border-radius:50px;margin-left:3px;vertical-align:middle;">0</span></span>
       <span class="tnav" id="t-r" onclick="showV('r')">Reviews</span>
       <span class="tnav" id="t-pricing" onclick="showV('pricing')">Pricing</span>
       <span class="tnav" id="t-pub" onclick="showV('pub')">My Profile</span>
@@ -396,7 +408,7 @@ input,select,textarea{font-family:var(--body);}
       <span class="tnav" id="t-f" onclick="findContractors()">View on Tradease</span>
     </div>
     <div class="tbr">
-      <button class="pro-pill" id="pro-btn" onclick="showToast('💳 Stripe checkout coming soon!')">⚡ Upgrade to Pro</button>
+      <button class="pro-pill" id="pro-btn" onclick="startCheckout('pro')">⚡ Upgrade to Pro</button>
       <div class="notif-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
         🔔<span class="notif-badge" id="notif-badge"></span>
       </div>
@@ -555,7 +567,7 @@ input,select,textarea{font-family:var(--body);}
         <div class="ph-acts">
           <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile</button>
           <button class="btn-gy" onclick="showV('pub')">👁️ Preview Listing</button>
-          <button class="btn-gy" id="dash-up-btn" onclick="showToast('💳 Stripe checkout coming soon!')">⚡ Upgrade to Pro</button>
+          <button class="btn-gy" id="dash-up-btn" onclick="startCheckout('pro')">⚡ Upgrade to Pro</button>
         </div>
       </div>
 
@@ -566,7 +578,7 @@ input,select,textarea{font-family:var(--body);}
           <h4>Unlock Tradease Pro</h4>
           <p>Top search placement · verified badge · more leads · analytics — only $19/month.</p>
         </div>
-        <button class="up-ban-btn" onclick="showToast('💳 Stripe checkout coming soon!')">Upgrade Now →</button>
+        <button class="up-ban-btn" onclick="startCheckout('pro')">Upgrade Now →</button>
       </div>
 
       <!-- Stats -->
@@ -774,6 +786,25 @@ input,select,textarea{font-family:var(--body);}
       <div class="sh" style="margin-top:8px;"><div class="st">Portfolio</div><span class="sa" onclick="openEditModal('portfolio')">Manage →</span></div>
       <div class="port-grid" id="settings-port-grid" style="margin-bottom:24px;"></div>
 
+      <div class="acct-card" style="margin-bottom:12px;">
+        <div class="al">Subscription</div>
+        <div class="ar" id="sub-row-leads" style="display:none;">
+          <div><div class="ar-t">📋 Just Leads</div><div class="ar-s">$5/month · Profile visibility · No booking fees</div></div>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="openBillingPortal()">Manage →</button>
+        </div>
+        <div class="ar" id="sub-row-pro" style="display:none;">
+          <div><div class="ar-t">⚡ Pro Contractor</div><div class="ar-s">$19/month · Priority ranking · Verified badge</div></div>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="openBillingPortal()">Manage →</button>
+        </div>
+        <div class="ar" id="sub-row-free">
+          <div><div class="ar-t">Free Plan</div><div class="ar-s">Upgrade to get more visibility and leads</div></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-gy" style="padding:8px 14px;font-size:12px;background:rgba(96,165,250,.12);color:#60A5FA;border-color:rgba(96,165,250,.3);" onclick="startCheckout('leads')">📋 Just Leads $5</button>
+            <button class="btn-or" style="padding:8px 14px;font-size:12px;" onclick="startCheckout('pro')">⚡ Pro $19</button>
+          </div>
+        </div>
+      </div>
+
       <div class="acct-card">
         <div class="al">Account</div>
         <div class="ar">
@@ -791,6 +822,61 @@ input,select,textarea{font-family:var(--body);}
 
 </div>
 
+  <!-- ═══ VIEW: MESSAGES ═══ -->
+  <div class="view" id="view-msgs">
+    <div class="pg" style="display:grid;grid-template-columns:300px 1fr;gap:0;height:calc(100vh - 64px);max-width:100%;padding:0;">
+
+      <!-- Conversation list -->
+      <div style="background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+        <div style="padding:20px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+          <h2 style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;">Messages</h2>
+          <p style="font-size:12px;color:var(--g3);margin-top:3px;">Accept requests to chat with customers</p>
+        </div>
+        <div id="c-conv-list" style="flex:1;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Active chat -->
+      <div style="display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Empty state -->
+        <div id="c-chat-empty" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--g3);">
+          <div style="font-size:40px;">💬</div>
+          <div style="font-size:14px;font-weight:600;">No conversation selected</div>
+          <div style="font-size:13px;">Accept a message request to start chatting</div>
+        </div>
+
+        <!-- Chat header -->
+        <div id="c-chat-header" style="display:none;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;gap:12px;flex-shrink:0;">
+          <div id="c-chat-av" style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;font-weight:900;color:white;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div id="c-chat-name" style="font-weight:700;font-size:15px;color:var(--white);"></div>
+            <div id="c-chat-status" style="font-size:12px;color:var(--g3);margin-top:1px;"></div>
+          </div>
+          <div id="c-accept-row" style="display:none;gap:8px;">
+            <button onclick="respondToRequest('accepted')" style="padding:8px 16px;background:var(--green);color:white;border:none;border-radius:8px;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;">✓ Accept</button>
+            <button onclick="respondToRequest('declined')" style="padding:8px 16px;background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:8px;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;">✕ Decline</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="c-chat-msgs" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;"></div>
+
+        <!-- Input -->
+        <div id="c-chat-input-row" style="display:none;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;">
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <textarea id="c-chat-input" placeholder="Type a message…" rows="1"
+              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--g1);font-size:14px;resize:none;outline:none;font-family:var(--body);max-height:100px;line-height:1.5;transition:border-color .12s;"
+              onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cSendMessage();}"></textarea>
+            <button onclick="cSendMessage()" style="padding:10px 18px;background:var(--orange);color:white;border:none;border-radius:12px;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;flex-shrink:0;" onmouseover="this.style.background='var(--orange-dk)'" onmouseout="this.style.background='var(--orange)'">Send</button>
+          </div>
+          <div style="font-size:11px;color:var(--g3);margin-top:6px;">Links are not allowed · Press Enter to send</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ VIEW: PRICING ═══ -->
   <div class="view" id="view-pricing">
     <div class="pg">
@@ -805,7 +891,7 @@ input,select,textarea{font-family:var(--body);}
       <!-- Plan gate banner -->
       <div class="plan-gate" id="pricing-plan-banner" style="display:none;">
         <span style="font-size:20px;">⚡</span>
-        <div><strong>Free plan:</strong> List up to 5 services. <a onclick="showToast('💳 Pro upgrade coming soon!')" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Upgrade to Pro</a> to list unlimited services with priority ranking.</div>
+        <div><strong>Free plan:</strong> List up to 5 services. <a onclick="startCheckout('pro')" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Upgrade to Pro</a> to list unlimited services with priority ranking.</div>
       </div>
 
       <div id="pricing-services-list">
@@ -933,19 +1019,22 @@ const sb = supabase.createClient(SB_URL, SB_KEY);
 
 let user = null, cProf = null, bkgs = [], revs = [], portfolio = [], avData = [];
 let pricingServices = []; // [{name, base, max, type, desc}]
-const TABS  = { d:'t-d', b:'t-b', r:'t-r', pricing:'t-pricing', pub:'t-pub', av:'t-av', settings:null };
-const VIEWS = ['d','b','r','pricing','pub','av','settings'];
+const TABS  = { d:'t-d', b:'t-b', msgs:'t-msgs', r:'t-r', pricing:'t-pricing', pub:'t-pub', av:'t-av', settings:null };
+const VIEWS = ['d','b','msgs','r','pricing','pub','av','settings'];
 
 // ── VIEW ROUTER ────────────────────────────────────────────
 function showV(v) {
   VIEWS.forEach(x => {
-    document.getElementById('view-'+x).classList.remove('active');
+    const el = document.getElementById('view-'+x);
+    if (el) el.classList.remove('active');
     if(TABS[x]) document.getElementById(TABS[x])?.classList.remove('active');
   });
-  document.getElementById('view-'+v).classList.add('active');
+  const target = document.getElementById('view-'+v);
+  if (target) target.classList.add('active');
   if(TABS[v]) document.getElementById(TABS[v])?.classList.add('active');
   document.getElementById('nav-av').classList.toggle('on', v==='settings');
   window.scrollTo(0,0);
+  if (v === 'msgs') loadCConversations();
 }
 
 // ── INIT ───────────────────────────────────────────────────
@@ -954,11 +1043,7 @@ let _redirecting = false; // guard against double-redirect
 async function init() {
   const { data:{ session }, error: sessionErr } = await sb.auth.getSession();
   if (sessionErr || !session) {
-<<<<<<< HEAD
     if (!_redirecting) { _redirecting = true; window.location.replace('/tradease-auth.html'); }
-=======
-    if (!_redirecting) { _redirecting = true; window.location.replace('./tradease-auth.html'); }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
   user = session.user;
@@ -968,11 +1053,7 @@ async function init() {
 
   // If the row exists and they're a customer, redirect them
   if (ur?.role === 'customer') {
-<<<<<<< HEAD
     if (!_redirecting) { _redirecting = true; window.location.replace('/customer-dashboard.html'); }
-=======
-    if (!_redirecting) { _redirecting = true; window.location.replace('./customer-dashboard.html'); }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -1010,6 +1091,7 @@ async function init() {
   await Promise.all([loadBookings(), loadReviews(), loadAvailability(), loadNotifications()]);
   subscribeToBookings();
   subscribeToNotifications();
+  checkNewMessageRequests();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -1018,7 +1100,6 @@ function fillUI() {
   const p = cProf;
   const name = p.company_name || 'Your Business';
   const ini = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-<<<<<<< HEAD
   const isPro   = p.plan === 'pro';
   const isLeads = p.plan === 'leads';
   const acceptsBookings = !isLeads; // leads plan = no booking system
@@ -1029,32 +1110,22 @@ function fillUI() {
   else if (isLeads) { planBdg.textContent = '📋 Just Leads'; planBdg.className = 'bdg'; planBdg.style.background='rgba(96,165,250,.15)'; planBdg.style.color='#60A5FA'; }
   else              { planBdg.textContent = 'Free Plan';     planBdg.className = 'bdg bdg-gy'; }
 
-=======
-  const isPro = p.plan === 'pro';
-
-  // Topbar + dashboard header
-  document.getElementById('nav-av').textContent = ini;
-  document.getElementById('ph-av').textContent = ini;
-  document.getElementById('ph-name').textContent = name;
-  document.getElementById('ph-trade').textContent = p.trade_type || 'Contractor';
-  document.getElementById('ph-loc').textContent = p.location ? '📍 '+p.location : '';
-
-  // Plan badges
-  const planBdg = document.getElementById('plan-bdg');
-  planBdg.textContent = isPro ? '⚡ Pro' : 'Free Plan';
-  planBdg.className = isPro ? 'bdg bdg-or' : 'bdg bdg-gy';
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   if (isPro) {
     document.getElementById('pro-btn').textContent = '✓ Pro Active';
     document.getElementById('pro-btn').classList.add('active');
+    document.getElementById('pro-btn').onclick = openBillingPortal;
     document.getElementById('up-banner').style.display = 'none';
-    document.getElementById('dash-up-btn').textContent = '✓ Pro Active';
-    document.getElementById('dash-up-btn').onclick = () => showToast('✅ You are on Tradease Pro!');
-<<<<<<< HEAD
+    document.getElementById('dash-up-btn').textContent = '⚙️ Manage Billing';
+    document.getElementById('dash-up-btn').onclick = openBillingPortal;
   } else if (isLeads) {
     document.getElementById('pro-btn').textContent = '📋 Just Leads';
+    document.getElementById('pro-btn').onclick = openBillingPortal;
     document.getElementById('up-banner').style.display = 'none';
     document.getElementById('dash-up-btn').textContent = '⚡ Upgrade to Pro';
+    document.getElementById('dash-up-btn').onclick = () => startCheckout('pro');
+  } else {
+    document.getElementById('pro-btn').onclick = () => startCheckout('pro');
+    document.getElementById('dash-up-btn').onclick = () => startCheckout('pro');
   }
   if (p.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
 
@@ -1062,11 +1133,6 @@ function fillUI() {
   const bkTab = document.getElementById('t-b');
   if (bkTab) bkTab.style.display = acceptsBookings ? '' : 'none';
 
-=======
-  }
-  if (p.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
-
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   // Stats
   document.getElementById('s-v').textContent = p.profile_views || 0;
   document.getElementById('s-b').textContent = p.total_bookings || 0;
@@ -1092,11 +1158,12 @@ function fillUI() {
   document.getElementById('si-lo').textContent = p.location || '—';
   document.getElementById('si-ex').textContent = p.experience || '—';
   document.getElementById('si-pr').textContent = p.hourly_rate ? '$'+p.hourly_rate+'/hr' : '—';
-<<<<<<< HEAD
   document.getElementById('si-pl').textContent = isPro ? 'Tradease Pro ⚡' : isLeads ? 'Just Leads 📋' : 'Free';
-=======
-  document.getElementById('si-pl').textContent = isPro ? 'Tradease Pro ⚡' : 'Free';
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
+
+  // Show correct subscription row in settings
+  document.getElementById('sub-row-free').style.display  = (!isPro && !isLeads) ? 'flex' : 'none';
+  document.getElementById('sub-row-leads').style.display = isLeads ? 'flex' : 'none';
+  document.getElementById('sub-row-pro').style.display   = isPro   ? 'flex' : 'none';
 
   // Banner + PFP
   applyBanner(p.banner_url || '');
@@ -1122,11 +1189,7 @@ function fillUI() {
   prefillModal(p);
 
   // Limit label
-<<<<<<< HEAD
   const portLim = isPro ? 25 : isLeads ? 10 : 5; document.getElementById('port-limit').textContent = portLim;
-=======
-  document.getElementById('port-limit').textContent = isPro ? '25' : '5';
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 function buildCompletion(p) {
@@ -1220,11 +1283,7 @@ function renderPortfolioGrid(containerId, showDelete) {
   const el = document.getElementById(containerId);
   if (!el) return;
   const isPro = cProf?.plan === 'pro';
-<<<<<<< HEAD
   const limit = isPro ? 25 : (cProf?.plan === 'leads' ? 10 : 5);
-=======
-  const limit = isPro ? 25 : 5;
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   let html = portfolio.map((url, i) => `
     <div class="port-img">
       <img src="${url}" alt="Portfolio" loading="lazy" onerror="this.parentElement.style.display='none'"/>
@@ -1251,11 +1310,7 @@ function renderModalPortfolio() {
 
 async function handlePortfolioUpload(input) {
   const isPro = cProf?.plan === 'pro';
-<<<<<<< HEAD
   const limit = isPro ? 25 : (cProf?.plan === 'leads' ? 10 : 5);
-=======
-  const limit = isPro ? 25 : 5;
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   const files = Array.from(input.files).slice(0, limit - portfolio.length);
   if (!files.length) { showToast(`⚠️ Portfolio limit is ${limit} images.`); return; }
 
@@ -1749,8 +1804,24 @@ function subscribeToNotifications() {
       notifications = [payload.new, ...notifications];
       renderNotifications();
       updateNotifBadge();
-      // Also show toast for immediate visibility
       showToast(payload.new.message);
+    })
+    .subscribe();
+
+  // Watch for new message requests
+  sb.channel('contractor-convs')
+    .on('postgres_changes', {
+      event:  'INSERT',
+      schema: 'public',
+      table:  'conversations',
+      filter: `contractor_id=eq.${user.id}`,
+    }, async payload => {
+      showToast('💬 New message request from ' + (payload.new.customer_name || 'a customer') + '!');
+      await checkNewMessageRequests();
+      // Refresh list if Messages view is open
+      if (document.getElementById('view-msgs')?.classList.contains('active')) {
+        loadCConversations();
+      }
     })
     .subscribe();
 }
@@ -1780,11 +1851,7 @@ async function sendBookingEmail(type, booking) {
 }
 
 // ── SIGN OUT / NAV ─────────────────────────────────────────
-<<<<<<< HEAD
 async function signOut() { await sb.auth.signOut(); sessionStorage.setItem('auth_intentional','1'); window.location.replace('/tradease-auth.html'); }
-=======
-async function signOut() { await sb.auth.signOut(); sessionStorage.setItem('auth_intentional','1'); window.location.replace('./tradease-auth.html'); }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 // ── ONLINE / OFFLINE TOGGLE ───────────────────────────────────
 let _isOnline   = false;
 let _trackingOn = false;
@@ -2196,16 +2263,294 @@ async function deletePriceEntry(idx) {
   showToast('🗑️ Service removed.');
 }
 
+// ── STRIPE CHECKOUT ────────────────────────────────────────
+const SUPABASE_FUNCTIONS_URL = SB_URL + '/functions/v1';
+
+async function startCheckout(plan) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { showToast('Please sign in first.'); return; }
+
+  const btn = document.getElementById('dash-up-btn') || document.getElementById('pro-btn');
+  const origText = btn?.textContent;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Loading checkout…'; }
+
+  try {
+    const res = await fetch(SUPABASE_FUNCTIONS_URL + '/create-checkout', {
+      method:  'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + session.access_token,
+      },
+      body: JSON.stringify({
+        plan,
+        success_url: window.location.origin + '/contractor-dashboard.html?plan_success=1',
+        cancel_url:  window.location.origin + '/contractor-dashboard.html',
+      }),
+    });
+
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    window.location.href = url;
+  } catch (e) {
+    showToast('❌ Could not open checkout: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = origText; }
+  }
+}
+
+async function openBillingPortal() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  showToast('⏳ Opening billing portal…');
+  try {
+    const res = await fetch(SUPABASE_FUNCTIONS_URL + '/manage-billing', {
+      method:  'POST',
+      headers: { 'Authorization': 'Bearer ' + session.access_token },
+    });
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    window.location.href = url;
+  } catch (e) {
+    showToast('❌ ' + e.message);
+  }
+}
+
+// Handle return from Stripe checkout
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('plan_success') === '1') {
+    window.history.replaceState({}, '', '/contractor-dashboard.html');
+    setTimeout(() => showToast('🎉 Subscription activated! Your plan is now live.'), 500);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════
+// CONTRACTOR CHAT SYSTEM
+// ══════════════════════════════════════════════════════════
+let cActiveConvId   = null;
+let cActiveConvStatus = null;
+let cChatChannel    = null;
+
+function cHasLink(txt) {
+  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[/\s])/i.test(txt);
+}
+function cSanitize(txt) {
+  return txt.replace(/(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[^\s]*)/gi,'[link removed]').trim();
+}
+function cEsc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Load all conversations for this contractor ────────────
+async function loadCConversations() {
+  const { data } = await sb.from('conversations')
+    .select('*')
+    .eq('contractor_id', user.id)
+    .order('last_message_at', { ascending: false, nullsFirst: false });
+
+  const list = document.getElementById('c-conv-list');
+  if (!data || !data.length) {
+    list.innerHTML = `<div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">No message requests yet.<br>Customers can message you from your profile.</div>`;
+    updateCMsgBadge(0);
+    return;
+  }
+
+  const pending = data.filter(c => c.status === 'pending').length;
+  updateCMsgBadge(pending);
+
+  list.innerHTML = data.map(c => {
+    const ini = (c.customer_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const time = c.last_message_at ? new Date(c.last_message_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '';
+    const preview = c.last_message ? c.last_message.substring(0,40)+(c.last_message.length>40?'…':'') : 'Sent a message request';
+    const isPending = c.status === 'pending';
+    const isActive  = c.id === cActiveConvId ? 'active' : '';
+    const statusDot = isPending
+      ? `<div class="c-pending-dot" title="Pending request"></div>`
+      : c.status === 'accepted'
+        ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>`
+        : '';
+    return `<div class="c-conv-item ${isActive}" onclick="cOpenConversation('${c.id}','${c.status}')">
+      <div class="c-conv-av">${cEsc(ini)}</div>
+      <div class="c-conv-info">
+        <div class="c-conv-name">${cEsc(c.customer_name || 'Customer')}${isPending ? ' <span style="font-size:10px;font-weight:800;color:var(--orange);text-transform:uppercase;">New</span>' : ''}</div>
+        <div class="c-conv-preview">${cEsc(preview)}</div>
+      </div>
+      <div class="c-conv-meta">
+        <span class="c-conv-time">${time}</span>
+        ${statusDot}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateCMsgBadge(n) {
+  const badge = document.getElementById('c-msg-badge');
+  if (!badge) return;
+  badge.style.display = n > 0 ? 'inline' : 'none';
+  badge.textContent   = n;
+}
+
+// ── Open a contractor conversation ────────────────────────
+async function cOpenConversation(convId, status) {
+  cActiveConvId     = convId;
+  cActiveConvStatus = status;
+
+  const { data: conv } = await sb.from('conversations').select('*').eq('id', convId).single();
+  if (!conv) return;
+
+  cActiveConvStatus = conv.status;
+  const ini = (conv.customer_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+
+  // Update header
+  document.getElementById('c-chat-av').textContent    = ini;
+  document.getElementById('c-chat-name').textContent  = conv.customer_name || 'Customer';
+  document.getElementById('c-chat-status').textContent =
+    conv.status === 'pending'  ? '⏳ New message request — accept to reply' :
+    conv.status === 'accepted' ? '✅ Active conversation' :
+    conv.status === 'declined' ? '❌ Request declined'   : conv.status;
+
+  // Show header, hide empty
+  document.getElementById('c-chat-header').style.display = 'flex';
+  document.getElementById('c-chat-empty').style.display   = 'none';
+
+  // Show accept/decline buttons only for pending
+  document.getElementById('c-accept-row').style.display    = conv.status === 'pending' ? 'flex' : 'none';
+  document.getElementById('c-chat-input-row').style.display = conv.status === 'accepted' ? 'flex' : 'none';
+
+  // Highlight in list
+  document.querySelectorAll('.c-conv-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.c-conv-item').forEach(el => {
+    if (el.getAttribute('onclick')?.includes(convId)) el.classList.add('active');
+  });
+
+  await cLoadMessages(convId);
+
+  // Real-time subscription
+  if (cChatChannel) sb.removeChannel(cChatChannel);
+  cChatChannel = sb.channel('c-msgs-'+convId)
+    .on('postgres_changes', {
+      event:'INSERT', schema:'public', table:'messages',
+      filter:`conversation_id=eq.${convId}`,
+    }, payload => cAppendMessage(payload.new))
+    .subscribe();
+}
+
+// ── Load messages ──────────────────────────────────────────
+async function cLoadMessages(convId) {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .eq('conversation_id', convId)
+    .order('created_at', { ascending: true });
+
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!data || !data.length) {
+    msgsEl.innerHTML = `<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;
+    return;
+  }
+  msgsEl.innerHTML = data.map(m => cRenderMessage(m)).join('');
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function cRenderMessage(m) {
+  const mine = m.sender_id === user.id;
+  const cls  = mine ? 'mine' : 'theirs';
+  const time = new Date(m.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  return `<div class="c-msg-wrap ${cls}">
+    <div class="c-msg-bubble ${mine ? 'c-msg-mine' : 'c-msg-theirs'}">${cEsc(m.body)}</div>
+    <div class="c-msg-time ${cls}">${time}</div>
+  </div>`;
+}
+
+function cAppendMessage(m) {
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!msgsEl) return;
+  const div = document.createElement('div');
+  div.innerHTML = cRenderMessage(m);
+  while (div.firstChild) msgsEl.appendChild(div.firstChild);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+// ── Accept / Decline request ───────────────────────────────
+async function respondToRequest(newStatus) {
+  if (!cActiveConvId) return;
+
+  const { error } = await sb.from('conversations')
+    .update({ status: newStatus })
+    .eq('id', cActiveConvId);
+
+  if (error) { showToast('❌ Could not update request.'); return; }
+
+  cActiveConvStatus = newStatus;
+  document.getElementById('c-accept-row').style.display = 'none';
+
+  if (newStatus === 'accepted') {
+    document.getElementById('c-chat-status').textContent  = '✅ Active conversation';
+    document.getElementById('c-chat-input-row').style.display = 'flex';
+    document.getElementById('c-chat-input').focus();
+    // Send a welcome message
+    await sb.from('messages').insert({
+      conversation_id: cActiveConvId,
+      sender_id:       user.id,
+      sender_role:     'contractor',
+      body:            '👋 Hi! I got your message request. How can I help you?',
+    });
+    showToast('✅ Request accepted! You can now chat.');
+  } else {
+    document.getElementById('c-chat-status').textContent = '❌ Request declined';
+    showToast('Request declined.');
+  }
+
+  await loadCConversations();
+}
+
+// ── Send a message ─────────────────────────────────────────
+async function cSendMessage() {
+  if (!cActiveConvId) return;
+  if (cActiveConvStatus !== 'accepted') {
+    showToast('⚠️ Accept the request first to send a message.');
+    return;
+  }
+
+  const input = document.getElementById('c-chat-input');
+  const raw   = (input.value || '').trim();
+  if (!raw) return;
+
+  if (cHasLink(raw)) {
+    showToast('🚫 Links are not allowed in messages.');
+    return;
+  }
+
+  const body = cSanitize(raw);
+  if (!body) return;
+
+  input.value = '';
+
+  const { error } = await sb.from('messages').insert({
+    conversation_id: cActiveConvId,
+    sender_id:       user.id,
+    sender_role:     'contractor',
+    body,
+  });
+
+  if (error) showToast('❌ Could not send message.');
+}
+
+// ── Check for new message requests on load ─────────────────
+async function checkNewMessageRequests() {
+  const { data } = await sb.from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('contractor_id', user.id)
+    .eq('status', 'pending');
+
+  const count = data?.length || 0;
+  updateCMsgBadge(count);
+}
+
 initOnlineStatus();
 subscribeToJobOffers();
 
-<<<<<<< HEAD
 function goHome() { window.location.href='/'; }
 function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='/'; }
-=======
-function goHome() { window.location.href='./tradease.html'; }
-function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='./tradease.html'; }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 
 // ── TOAST ──────────────────────────────────────────────────
 let _tt;

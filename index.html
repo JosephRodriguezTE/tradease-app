@@ -1,3 +1,21 @@
+<script src="https://js.stripe.com/v3/"></script>
+
+<button onclick="pay()">Pay $50</button>
+
+<script>
+async function pay() {
+  const res = await fetch("/api/create-checkout-session", {
+    method: "POST",
+  });
+
+  const data = await res.json();
+
+  const stripe = Stripe("YOUR_PUBLISHABLE_KEY");
+
+  stripe.redirectToCheckout({ sessionId: data.id });
+}
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -394,7 +394,7 @@ input,select,textarea{font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-      <img class="logo-img" src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
+      <img class="logo-img" src="/tradease-logo.png" alt=""/>
       <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="tnav-wrap">
@@ -408,7 +408,7 @@ input,select,textarea{font-family:var(--body);}
       <span class="tnav" id="t-f" onclick="findContractors()">View on Tradease</span>
     </div>
     <div class="tbr">
-      <button class="pro-pill" id="pro-btn" onclick="startCheckout('pro')">⚡ Upgrade to Pro</button>
+      <button class="pro-pill" id="pro-btn" onclick="showUpgradeToast('pro')">⚡ Upgrade to Pro</button>
       <div class="notif-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
         🔔<span class="notif-badge" id="notif-badge"></span>
       </div>
@@ -567,7 +567,7 @@ input,select,textarea{font-family:var(--body);}
         <div class="ph-acts">
           <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile</button>
           <button class="btn-gy" onclick="showV('pub')">👁️ Preview Listing</button>
-          <button class="btn-gy" id="dash-up-btn" onclick="startCheckout('pro')">⚡ Upgrade to Pro</button>
+          <button class="btn-gy" id="dash-up-btn" onclick="showUpgradeToast('pro')">⚡ Upgrade to Pro</button>
         </div>
       </div>
 
@@ -578,7 +578,7 @@ input,select,textarea{font-family:var(--body);}
           <h4>Unlock Tradease Pro</h4>
           <p>Top search placement · verified badge · more leads · analytics — only $19/month.</p>
         </div>
-        <button class="up-ban-btn" onclick="startCheckout('pro')">Upgrade Now →</button>
+        <button class="up-ban-btn" onclick="showUpgradeToast('pro')">Upgrade Now →</button>
       </div>
 
       <!-- Stats -->
@@ -790,17 +790,17 @@ input,select,textarea{font-family:var(--body);}
         <div class="al">Subscription</div>
         <div class="ar" id="sub-row-leads" style="display:none;">
           <div><div class="ar-t">📋 Just Leads</div><div class="ar-s">$5/month · Profile visibility · No booking fees</div></div>
-          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="openBillingPortal()">Manage →</button>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="showUpgradeToast('manage')">Manage →</button>
         </div>
         <div class="ar" id="sub-row-pro" style="display:none;">
           <div><div class="ar-t">⚡ Pro Contractor</div><div class="ar-s">$19/month · Priority ranking · Verified badge</div></div>
-          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="openBillingPortal()">Manage →</button>
+          <button class="btn-gy" style="padding:8px 14px;font-size:12px;" onclick="showUpgradeToast('manage')">Manage →</button>
         </div>
         <div class="ar" id="sub-row-free">
           <div><div class="ar-t">Free Plan</div><div class="ar-s">Upgrade to get more visibility and leads</div></div>
           <div style="display:flex;gap:8px;">
-            <button class="btn-gy" style="padding:8px 14px;font-size:12px;background:rgba(96,165,250,.12);color:#60A5FA;border-color:rgba(96,165,250,.3);" onclick="startCheckout('leads')">📋 Just Leads $5</button>
-            <button class="btn-or" style="padding:8px 14px;font-size:12px;" onclick="startCheckout('pro')">⚡ Pro $19</button>
+            <button class="btn-gy" style="padding:8px 14px;font-size:12px;background:rgba(96,165,250,.12);color:#60A5FA;border-color:rgba(96,165,250,.3);" onclick="showUpgradeToast('leads')">📋 Just Leads $5</button>
+            <button class="btn-or" style="padding:8px 14px;font-size:12px;" onclick="showUpgradeToast('pro')">⚡ Pro $19</button>
           </div>
         </div>
       </div>
@@ -891,7 +891,7 @@ input,select,textarea{font-family:var(--body);}
       <!-- Plan gate banner -->
       <div class="plan-gate" id="pricing-plan-banner" style="display:none;">
         <span style="font-size:20px;">⚡</span>
-        <div><strong>Free plan:</strong> List up to 5 services. <a onclick="startCheckout('pro')" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Upgrade to Pro</a> to list unlimited services with priority ranking.</div>
+        <div><strong>Free plan:</strong> List up to 5 services. <a onclick="showUpgradeToast('pro')" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Upgrade to Pro</a> to list unlimited services with priority ranking.</div>
       </div>
 
       <div id="pricing-services-list">
@@ -1113,19 +1113,19 @@ function fillUI() {
   if (isPro) {
     document.getElementById('pro-btn').textContent = '✓ Pro Active';
     document.getElementById('pro-btn').classList.add('active');
-    document.getElementById('pro-btn').onclick = openBillingPortal;
+    document.getElementById('pro-btn').onclick = () => showUpgradeToast('manage');
     document.getElementById('up-banner').style.display = 'none';
     document.getElementById('dash-up-btn').textContent = '⚙️ Manage Billing';
-    document.getElementById('dash-up-btn').onclick = openBillingPortal;
+    document.getElementById('dash-up-btn').onclick = () => showUpgradeToast('manage');
   } else if (isLeads) {
     document.getElementById('pro-btn').textContent = '📋 Just Leads';
-    document.getElementById('pro-btn').onclick = openBillingPortal;
+    document.getElementById('pro-btn').onclick = () => showUpgradeToast('manage');
     document.getElementById('up-banner').style.display = 'none';
     document.getElementById('dash-up-btn').textContent = '⚡ Upgrade to Pro';
-    document.getElementById('dash-up-btn').onclick = () => startCheckout('pro');
+    document.getElementById('dash-up-btn').onclick = () => showUpgradeToast('pro');
   } else {
-    document.getElementById('pro-btn').onclick = () => startCheckout('pro');
-    document.getElementById('dash-up-btn').onclick = () => startCheckout('pro');
+    document.getElementById('pro-btn').onclick = () => showUpgradeToast('pro');
+    document.getElementById('dash-up-btn').onclick = () => showUpgradeToast('pro');
   }
   if (p.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
 
@@ -2263,287 +2263,14 @@ async function deletePriceEntry(idx) {
   showToast('🗑️ Service removed.');
 }
 
-// ── STRIPE CHECKOUT ────────────────────────────────────────
-const SUPABASE_FUNCTIONS_URL = SB_URL + '/functions/v1';
-
-async function startCheckout(plan) {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { showToast('Please sign in first.'); return; }
-
-  const btn = document.getElementById('dash-up-btn') || document.getElementById('pro-btn');
-  const origText = btn?.textContent;
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Loading checkout…'; }
-
-  try {
-    const res = await fetch(SUPABASE_FUNCTIONS_URL + '/create-checkout', {
-      method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + session.access_token,
-      },
-      body: JSON.stringify({
-        plan,
-        success_url: window.location.origin + '/contractor-dashboard.html?plan_success=1',
-        cancel_url:  window.location.origin + '/contractor-dashboard.html',
-      }),
-    });
-
-    const { url, error } = await res.json();
-    if (error) throw new Error(error);
-    window.location.href = url;
-  } catch (e) {
-    showToast('❌ Could not open checkout: ' + e.message);
-    if (btn) { btn.disabled = false; btn.textContent = origText; }
-  }
-}
-
-async function openBillingPortal() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return;
-
-  showToast('⏳ Opening billing portal…');
-  try {
-    const res = await fetch(SUPABASE_FUNCTIONS_URL + '/manage-billing', {
-      method:  'POST',
-      headers: { 'Authorization': 'Bearer ' + session.access_token },
-    });
-    const { url, error } = await res.json();
-    if (error) throw new Error(error);
-    window.location.href = url;
-  } catch (e) {
-    showToast('❌ ' + e.message);
-  }
-}
-
-// Handle return from Stripe checkout
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('plan_success') === '1') {
-    window.history.replaceState({}, '', '/contractor-dashboard.html');
-    setTimeout(() => showToast('🎉 Subscription activated! Your plan is now live.'), 500);
-  }
-})();
-
-// ══════════════════════════════════════════════════════════
-// CONTRACTOR CHAT SYSTEM
-// ══════════════════════════════════════════════════════════
-let cActiveConvId   = null;
-let cActiveConvStatus = null;
-let cChatChannel    = null;
-
-function cHasLink(txt) {
-  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[/\s])/i.test(txt);
-}
-function cSanitize(txt) {
-  return txt.replace(/(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[^\s]*)/gi,'[link removed]').trim();
-}
-function cEsc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-// ── Load all conversations for this contractor ────────────
-async function loadCConversations() {
-  const { data } = await sb.from('conversations')
-    .select('*')
-    .eq('contractor_id', user.id)
-    .order('last_message_at', { ascending: false, nullsFirst: false });
-
-  const list = document.getElementById('c-conv-list');
-  if (!data || !data.length) {
-    list.innerHTML = `<div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">No message requests yet.<br>Customers can message you from your profile.</div>`;
-    updateCMsgBadge(0);
-    return;
-  }
-
-  const pending = data.filter(c => c.status === 'pending').length;
-  updateCMsgBadge(pending);
-
-  list.innerHTML = data.map(c => {
-    const ini = (c.customer_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-    const time = c.last_message_at ? new Date(c.last_message_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '';
-    const preview = c.last_message ? c.last_message.substring(0,40)+(c.last_message.length>40?'…':'') : 'Sent a message request';
-    const isPending = c.status === 'pending';
-    const isActive  = c.id === cActiveConvId ? 'active' : '';
-    const statusDot = isPending
-      ? `<div class="c-pending-dot" title="Pending request"></div>`
-      : c.status === 'accepted'
-        ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>`
-        : '';
-    return `<div class="c-conv-item ${isActive}" onclick="cOpenConversation('${c.id}','${c.status}')">
-      <div class="c-conv-av">${cEsc(ini)}</div>
-      <div class="c-conv-info">
-        <div class="c-conv-name">${cEsc(c.customer_name || 'Customer')}${isPending ? ' <span style="font-size:10px;font-weight:800;color:var(--orange);text-transform:uppercase;">New</span>' : ''}</div>
-        <div class="c-conv-preview">${cEsc(preview)}</div>
-      </div>
-      <div class="c-conv-meta">
-        <span class="c-conv-time">${time}</span>
-        ${statusDot}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function updateCMsgBadge(n) {
-  const badge = document.getElementById('c-msg-badge');
-  if (!badge) return;
-  badge.style.display = n > 0 ? 'inline' : 'none';
-  badge.textContent   = n;
-}
-
-// ── Open a contractor conversation ────────────────────────
-async function cOpenConversation(convId, status) {
-  cActiveConvId     = convId;
-  cActiveConvStatus = status;
-
-  const { data: conv } = await sb.from('conversations').select('*').eq('id', convId).single();
-  if (!conv) return;
-
-  cActiveConvStatus = conv.status;
-  const ini = (conv.customer_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-
-  // Update header
-  document.getElementById('c-chat-av').textContent    = ini;
-  document.getElementById('c-chat-name').textContent  = conv.customer_name || 'Customer';
-  document.getElementById('c-chat-status').textContent =
-    conv.status === 'pending'  ? '⏳ New message request — accept to reply' :
-    conv.status === 'accepted' ? '✅ Active conversation' :
-    conv.status === 'declined' ? '❌ Request declined'   : conv.status;
-
-  // Show header, hide empty
-  document.getElementById('c-chat-header').style.display = 'flex';
-  document.getElementById('c-chat-empty').style.display   = 'none';
-
-  // Show accept/decline buttons only for pending
-  document.getElementById('c-accept-row').style.display    = conv.status === 'pending' ? 'flex' : 'none';
-  document.getElementById('c-chat-input-row').style.display = conv.status === 'accepted' ? 'flex' : 'none';
-
-  // Highlight in list
-  document.querySelectorAll('.c-conv-item').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.c-conv-item').forEach(el => {
-    if (el.getAttribute('onclick')?.includes(convId)) el.classList.add('active');
-  });
-
-  await cLoadMessages(convId);
-
-  // Real-time subscription
-  if (cChatChannel) sb.removeChannel(cChatChannel);
-  cChatChannel = sb.channel('c-msgs-'+convId)
-    .on('postgres_changes', {
-      event:'INSERT', schema:'public', table:'messages',
-      filter:`conversation_id=eq.${convId}`,
-    }, payload => cAppendMessage(payload.new))
-    .subscribe();
-}
-
-// ── Load messages ──────────────────────────────────────────
-async function cLoadMessages(convId) {
-  const { data } = await sb.from('messages')
-    .select('*')
-    .eq('conversation_id', convId)
-    .order('created_at', { ascending: true });
-
-  const msgsEl = document.getElementById('c-chat-msgs');
-  if (!data || !data.length) {
-    msgsEl.innerHTML = `<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;
-    return;
-  }
-  msgsEl.innerHTML = data.map(m => cRenderMessage(m)).join('');
-  msgsEl.scrollTop = msgsEl.scrollHeight;
-}
-
-function cRenderMessage(m) {
-  const mine = m.sender_id === user.id;
-  const cls  = mine ? 'mine' : 'theirs';
-  const time = new Date(m.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  return `<div class="c-msg-wrap ${cls}">
-    <div class="c-msg-bubble ${mine ? 'c-msg-mine' : 'c-msg-theirs'}">${cEsc(m.body)}</div>
-    <div class="c-msg-time ${cls}">${time}</div>
-  </div>`;
-}
-
-function cAppendMessage(m) {
-  const msgsEl = document.getElementById('c-chat-msgs');
-  if (!msgsEl) return;
-  const div = document.createElement('div');
-  div.innerHTML = cRenderMessage(m);
-  while (div.firstChild) msgsEl.appendChild(div.firstChild);
-  msgsEl.scrollTop = msgsEl.scrollHeight;
-}
-
-// ── Accept / Decline request ───────────────────────────────
-async function respondToRequest(newStatus) {
-  if (!cActiveConvId) return;
-
-  const { error } = await sb.from('conversations')
-    .update({ status: newStatus })
-    .eq('id', cActiveConvId);
-
-  if (error) { showToast('❌ Could not update request.'); return; }
-
-  cActiveConvStatus = newStatus;
-  document.getElementById('c-accept-row').style.display = 'none';
-
-  if (newStatus === 'accepted') {
-    document.getElementById('c-chat-status').textContent  = '✅ Active conversation';
-    document.getElementById('c-chat-input-row').style.display = 'flex';
-    document.getElementById('c-chat-input').focus();
-    // Send a welcome message
-    await sb.from('messages').insert({
-      conversation_id: cActiveConvId,
-      sender_id:       user.id,
-      sender_role:     'contractor',
-      body:            '👋 Hi! I got your message request. How can I help you?',
-    });
-    showToast('✅ Request accepted! You can now chat.');
-  } else {
-    document.getElementById('c-chat-status').textContent = '❌ Request declined';
-    showToast('Request declined.');
-  }
-
-  await loadCConversations();
-}
-
-// ── Send a message ─────────────────────────────────────────
-async function cSendMessage() {
-  if (!cActiveConvId) return;
-  if (cActiveConvStatus !== 'accepted') {
-    showToast('⚠️ Accept the request first to send a message.');
-    return;
-  }
-
-  const input = document.getElementById('c-chat-input');
-  const raw   = (input.value || '').trim();
-  if (!raw) return;
-
-  if (cHasLink(raw)) {
-    showToast('🚫 Links are not allowed in messages.');
-    return;
-  }
-
-  const body = cSanitize(raw);
-  if (!body) return;
-
-  input.value = '';
-
-  const { error } = await sb.from('messages').insert({
-    conversation_id: cActiveConvId,
-    sender_id:       user.id,
-    sender_role:     'contractor',
-    body,
-  });
-
-  if (error) showToast('❌ Could not send message.');
-}
-
-// ── Check for new message requests on load ─────────────────
-async function checkNewMessageRequests() {
-  const { data } = await sb.from('conversations')
-    .select('id', { count: 'exact', head: true })
-    .eq('contractor_id', user.id)
-    .eq('status', 'pending');
-
-  const count = data?.length || 0;
-  updateCMsgBadge(count);
+// ── UPGRADE TOAST (Stripe coming soon) ────────────────────
+function showUpgradeToast(type) {
+  const msgs = {
+    pro:    '⚡ Pro plan coming soon — we'll notify you when billing is live!',
+    leads:  '📋 Just Leads plan coming soon — we'll notify you when billing is live!',
+    manage: '⚙️ Billing portal coming soon!',
+  };
+  showToast(msgs[type] || '💳 Payments coming soon!');
 }
 
 initOnlineStatus();

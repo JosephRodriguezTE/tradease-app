@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<<<<<<< HEAD
 <title>Tradease – Book Trusted Local Contractors</title>
-=======
-<title>Tradease — My Dashboard</title>
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -219,6 +215,28 @@ button{cursor:pointer;border:none;font-family:var(--body);}
 .bmh{background:linear-gradient(135deg,var(--orange),var(--orange-dk));padding:20px 24px;display:flex;align-items:center;gap:13px;}
 .bma{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:17px;font-weight:900;color:white;flex-shrink:0;}
 
+/* CHAT */
+.conv-item{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.conv-item:hover,.conv-item.active{background:var(--bg3);}
+.conv-av{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:900;color:white;flex-shrink:0;}
+.conv-info{flex:1;min-width:0;}
+.conv-name{font-size:14px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.conv-preview{font-size:12px;color:var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.conv-time{font-size:11px;color:var(--g3);}
+.conv-unread{width:18px;height:18px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;}
+.conv-status-pill{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:50px;}
+.conv-status-pending{background:rgba(251,191,36,.12);color:#FBBF24;}
+.conv-status-accepted{background:rgba(34,197,94,.12);color:#22C55E;}
+.conv-status-declined{background:rgba(239,68,68,.12);color:#EF4444;}
+.msg-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.55;word-break:break-word;}
+.msg-mine{background:var(--orange);color:white;align-self:flex-end;border-bottom-right-radius:4px;}
+.msg-theirs{background:var(--bg3);color:var(--g1);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border);}
+.msg-time{font-size:11px;color:var(--g3);margin-top:2px;text-align:right;}
+.msg-time.theirs{text-align:left;}
+.msg-wrap{display:flex;flex-direction:column;}
+.msg-wrap.mine{align-items:flex-end;}
+.msg-wrap.theirs{align-items:flex-start;}
 /* TOAST */
 .toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg3);color:var(--g1);border:1px solid var(--border);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:0 6px 28px rgba(0,0,0,.5);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:290px;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
@@ -245,20 +263,14 @@ button{cursor:pointer;border:none;font-family:var(--body);}
   <!-- TOPBAR -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-<<<<<<< HEAD
       <img class="logo-img" src="/tradease-logo.png" alt="Tradease"/>
-=======
-      <img class="logo-img" src="./tradease-logo.png" alt="Tradease"/>
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="logo-text">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="topbar-nav">
       <span class="tnav" id="tab-d" onclick="showView('d')">Dashboard</span>
       <span class="tnav" id="tab-b" onclick="showView('b')">My Bookings</span>
-<<<<<<< HEAD
+      <span class="tnav" id="tab-m" onclick="showView('m')">Messages <span id="msg-badge" style="display:none;background:var(--orange);color:white;font-size:10px;font-weight:800;padding:1px 6px;border-radius:50px;margin-left:3px;vertical-align:middle;">0</span></span>
       <span class="tnav" id="tab-p" onclick="showView('p')">My Profile</span>
-=======
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
       <span class="tnav" id="tab-f" onclick="findContractors()">Find Contractors</span>
     </div>
     <div class="topbar-right">
@@ -394,6 +406,61 @@ button{cursor:pointer;border:none;font-family:var(--body);}
     </div>
   </div>
 
+  <!-- VIEW: MESSAGES -->
+  <div class="view" id="view-m">
+    <div class="pg" style="display:grid;grid-template-columns:320px 1fr;gap:0;height:calc(100vh - 64px);max-width:100%;padding:0;">
+
+      <!-- Conversation list -->
+      <div style="background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+        <div style="padding:20px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+          <h2 style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;">Messages</h2>
+          <p style="font-size:12px;color:var(--g3);margin-top:3px;">Your contractor conversations</p>
+        </div>
+        <div id="conv-list" style="flex:1;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Active chat -->
+      <div style="display:flex;flex-direction:column;overflow:hidden;" id="chat-panel">
+        <!-- Empty state -->
+        <div id="chat-empty" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--g3);">
+          <div style="font-size:40px;">💬</div>
+          <div style="font-size:14px;font-weight:600;">Select a conversation</div>
+          <div style="font-size:13px;">or message a contractor from their profile</div>
+        </div>
+
+        <!-- Chat header -->
+        <div id="chat-header" style="display:none;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2);display:none;align-items:center;gap:12px;flex-shrink:0;">
+          <div id="chat-av" style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;font-weight:900;color:white;flex-shrink:0;"></div>
+          <div>
+            <div id="chat-name" style="font-weight:700;font-size:15px;color:var(--white);"></div>
+            <div id="chat-status" style="font-size:12px;color:var(--g3);margin-top:1px;"></div>
+          </div>
+        </div>
+
+        <!-- Pending acceptance banner -->
+        <div id="chat-pending-banner" style="display:none;background:rgba(255,107,43,.08);border-bottom:1px solid rgba(255,107,43,.2);padding:12px 20px;font-size:13px;color:var(--g2);flex-shrink:0;">
+          ⏳ Waiting for the contractor to accept your message request…
+        </div>
+
+        <!-- Messages -->
+        <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;"></div>
+
+        <!-- Input -->
+        <div id="chat-input-row" style="display:none;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;">
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <textarea id="chat-input" placeholder="Type a message…" rows="1"
+              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--g1);font-size:14px;resize:none;outline:none;font-family:var(--body);max-height:100px;line-height:1.5;transition:border-color .12s;"
+              onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+            <button onclick="sendMessage()" style="padding:10px 18px;background:var(--orange);color:white;border:none;border-radius:12px;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:background .1s;flex-shrink:0;" onmouseover="this.style.background='var(--orange-dk)'" onmouseout="this.style.background='var(--orange)'">Send</button>
+          </div>
+          <div style="font-size:11px;color:var(--g3);margin-top:6px;">Links are not allowed · Press Enter to send</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div><!-- #app -->
 
 <!-- EDIT MODAL -->
@@ -469,24 +536,18 @@ const COLS=['linear-gradient(135deg,#FF6B2B,#E05520)','linear-gradient(135deg,#3
 let user=null,prof=null,bkgs=[],activeC=null;
 
 // ── VIEWS ──
-<<<<<<< HEAD
-const TABS={d:'tab-d',b:'tab-b',p:'tab-p'};
-=======
-const TABS={d:'tab-d',b:'tab-b',p:null};
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
+const TABS={d:'tab-d',b:'tab-b',m:'tab-m',p:'tab-p'};
 function showView(v){
-  ['d','b','p'].forEach(x=>{
-    document.getElementById('view-'+x).classList.remove('active');
-    if(TABS[x])document.getElementById(TABS[x])?.classList.remove('active');
+  ['d','b','m','p'].forEach(x=>{
+    const vEl = document.getElementById('view-'+x);
+    if(vEl) vEl.classList.remove('active');
+    if(TABS[x]) document.getElementById(TABS[x])?.classList.remove('active');
   });
-<<<<<<< HEAD
   document.getElementById('view-'+v)?.classList.add('active');
-=======
-  document.getElementById('view-'+v).classList.add('active');
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
-  if(TABS[v])document.getElementById(TABS[v])?.classList.add('active');
+  if(TABS[v]) document.getElementById(TABS[v])?.classList.add('active');
   document.getElementById('nav-av').classList.toggle('on',v==='p');
   window.scrollTo(0,0);
+  if(v==='m') loadConversations();
 }
 
 // ── INIT ──
@@ -496,11 +557,7 @@ async function init(){
   const{data:{session},error:sessionErr}=await sb.auth.getSession();
 
   if(sessionErr || !session){
-<<<<<<< HEAD
     if(!_redirecting){ _redirecting=true; window.location.replace('/tradease-auth.html'); }
-=======
-    if(!_redirecting){ _redirecting=true; window.location.replace('./tradease-auth.html'); }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -526,11 +583,7 @@ async function init(){
 
   // Role check — contractors go to their dashboard
   if(prof?.role === 'contractor'){
-<<<<<<< HEAD
     if(!_redirecting){ _redirecting=true; window.location.replace('/contractor-dashboard.html'); }
-=======
-    if(!_redirecting){ _redirecting=true; window.location.replace('./contractor-dashboard.html'); }
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
 
@@ -539,7 +592,21 @@ async function init(){
   fillUI();
   document.getElementById('loading-screen').style.display='none';
   document.getElementById('app').classList.add('ready');
-  showView('d');
+
+  // Check if we need to auto-open a chat (from profile page Message button)
+  const openChat = sessionStorage.getItem('open_chat');
+  if (openChat) {
+    sessionStorage.removeItem('open_chat');
+    try {
+      const { contractorId, contractorName } = JSON.parse(openChat);
+      showView('m');
+      await loadConversations();
+      await startConversation(contractorId, contractorName);
+    } catch(e) { showView('d'); }
+  } else {
+    showView('d');
+  }
+
   await Promise.all([loadContractors(), loadBookings(), loadNotifications()]);
   subscribeToBookings();
   subscribeToNotifications();
@@ -580,11 +647,7 @@ function fillUI(){
 
 // ── CONTRACTORS ──
 async function loadContractors(){
-<<<<<<< HEAD
   const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating,plan,accepts_bookings').order('rating',{ascending:false}).limit(6);
-=======
-  const{data}=await sb.from('contractors').select('id,company_name,trade_type,location,description,rating').order('rating',{ascending:false}).limit(6);
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
   const isLive = data && data.length > 0;
   const list = isLive ? data.map((c,i)=>({
     id:c.id, name:c.company_name,
@@ -593,7 +656,6 @@ async function loadContractors(){
     about:(c.description||'Professional contractor serving New York.').substring(0,80)+'…',
     col:COLS[i%COLS.length],
     sample:false,
-<<<<<<< HEAD
     plan:c.plan||'free',
     acceptsBookings: c.accepts_bookings !== false && c.plan !== 'leads',
   })) : fallback();
@@ -614,30 +676,14 @@ async function loadContractors(){
         <div class="cc-av" style="background:${c.col};">${c.ini}</div>
         <div>
           <div class="cc-name">${c.name}${sampleBadge}${leadsBadge}</div>
-=======
-  })) : fallback();
-
-  document.getElementById('cg').innerHTML = list.map(c=>`
-    <div class="cc">
-      <div class="cc-top">
-        <div class="cc-av" style="background:${c.col};">${c.ini}</div>
-        <div>
-          <div class="cc-name">${c.name}${c.sample?` <span style="font-size:9px;background:rgba(255,107,43,.12);color:var(--orange);border-radius:4px;padding:1px 5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle;">Sample</span>`:''}
-          </div>
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
           <div class="cc-trade">${c.trade||'Contractor'}</div>
         </div>
       </div>
       <div class="cc-loc">📍 ${c.loc}</div>
       <div class="cc-about">${c.about}</div>
-<<<<<<< HEAD
       ${btn}
     </div>`;
   }).join('');
-=======
-      <button class="cc-btn" onclick='openBook(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Book Now</button>
-    </div>`).join('');
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 
 // ── BOOKINGS ──
@@ -821,11 +867,7 @@ async function autoFindNewContractor(booking) {
   });
   if(!candidates||!candidates.length){
     showToast('😔 No other contractors available right now. Please search manually.');
-<<<<<<< HEAD
     setTimeout(()=>{window.location.href='/';},2200);
-=======
-    setTimeout(()=>{window.location.href='./tradease.html';},2200);
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
     return;
   }
   const next=candidates[0];
@@ -1040,16 +1082,9 @@ async function sendReset(){
 
 // ── SEARCH / SIGN OUT / NAV ──
 function runSearch(){
-<<<<<<< HEAD
   const q = document.getElementById('srch').value.trim();
   // Pass search query via URL hash so tradease.html can pick it up
   window.location.href = q ? '/?q=' + encodeURIComponent(q) : '/';
-=======
-  const q=document.getElementById('srch').value.trim();
-  if(q) localStorage.setItem('tradease_search',q);
-  localStorage.setItem('tradease_goto','search');
-  window.location.href='./tradease.html';
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 }
 // ── NOTIFICATIONS ──────────────────────────────────────────
 let notifications = [];
@@ -1295,17 +1330,10 @@ async function submitRating() {
 function findContractors(){
   // Clear any stale nav flags so tradease.html always lands on home
   localStorage.removeItem('tradease_goto');
-<<<<<<< HEAD
   window.location.href='/';
 }
 async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('/tradease-auth.html');}
 function goHome(){window.location.href='/';}
-=======
-  window.location.href='./tradease.html';
-}
-async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('./tradease-auth.html');}
-function goHome(){window.location.href='./tradease.html';}
->>>>>>> 843427a7a01b1dc3b87766fa48565a9319333d13
 
 // ── FALLBACK CONTRACTORS ──
 function fallback(){return[
@@ -1320,3 +1348,220 @@ function fallback(){return[
 // ── TOAST ──
 let _tt;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3800);}
+
+// ══════════════════════════════════════════════════════════
+// CHAT SYSTEM
+// ══════════════════════════════════════════════════════════
+let activeConvId = null;
+let chatChannel  = null;
+let chatContractorId = null;
+
+// ── Link blocker ──────────────────────────────────────────
+function sanitizeMessage(txt) {
+  // Strip any URLs
+  return txt.replace(/(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[^\s]*)/gi, '[link removed]').trim();
+}
+
+function hasLink(txt) {
+  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[/\s])/i.test(txt);
+}
+
+// ── Start a new conversation with a contractor ────────────
+async function startConversation(contractorId, contractorName) {
+  if (!user) return;
+
+  // Check if conversation already exists
+  const { data: existing } = await sb.from('conversations')
+    .select('id,status')
+    .eq('customer_id', user.id)
+    .eq('contractor_id', contractorId)
+    .maybeSingle();
+
+  if (existing) {
+    showView('m');
+    await loadConversations();
+    openConversation(existing.id);
+    return;
+  }
+
+  // Create new conversation request
+  const { data: conv, error } = await sb.from('conversations').insert({
+    customer_id:     user.id,
+    contractor_id:   contractorId,
+    customer_name:   prof?.username || user.email.split('@')[0],
+    contractor_name: contractorName,
+    status:          'pending',
+  }).select().single();
+
+  if (error) { showToast('❌ Could not start conversation.'); return; }
+
+  // Send the initial system message
+  await sb.from('messages').insert({
+    conversation_id: conv.id,
+    sender_id:       user.id,
+    sender_role:     'customer',
+    body:            '👋 Hi! I found your profile on Tradease and would like to connect.',
+  });
+
+  showToast('✅ Message request sent! Waiting for contractor to accept.');
+  showView('m');
+  await loadConversations();
+  openConversation(conv.id);
+}
+
+// ── Load all conversations for this customer ──────────────
+async function loadConversations() {
+  const { data } = await sb.from('conversations')
+    .select('*')
+    .eq('customer_id', user.id)
+    .order('last_message_at', { ascending: false, nullsFirst: false });
+
+  const list = document.getElementById('conv-list');
+  if (!data || !data.length) {
+    list.innerHTML = `<div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">No conversations yet.<br>Message a contractor from their profile.</div>`;
+    return;
+  }
+
+  // Count unread
+  let totalUnread = 0;
+  list.innerHTML = data.map(c => {
+    const ini = (c.contractor_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const time = c.last_message_at ? new Date(c.last_message_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '';
+    const statusClass = `conv-status-${c.status}`;
+    const statusLabel = c.status === 'pending' ? 'Pending' : c.status === 'accepted' ? 'Active' : c.status === 'declined' ? 'Declined' : '';
+    const preview = c.last_message ? c.last_message.substring(0,45)+(c.last_message.length>45?'…':'') : 'No messages yet';
+    const isActive = c.id === activeConvId ? 'active' : '';
+    return `<div class="conv-item ${isActive}" onclick="openConversation('${c.id}')">
+      <div class="conv-av">${ini}</div>
+      <div class="conv-info">
+        <div class="conv-name">${c.contractor_name || 'Contractor'}</div>
+        <div class="conv-preview">${preview}</div>
+      </div>
+      <div class="conv-meta">
+        <span class="conv-time">${time}</span>
+        <span class="conv-status-pill ${statusClass}">${statusLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Update badge
+  const badge = document.getElementById('msg-badge');
+  if (badge) {
+    badge.style.display = totalUnread > 0 ? 'inline' : 'none';
+    badge.textContent = totalUnread;
+  }
+}
+
+// ── Open a specific conversation ──────────────────────────
+async function openConversation(convId) {
+  activeConvId = convId;
+
+  // Get conversation details
+  const { data: conv } = await sb.from('conversations').select('*').eq('id', convId).single();
+  if (!conv) return;
+
+  // Update header
+  const ini = (conv.contractor_name || 'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('chat-av').textContent      = ini;
+  document.getElementById('chat-name').textContent    = conv.contractor_name || 'Contractor';
+  document.getElementById('chat-status').textContent  = conv.status === 'accepted' ? '✅ Active conversation' : conv.status === 'pending' ? '⏳ Request pending…' : '❌ Request declined';
+  document.getElementById('chat-header').style.display = 'flex';
+  document.getElementById('chat-empty').style.display  = 'none';
+
+  // Show/hide pending banner and input
+  document.getElementById('chat-pending-banner').style.display = conv.status === 'pending' ? 'block' : 'none';
+  document.getElementById('chat-input-row').style.display      = conv.status === 'accepted' ? 'flex' : 'none';
+
+  // Mark active in list
+  document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.conv-item').forEach(el => {
+    if (el.onclick?.toString().includes(convId)) el.classList.add('active');
+  });
+
+  // Load messages
+  await loadMessages(convId);
+
+  // Subscribe to real-time messages
+  if (chatChannel) sb.removeChannel(chatChannel);
+  chatChannel = sb.channel('msgs-' + convId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'messages',
+      filter: `conversation_id=eq.${convId}`,
+    }, payload => {
+      appendMessage(payload.new, conv);
+    })
+    .subscribe();
+}
+
+// ── Load messages for a conversation ──────────────────────
+async function loadMessages(convId) {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .eq('conversation_id', convId)
+    .order('created_at', { ascending: true });
+
+  const msgsEl = document.getElementById('chat-msgs');
+  if (!data || !data.length) {
+    msgsEl.innerHTML = `<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;
+    return;
+  }
+  msgsEl.innerHTML = data.map(m => renderMessage(m)).join('');
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function renderMessage(m) {
+  const mine    = m.sender_id === user.id;
+  const cls     = mine ? 'mine' : 'theirs';
+  const bubbleCls = mine ? 'msg-mine' : 'msg-theirs';
+  const time    = new Date(m.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  return `<div class="msg-wrap ${cls}">
+    <div class="msg-bubble ${bubbleCls}">${escHtml(m.body)}</div>
+    <div class="msg-time ${cls}">${time}</div>
+  </div>`;
+}
+
+function appendMessage(m, conv) {
+  const msgsEl = document.getElementById('chat-msgs');
+  if (!msgsEl) return;
+  const div = document.createElement('div');
+  div.innerHTML = renderMessage(m);
+  msgsEl.appendChild(div.firstChild);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+// ── Send a message ─────────────────────────────────────────
+async function sendMessage() {
+  if (!activeConvId) return;
+  const input = document.getElementById('chat-input');
+  const raw   = (input.value || '').trim();
+  if (!raw) return;
+
+  if (hasLink(raw)) {
+    showToast('🚫 Links are not allowed in messages.');
+    return;
+  }
+
+  const body = sanitizeMessage(raw);
+  if (!body) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+
+  const { error } = await sb.from('messages').insert({
+    conversation_id: activeConvId,
+    sender_id:       user.id,
+    sender_role:     'customer',
+    body,
+  });
+
+  if (error) showToast('❌ Could not send message.');
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+init();
+</script>
+</body>
+</html>

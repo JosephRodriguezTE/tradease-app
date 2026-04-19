@@ -1104,7 +1104,7 @@ h1, h2, h3, h4 { text-shadow: var(--shadow-text); }
           <div class="why-icon">⚡</div>
           <div>
             <h4>Fast Booking</h4>
-            <p>From search to confirmed booking in under 60 seconds. No back-and-forth, no waiting.</p>
+            <p>From search to Accepted booking in under 60 seconds. No back-and-forth, no waiting.</p>
           </div>
         </div>
         <div class="card why-card">
@@ -2452,7 +2452,7 @@ function showResultsPage(trade, rawQuery) {
   document.getElementById('results-subtext').textContent     = info ? info.sub : (rawQuery ? `Showing results for: "${rawQuery}"` : 'Browse all available contractors.');
 
   const rsEl = document.getElementById('resultsSearch');
-  if (rsEl && !rsEl.value) rsEl.value = rawQuery;
+  if (rsEl) rsEl.value = rawQuery;
 
   const tradeSel = document.getElementById('filter-trade');
   if (tradeSel && trade) tradeSel.value = trade;
@@ -2816,7 +2816,375 @@ function toggleMobileMenu() {
   const m = document.getElementById('mobileMenu');
   m.style.display = m.style.display === 'none' ? 'block' : 'none';
 }
-
+// ── MATCH FLOW STATE ─────────────────────────────────────────
+const _match = {
+  service:  '',
+  desc:     '',
+  urgency:  'asap',
+  date:     '',
+  time:     '',
+  location: '',
+  name:     '',
+  phone:    '',
+  contractor: null,
+};
+ 
+const PRICE_CATALOG = {
+  Plumbing:    { min: 150, max: 450, note: 'Service call + parts' },
+  Electrical:  { min: 125, max: 400, note: 'Labor + materials' },
+  HVAC:        { min: 100, max: 600, note: 'Diagnostic + repair' },
+  Handyman:    { min: 75,  max: 250, note: 'Per job / hourly' },
+  Roofing:     { min: 300, max: 1500, note: 'Inspection + repair' },
+  Cleaning:    { min: 80,  max: 300, note: 'Per session' },
+  Mechanical:  { min: 120, max: 500, note: 'Labor + parts' },
+  Painting:    { min: 200, max: 800, note: 'Per room / project' },
+  Carpentry:   { min: 150, max: 600, note: 'Materials + labor' },
+  Landscaping: { min: 100, max: 400, note: 'Per visit' },
+};
+ 
+// ── OPEN / CLOSE ─────────────────────────────────────────────
+function openMatchFlow() {
+  document.getElementById('match-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  matchStep(1);
+}
+ 
+function closeMatchFlow() {
+  document.getElementById('match-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+ 
+function startMatchFlow() {
+  const q = (document.getElementById('heroSearch')?.value || '').trim();
+  if (q) {
+    _match.desc = q;
+    const guessed = classifyTrade(q);
+    if (guessed) {
+      _match.service = guessed;
+      openMatchFlow();
+      matchStep(2);
+      return;
+    }
+  }
+  openMatchFlow();
+}
+ 
+function openMatchFlowWithService(service) {
+  _match.service = service;
+  openMatchFlow();
+  if (service) matchStep(2);
+}
+ 
+// ── STEP NAVIGATION ──────────────────────────────────────────
+function matchStep(n) {
+  const steps = document.querySelectorAll('.match-step');
+  steps.forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('mstep-' + n);
+  if (target) target.classList.add('active');
+ 
+  const pcts = { 1: '25%', 2: '50%', 3: '75%', 4: '100%' };
+  const titles = {
+    1: 'What do you need?',
+    2: 'Describe the job',
+    3: "Where's the job?",
+    4: 'Your top matches',
+  };
+  const labels = {
+    1: 'Step 1 of 4',
+    2: 'Step 2 of 4',
+    3: 'Step 3 of 4',
+    4: 'Step 4 of 4',
+  };
+ 
+  const progEl = document.getElementById('match-progress');
+  if (progEl) progEl.style.width = pcts[n] || '25%';
+  const titleEl = document.getElementById('match-step-title');
+  if (titleEl) titleEl.textContent = titles[n] || '';
+  const labelEl = document.getElementById('match-step-label');
+  if (labelEl) labelEl.textContent = labels[n] || '';
+ 
+  // Step 2: pre-fill service title
+  if (n === 2 && _match.service) {
+    const ms2 = document.getElementById('ms2-title');
+    if (ms2) ms2.textContent = 'Describe your ' + _match.service + ' issue';
+    const descEl = document.getElementById('m-desc');
+    if (descEl && _match.desc) descEl.value = _match.desc;
+  }
+ 
+  // Step 4: trigger matching
+  if (n === 4) loadMatchedContractors();
+}
+ 
+// ── STEP 1: Service Selection ─────────────────────────────────
+function selectService(service, el) {
+  document.querySelectorAll('.service-btn').forEach(b => b.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+  _match.service = service;
+  // Auto-advance after short delay for UX
+  setTimeout(() => matchStep(2), 200);
+}
+ 
+// ── STEP 2: Urgency ──────────────────────────────────────────
+function selectUrgency(urgency, el) {
+  document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+  _match.urgency = urgency;
+ 
+  const scheduleInputs = document.getElementById('schedule-inputs');
+  if (scheduleInputs) {
+    scheduleInputs.style.display = urgency === 'scheduled' ? 'block' : 'none';
+  }
+ 
+  if (urgency === 'scheduled') {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateEl = document.getElementById('m-date');
+    if (dateEl) dateEl.value = tomorrow.toISOString().split('T')[0];
+  }
+}
+ 
+// ── STEP 3: Location Detection ───────────────────────────────
+function detectLocation() {
+  const statusEl = document.getElementById('loc-status');
+  if (!navigator.geolocation) {
+    if (statusEl) statusEl.textContent = '⚠️ Geolocation not supported on this device.';
+    return;
+  }
+  if (statusEl) statusEl.textContent = '📍 Detecting your location…';
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`
+        );
+        const data = await res.json();
+        const city    = data.address?.city || data.address?.town || data.address?.village || '';
+        const state   = data.address?.state || '';
+        const postcode = data.address?.postcode || '';
+        const locStr  = postcode ? `${city}, ${state} ${postcode}` : `${city}, ${state}`;
+        const locEl   = document.getElementById('m-location');
+        if (locEl) locEl.value = locStr.trim();
+        if (statusEl) statusEl.textContent = '✅ Location detected!';
+      } catch (e) {
+        if (statusEl) statusEl.textContent = '⚠️ Could not resolve address. Enter manually.';
+      }
+    },
+    err => {
+      if (statusEl) statusEl.textContent = '⚠️ ' + (err.message || 'Location access denied.');
+    },
+    { timeout: 8000 }
+  );
+}
+ 
+// Validate step 2→3 transition
+const _origMatchStep3 = matchStep;
+// Override step 3 trigger from step 2's Continue button
+document.addEventListener('DOMContentLoaded', () => {
+  const ms2next = document.getElementById('ms2-next');
+  if (ms2next) {
+    ms2next.onclick = () => {
+      const desc = (document.getElementById('m-desc')?.value || '').trim();
+      if (!desc) { showToast('⚠️ Please describe the job first.'); return; }
+      _match.desc    = desc;
+      _match.urgency = _match.urgency || 'asap';
+      if (_match.urgency === 'scheduled') {
+        _match.date = document.getElementById('m-date')?.value || '';
+        _match.time = document.getElementById('m-time')?.value || '';
+      }
+      matchStep(3);
+    };
+  }
+});
+ 
+// ── STEP 4: Load Matched Contractors ─────────────────────────
+async function loadMatchedContractors() {
+  // Collect step 3 data
+  _match.location = (document.getElementById('m-location')?.value || '').trim();
+  _match.name     = (document.getElementById('m-name')?.value    || '').trim();
+  _match.phone    = (document.getElementById('m-phone')?.value   || '').trim();
+ 
+  // Show price estimate
+  const catalog = PRICE_CATALOG[_match.service];
+  if (catalog) {
+    const pricePreview = document.getElementById('price-preview');
+    const priceRange   = document.getElementById('price-range');
+    const priceNote    = document.getElementById('price-note');
+    const priceIcon    = document.getElementById('price-icon');
+    if (pricePreview) pricePreview.style.display = 'flex';
+    if (priceRange)   priceRange.textContent = `$${catalog.min}–$${catalog.max}`;
+    if (priceNote)    priceNote.textContent   = catalog.note + ' · No charge until job done';
+    if (priceIcon)    priceIcon.textContent   = (TRADE_MAP[_match.service]?.icon) || '🔧';
+  }
+ 
+  const sub = document.getElementById('ms4-sub');
+  if (sub) sub.textContent = 'Finding available contractors near you…';
+ 
+  const listEl = document.getElementById('match-contractors-list');
+  if (listEl) {
+    listEl.innerHTML = `<div style="text-align:center;padding:32px;color:rgba(255,255,255,.4);">
+      <div style="font-size:28px;margin-bottom:10px;display:inline-block;animation:spin .8s linear infinite;">⟳</div>
+      <div style="font-size:14px;">Matching you with top contractors…</div>
+    </div>`;
+  }
+ 
+  // Reset confirm state
+  _match.contractor = null;
+  const confirmBtn = document.getElementById('confirm-booking-btn');
+  if (confirmBtn) confirmBtn.disabled = true;
+  const confirmCard = document.getElementById('selected-confirm-card');
+  if (confirmCard) confirmCard.style.display = 'none';
+ 
+  // Fetch from Supabase — filter by trade if set
+  let list = getContractorList ? getContractorList() : CONTRACTORS;
+  if (_match.service) {
+    list = list.filter(c =>
+      c.trades?.includes(_match.service) || c.trade === _match.service
+    );
+  }
+  // Exclude Just Leads contractors from booking flow
+  list = list.filter(c => c.plan !== 'leads');
+  // Sort by rating
+  list = [...list].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
+ 
+  await new Promise(r => setTimeout(r, 800)); // simulate matching delay
+ 
+  if (!list.length) {
+    if (sub) sub.textContent = 'No contractors available right now.';
+    if (listEl) listEl.innerHTML = `<div style="text-align:center;padding:24px;color:rgba(255,255,255,.4);">
+      <div style="font-size:32px;margin-bottom:10px;">😔</div>
+      <div>No contractors available for this service right now.<br>Try expanding your search or check back soon.</div>
+    </div>`;
+    return;
+  }
+ 
+  if (sub) sub.textContent = `${list.length} contractor${list.length !== 1 ? 's' : ''} available near you`;
+ 
+  const COLORS = [
+    'linear-gradient(135deg,#FF6B2B,#E05520)',
+    'linear-gradient(135deg,#3B82F6,#1D4ED8)',
+    'linear-gradient(135deg,#10B981,#059669)',
+  ];
+ 
+  if (listEl) {
+    listEl.innerHTML = list.map((c, i) => {
+      const eta = _match.urgency === 'asap' ? `~${20 + i * 15} min` :
+                  _match.urgency === 'today' ? 'Today' : 'Scheduled';
+      const ratingStr = c.rating ? `★ ${Number(c.rating).toFixed(1)}` : '★ New';
+      return `<div class="match-contractor" onclick="selectMatchContractor(${JSON.stringify(c).replace(/"/g,'&quot;')}, this)">
+        <div class="mc-av" style="background:${c.color || COLORS[i % COLORS.length]};">${c.initials || (c.name||'').substring(0,2).toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="mc-name">${c.name || '—'}</div>
+          <div class="mc-meta">${c.trade || ''} · ${c.location || 'New York'}</div>
+        </div>
+        <div class="mc-badge">
+          <div class="mc-eta">${eta}</div>
+          <div class="mc-rating">${ratingStr}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+ 
+function selectMatchContractor(c, el) {
+  document.querySelectorAll('.match-contractor').forEach(e => e.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+  _match.contractor = c;
+ 
+  const confirmBtn = document.getElementById('confirm-booking-btn');
+  if (confirmBtn) confirmBtn.disabled = false;
+ 
+  const confirmCard = document.getElementById('selected-confirm-card');
+  const confirmName = document.getElementById('confirm-contractor-name');
+  const confirmDets = document.getElementById('confirm-details');
+  if (confirmCard) confirmCard.style.display = 'block';
+  if (confirmName) confirmName.textContent = c.name || '—';
+ 
+  const lines = [];
+  if (_match.service)  lines.push('🔧 ' + _match.service);
+  if (_match.urgency === 'asap')   lines.push('⏱ ASAP — within 2 hours');
+  else if (_match.urgency === 'today') lines.push('📅 Today');
+  else if (_match.urgency === 'this_week') lines.push('🗓️ This week');
+  else if (_match.date) lines.push('📅 ' + _match.date + (_match.time ? ' · ' + _match.time : ''));
+  if (_match.location) lines.push('📍 ' + _match.location);
+ 
+  if (confirmDets) {
+    confirmDets.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+  }
+}
+ 
+// ── CONFIRM BOOKING ───────────────────────────────────────────
+async function confirmMatchedBooking() {
+  if (!_match.contractor) { showToast('⚠️ Please select a contractor first.'); return; }
+  if (!_match.name)  { showToast('⚠️ Please enter your name in step 3.'); matchStep(3); return; }
+  if (!_match.phone) { showToast('⚠️ Please enter your phone number in step 3.'); matchStep(3); return; }
+ 
+  const btn = document.getElementById('confirm-booking-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Booking…'; }
+ 
+  if (!currentUser) {
+    // Store intent and redirect to login
+    sessionStorage.setItem('post_auth_action', JSON.stringify({ action: 'book', match: _match }));
+    showToast('🔐 Please sign in to confirm your booking.');
+    setTimeout(() => { sessionStorage.setItem('auth_intentional','1'); window.location.href = '/tradease-auth.html'; }, 1200);
+    return;
+  }
+ 
+  const c = _match.contractor;
+  const urgencyTime = {
+    asap:      'ASAP (within 2 hours)',
+    today:     'Today',
+    this_week: 'This week',
+    scheduled: _match.time || 'Scheduled',
+  };
+ 
+  const { error } = await sb.from('bookings').insert({
+    customer_id:     currentUser.id,
+    customer_name:   _match.name,
+    customer_phone:  _match.phone,
+    contractor_id:   String(c.id),
+    contractor_name: c.name,
+    trade:           _match.service || c.trade,
+    description:     _match.desc,
+    booking_date:    _match.date || null,
+    booking_time:    urgencyTime[_match.urgency] || _match.urgency,
+    status:          'pending',
+    payment_status:  'unpaid',
+  });
+ 
+  if (btn) { btn.disabled = false; btn.textContent = 'Confirm Booking →'; }
+ 
+  if (error) {
+    showToast('❌ Could not save booking: ' + error.message);
+    return;
+  }
+ 
+  // Store for success page
+  sessionStorage.setItem('booking_Accepted', JSON.stringify({
+    contractor: c.name,
+    service:    _match.service || c.trade,
+    date:       _match.date || (_match.urgency === 'asap' ? 'Today (ASAP)' : _match.urgency),
+  }));
+ 
+  closeMatchFlow();
+  window.location.href = '/success.html';
+}
+ 
+// ── MESSAGE CONTRACTOR (from profile page) ────────────────────
+function handleMessageContractor(contractorId, contractorName) {
+  if (!currentUser) {
+    sessionStorage.setItem('post_auth_action', JSON.stringify({
+      action: 'message',
+      contractorId,
+      contractorName,
+    }));
+    showToast('🔐 Please sign in to message this contractor.');
+    setTimeout(() => { sessionStorage.setItem('auth_intentional','1'); window.location.href = '/tradease-auth.html'; }, 1200);
+    return;
+  }
+  // Redirect to customer dashboard with chat open
+  sessionStorage.setItem('open_chat', JSON.stringify({ contractorId, contractorName }));
+  window.location.href = '/customer-dashboard.html';
+}
 </script>
 
 <!-- ============================================================
@@ -2977,7 +3345,12 @@ async function submitBooking() {
   const btn = document.getElementById('booking-submit-btn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Booking…'; }
 
-  const { data: booking, error } = await sb.from('bookings').insert({
+  if (!activeContractor) {
+  if (btn) { btn.disabled = false; btn.textContent = 'Confirm Booking Request →'; }
+  showToast('⚠️ No contractor selected. Please try again.');
+  return;
+}
+const { data: booking, error } = await sb.from('bookings').insert({
     customer_id:     currentUser.id,
     customer_name:   name,
     customer_phone:  phone,
@@ -3118,6 +3491,272 @@ function handleHelpSearch() {
   );
 }
 
+
+// ── FIX #12: loadBkgs → loadBookings alias ───────────────────
+// acceptJobOffer() calls loadBkgs() but the function is loadBookings()
+function loadBkgs() { return loadBookings(); }
+
+// ── FIX #8: checkNewMessageRequests ──────────────────────────
+async function checkNewMessageRequests() {
+  initOnlineStatus();
+subscribeToJobOffers();
+  if (!user) return;
+  const { data, error } = await sb.from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('contractor_id', user.id)
+    .eq('status', 'pending');
+  if (error || data === null) return;
+  const badge = document.getElementById('c-msg-badge');
+  if (!badge) return;
+  // count is on the response for head:true queries
+  const { count } = await sb.from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('contractor_id', user.id)
+    .eq('status', 'pending');
+  if (count > 0) {
+    badge.textContent = count > 9 ? '9+' : count;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ── FIX #9: loadCConversations ───────────────────────────────
+async function loadCConversations() {
+  if (!user) return;
+  const { data } = await sb.from('conversations')
+    .select('*')
+    .eq('contractor_id', user.id)
+    .order('last_message_at', { ascending: false, nullsFirst: false });
+
+  const listEl = document.getElementById('c-conv-list');
+  if (!listEl) return;
+
+  if (!data || !data.length) {
+    listEl.innerHTML = `<div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">
+      No conversations yet.<br>Customers will appear here after booking.
+    </div>`;
+    return;
+  }
+
+  let unread = 0;
+  listEl.innerHTML = data.map(c => {
+    const ini      = (c.customer_name || 'C').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const time     = c.last_message_at ? new Date(c.last_message_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '';
+    const preview  = c.last_message ? c.last_message.substring(0, 45) + (c.last_message.length > 45 ? '…' : '') : 'No messages yet';
+    const isPending = c.status === 'pending';
+    if (isPending) unread++;
+    const activeClass = c.id === _cActiveConvId ? 'active' : '';
+    return `<div class="c-conv-item ${activeClass}" onclick="cOpenConversation('${c.id}')">
+      <div class="c-conv-av">${ini}</div>
+      <div class="c-conv-info">
+        <div class="c-conv-name">${c.customer_name || 'Customer'}</div>
+        <div class="c-conv-preview">${preview}</div>
+      </div>
+      <div class="c-conv-meta">
+        <span class="c-conv-time">${time}</span>
+        ${isPending ? '<div class="c-pending-dot"></div>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Update badge
+  const badge = document.getElementById('c-msg-badge');
+  if (badge) {
+    badge.style.display = unread > 0 ? 'inline' : 'none';
+    badge.textContent   = unread > 9 ? '9+' : unread;
+  }
+}
+
+// ── CONVERSATION STATE ────────────────────────────────────────
+let _cActiveConvId  = null;
+let _cChatChannel   = null;
+
+// ── FIX: cOpenConversation ────────────────────────────────────
+async function cOpenConversation(convId) {
+  _cActiveConvId = convId;
+
+  const { data: conv } = await sb.from('conversations')
+    .select('*').eq('id', convId).single();
+  if (!conv) return;
+
+  const ini = (conv.customer_name || 'C').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const headerEl = document.getElementById('c-chat-header');
+  const emptyEl  = document.getElementById('c-chat-empty');
+  const inputRow = document.getElementById('c-chat-input-row');
+  const acceptRow = document.getElementById('c-accept-row');
+  const chatAv   = document.getElementById('c-chat-av');
+  const chatName = document.getElementById('c-chat-name');
+  const chatStat = document.getElementById('c-chat-status');
+
+  if (chatAv)    chatAv.textContent    = ini;
+  if (chatName)  chatName.textContent  = conv.customer_name || 'Customer';
+  if (chatStat)  chatStat.textContent  = conv.status === 'pending'
+    ? '⏳ Message request — accept to reply'
+    : conv.status === 'accepted' ? '✅ Active conversation' : '❌ Declined';
+
+  if (headerEl)  headerEl.style.display = 'flex';
+  if (emptyEl)   emptyEl.style.display  = 'none';
+  if (acceptRow) acceptRow.style.display = conv.status === 'pending' ? 'flex' : 'none';
+  if (inputRow)  inputRow.style.display  = conv.status === 'accepted' ? 'flex' : 'none';
+
+  // Mark active in list
+  document.querySelectorAll('.c-conv-item').forEach(el => el.classList.remove('active'));
+  const items = document.querySelectorAll('.c-conv-item');
+  items.forEach(el => {
+    if (el.getAttribute('onclick')?.includes(convId)) el.classList.add('active');
+  });
+
+  // Load messages
+  await cLoadMessages(convId);
+
+  // Real-time subscription
+  if (_cChatChannel) sb.removeChannel(_cChatChannel);
+  _cChatChannel = sb.channel('c-msgs-' + convId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'messages',
+      filter: `conversation_id=eq.${convId}`,
+    }, payload => cAppendMessage(payload.new))
+    .subscribe();
+}
+
+async function cLoadMessages(convId) {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .eq('conversation_id', convId)
+    .order('created_at', { ascending: true });
+
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!msgsEl) return;
+
+  if (!data || !data.length) {
+    msgsEl.innerHTML = `<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;
+    return;
+  }
+  msgsEl.innerHTML = data.map(m => cRenderMessage(m)).join('');
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function cRenderMessage(m) {
+  const mine      = m.sender_id === user.id;
+  const cls       = mine ? 'mine' : 'theirs';
+  const bubbleCls = mine ? 'c-msg-mine' : 'c-msg-theirs';
+  const time      = new Date(m.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return `<div class="c-msg-wrap ${cls}">
+    <div class="c-msg-bubble ${bubbleCls}">${escCHtml(m.body)}</div>
+    <div class="c-msg-time ${cls}">${time}</div>
+  </div>`;
+}
+
+function cAppendMessage(m) {
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!msgsEl) return;
+  const div = document.createElement('div');
+  div.innerHTML = cRenderMessage(m);
+  msgsEl.appendChild(div.firstChild);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function escCHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function cHasLink(txt) {
+  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app)[^\s]*)/i.test(txt);
+}
+
+// ── FIX #10: cSendMessage ────────────────────────────────────
+async function cSendMessage() {
+  if (!_cActiveConvId || !user) return;
+  const input = document.getElementById('c-chat-input');
+  const raw   = (input?.value || '').trim();
+  if (!raw) return;
+
+  if (cHasLink(raw)) {
+    showToast('🚫 Links are not allowed in messages.');
+    return;
+  }
+
+  if (input) input.value = '';
+
+  const { error } = await sb.from('messages').insert({
+    conversation_id: _cActiveConvId,
+    sender_id:       user.id,
+    sender_role:     'contractor',
+    body:            raw,
+  });
+
+  if (error) showToast('❌ Could not send message.');
+
+  // Update last_message on conversation
+  await sb.from('conversations')
+    .update({ last_message: raw, last_message_at: new Date().toISOString() })
+    .eq('id', _cActiveConvId);
+}
+
+// ── FIX #11: respondToRequest ─────────────────────────────────
+async function respondToRequest(action) {
+  if (!_cActiveConvId || !user) return;
+
+  const { error } = await sb.from('conversations')
+    .update({ status: action })
+    .eq('id', _cActiveConvId)
+    .eq('contractor_id', user.id);
+
+  if (error) { showToast('❌ Could not update request.'); return; }
+
+  const acceptRow = document.getElementById('c-accept-row');
+  const inputRow  = document.getElementById('c-chat-input-row');
+  const chatStat  = document.getElementById('c-chat-status');
+
+  if (action === 'accepted') {
+    if (acceptRow) acceptRow.style.display = 'none';
+    if (inputRow)  inputRow.style.display  = 'flex';
+    if (chatStat)  chatStat.textContent    = '✅ Active conversation';
+    showToast('✅ Message request accepted!');
+    // Send a welcome message
+    await sb.from('messages').insert({
+      conversation_id: _cActiveConvId,
+      sender_id:       user.id,
+      sender_role:     'contractor',
+      body:            'Hi! Thanks for reaching out. How can I help you?',
+    });
+    await cLoadMessages(_cActiveConvId);
+  } else {
+    if (acceptRow) acceptRow.style.display = 'none';
+    if (chatStat)  chatStat.textContent    = '❌ Request declined';
+    showToast('Request declined.');
+  }
+
+  loadCConversations();
+  checkNewMessageRequests();
+}
+
+// ── FIX #17/#18: Move init-time calls inside init() ──────────
+// initOnlineStatus() and subscribeToJobOffers() are called at the
+// bottom of the script before init() sets user. They now run inside
+// init() AFTER user is set. Remove the two bare calls at the bottom
+// of the original script and instead call them from within init().
+// The patch below is additive; the original bare calls will be
+// harmless no-ops since user is set by the time DOMContentLoaded fires,
+// but to be safe we guard both functions:
+
+const _origInitOnlineStatus = typeof initOnlineStatus === 'function' ? initOnlineStatus : null;
+async function initOnlineStatusSafe() {
+  if (!user) return;
+  return _origInitOnlineStatus ? _origInitOnlineStatus() : undefined;
+}
+
+// ── FIX #14: filterBk label "Confirmed" maps correctly ────────
+// The filter buttons use text "Confirmed" but booking status is "accepted".
+// The map const { confirmed: 'accepted' } handles this — no code change needed,
+// but the button label should say "Accepted" not "Confirmed" for clarity.
+// Fix is applied in the HTML patch below.
 </script>
 </body>
 </html>

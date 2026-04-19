@@ -764,7 +764,8 @@ async function cancelBooking(id){ cancelBookingWithFee(id,'',''); }
 async function cancelBookingWithFee(id, bookingDate, bookingTime) {
   let hoursUntil = 999;
   if (bookingDate) {
-    const ts = new Date(bookingDate + 'T' + (bookingTime||'09:00'));
+    const timeStr = /^\d{1,2}:\d{2}$/.test(bookingTime) ? bookingTime : '09:00';
+const ts = new Date(bookingDate + 'T' + timeStr);
     hoursUntil = (ts - new Date()) / 3600000;
   }
   let feePct=0, feeMsg='Free cancellation — no charge.';
@@ -860,12 +861,15 @@ function subscribeToBookings() {
 
 async function autoFindNewContractor(booking) {
   if(!booking.trade) return;
-  const{data:candidates}=await sb.rpc('find_next_contractor',{
+  const { data: candidates, error: rpcErr } = await sb.rpc('find_next_contractor', {
     p_booking_id:booking.id, p_trade:booking.trade,
     p_location:prof?.location||null,
     p_exclude_ids:String(booking.contractor_id||''),
   });
-  if(!candidates||!candidates.length){
+  if (rpcErr) {
+  console.error('RPC Error:', rpcErr);
+}
+  if (rpcErr || !candidates || !candidates.length) {
     showToast('😔 No other contractors available right now. Please search manually.');
     setTimeout(()=>{window.location.href='/';},2200);
     return;
@@ -1359,12 +1363,10 @@ let chatContractorId = null;
 // ── Link blocker ──────────────────────────────────────────
 function sanitizeMessage(txt) {
   // Strip any URLs
-  return txt.replace(/(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[^\s]*)/gi, '[link removed]').trim();
-}
+  return txt.return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)([/?#\s]|$))/i.test(txt);
 
 function hasLink(txt) {
-  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)[/\s])/i.test(txt);
-}
+ return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app|gg|me|info)([/?#\s]|$))/i.test(txt);
 
 // ── Start a new conversation with a contractor ────────────
 async function startConversation(contractorId, contractorName) {

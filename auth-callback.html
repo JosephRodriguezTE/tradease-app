@@ -250,7 +250,7 @@ async function redirectToDashboard(user) {
     await sb.from('users').upsert({
       id:       user.id,
       email:    user.email,
-      username: user.user_metadata?.full_name || user.user_metadata?.name || user.user_metadata?.user_name || user.email.split('@')[0],
+      user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]
       role,
     }, { onConflict: 'id' });
 

@@ -1606,7 +1606,7 @@ async function handleContractorSignup() {
     total_bookings:  0,
     profile_views:   0,
     portfolio:       [],
-    avatar:          `https://picsum.photos/seed/${encodeURIComponent(companyName)}/200/200`,
+    avatar_url:          `https://picsum.photos/seed/${encodeURIComponent(companyName)}/200/200`,
   });
 
   setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
@@ -1710,7 +1710,7 @@ async function resendConfirmation() {
   // Get email from the signup form field that was last used
   const email = _lastResendEmail
     || document.getElementById('cu-email')?.value?.trim()
-    || document.getElementById('co-email')?.value?.trim()
+    || document.getElementById('c-email')?.value?.trim()
     || '';
 
   if (!email) {

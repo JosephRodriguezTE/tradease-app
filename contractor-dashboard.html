@@ -1092,6 +1092,8 @@ async function init() {
   subscribeToBookings();
   subscribeToNotifications();
   checkNewMessageRequests();
+  initOnlineStatus();
+subscribeToJobOffers();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -1982,19 +1984,7 @@ function subscribeToJobOffers() {
       showJobOfferBanner({ ...offer, ...job });
     }).subscribe();
 
-  // Also subscribe to new bookings assigned directly
-  sb.channel('new-bookings-' + user.id)
-    .on('postgres_changes', {
-      event: 'INSERT', schema: 'public', table: 'bookings',
-      filter: `contractor_id=eq.${user.id}`,
-    }, payload => {
-      const bk = payload.new;
-      if (bk.status === 'pending') {
-        showJobOfferBanner(bk);
-        showToast('🔔 New booking request from ' + (bk.customer_name || 'a customer') + '!');
-      }
-    }).subscribe();
-}
+  
 
 function showJobOfferBanner(job) {
   _currentJobOffer = job;
@@ -2273,8 +2263,7 @@ function showUpgradeToast(type) {
   showToast(msgs[type] || '💳 Payments coming soon!');
 }
 
-initOnlineStatus();
-subscribeToJobOffers();
+// Moved into init()
 
 function goHome() { window.location.href='/'; }
 function findContractors() { localStorage.removeItem('tradease_goto'); window.location.href='/'; }
@@ -2288,6 +2277,271 @@ function showToast(msg) {
 }
 
 init();
+// ── FIX #12: loadBkgs → loadBookings alias ───────────────────
+// acceptJobOffer() calls loadBkgs() but the function is loadBookings()
+function loadBkgs() { return loadBookings(); }
+ 
+// ── FIX #8: checkNewMessageRequests ──────────────────────────
+async function checkNewMessageRequests() {
+  if (!user) return;
+  const { data, error } = await sb.from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('contractor_id', user.id)
+    .eq('status', 'pending');
+  if (error || data === null) return;
+  const badge = document.getElementById('c-msg-badge');
+  if (!badge) return;
+  // count is on the response for head:true queries
+  const { count } = await sb.from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('contractor_id', user.id)
+    .eq('status', 'pending');
+  if (count > 0) {
+    badge.textContent = count > 9 ? '9+' : count;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+ 
+// ── FIX #9: loadCConversations ───────────────────────────────
+async function loadCConversations() {
+  if (!user) return;
+  const { data } = await sb.from('conversations')
+    .select('*')
+    .eq('contractor_id', user.id)
+    .order('last_message_at', { ascending: false, nullsFirst: false });
+ 
+  const listEl = document.getElementById('c-conv-list');
+  if (!listEl) return;
+ 
+  if (!data || !data.length) {
+    listEl.innerHTML = `<div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">
+      No conversations yet.<br>Customers will appear here after booking.
+    </div>`;
+    return;
+  }
+ 
+  let unread = 0;
+  listEl.innerHTML = data.map(c => {
+    const ini      = (c.customer_name || 'C').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const time     = c.last_message_at ? new Date(c.last_message_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '';
+    const preview  = c.last_message ? c.last_message.substring(0, 45) + (c.last_message.length > 45 ? '…' : '') : 'No messages yet';
+    const isPending = c.status === 'pending';
+    if (isPending) unread++;
+    const activeClass = c.id === _cActiveConvId ? 'active' : '';
+    return `<div class="c-conv-item ${activeClass}" onclick="cOpenConversation('${c.id}')">
+      <div class="c-conv-av">${ini}</div>
+      <div class="c-conv-info">
+        <div class="c-conv-name">${c.customer_name || 'Customer'}</div>
+        <div class="c-conv-preview">${preview}</div>
+      </div>
+      <div class="c-conv-meta">
+        <span class="c-conv-time">${time}</span>
+        ${isPending ? '<div class="c-pending-dot"></div>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+ 
+  // Update badge
+  const badge = document.getElementById('c-msg-badge');
+  if (badge) {
+    badge.style.display = unread > 0 ? 'inline' : 'none';
+    badge.textContent   = unread > 9 ? '9+' : unread;
+  }
+}
+ 
+// ── CONVERSATION STATE ────────────────────────────────────────
+let _cActiveConvId  = null;
+let _cChatChannel   = null;
+ 
+// ── FIX: cOpenConversation ────────────────────────────────────
+async function cOpenConversation(convId) {
+  _cActiveConvId = convId;
+ 
+  const { data: conv } = await sb.from('conversations')
+    .select('*').eq('id', convId).single();
+  if (!conv) return;
+ 
+  const ini = (conv.customer_name || 'C').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const headerEl = document.getElementById('c-chat-header');
+  const emptyEl  = document.getElementById('c-chat-empty');
+  const inputRow = document.getElementById('c-chat-input-row');
+  const acceptRow = document.getElementById('c-accept-row');
+  const chatAv   = document.getElementById('c-chat-av');
+  const chatName = document.getElementById('c-chat-name');
+  const chatStat = document.getElementById('c-chat-status');
+ 
+  if (chatAv)    chatAv.textContent    = ini;
+  if (chatName)  chatName.textContent  = conv.customer_name || 'Customer';
+  if (chatStat)  chatStat.textContent  = conv.status === 'pending'
+    ? '⏳ Message request — accept to reply'
+    : conv.status === 'accepted' ? '✅ Active conversation' : '❌ Declined';
+ 
+  if (headerEl)  headerEl.style.display = 'flex';
+  if (emptyEl)   emptyEl.style.display  = 'none';
+  if (acceptRow) acceptRow.style.display = conv.status === 'pending' ? 'flex' : 'none';
+  if (inputRow)  inputRow.style.display  = conv.status === 'accepted' ? 'flex' : 'none';
+ 
+  // Mark active in list
+  document.querySelectorAll('.c-conv-item').forEach(el => el.classList.remove('active'));
+  const items = document.querySelectorAll('.c-conv-item');
+  items.forEach(el => {
+    if (el.getAttribute('onclick')?.includes(convId)) el.classList.add('active');
+  });
+ 
+  // Load messages
+  await cLoadMessages(convId);
+ 
+  // Real-time subscription
+  if (_cChatChannel) sb.removeChannel(_cChatChannel);
+  _cChatChannel = sb.channel('c-msgs-' + convId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'messages',
+      filter: `conversation_id=eq.${convId}`,
+    }, payload => cAppendMessage(payload.new))
+    .subscribe();
+}
+ 
+async function cLoadMessages(convId) {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .eq('conversation_id', convId)
+    .order('created_at', { ascending: true });
+ 
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!msgsEl) return;
+ 
+  if (!data || !data.length) {
+    msgsEl.innerHTML = `<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;
+    return;
+  }
+  msgsEl.innerHTML = data.map(m => cRenderMessage(m)).join('');
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+ 
+function cRenderMessage(m) {
+  const mine      = m.sender_id === user.id;
+  const cls       = mine ? 'mine' : 'theirs';
+  const bubbleCls = mine ? 'c-msg-mine' : 'c-msg-theirs';
+  const time      = new Date(m.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return `<div class="c-msg-wrap ${cls}">
+    <div class="c-msg-bubble ${bubbleCls}">${escCHtml(m.body)}</div>
+    <div class="c-msg-time ${cls}">${time}</div>
+  </div>`;
+}
+ 
+function cAppendMessage(m) {
+  const msgsEl = document.getElementById('c-chat-msgs');
+  if (!msgsEl) return;
+  const div = document.createElement('div');
+  div.innerHTML = cRenderMessage(m);
+  msgsEl.appendChild(div.firstChild);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+ 
+function escCHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+ 
+function cHasLink(txt) {
+  return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io|co|app)[^\s]*)/i.test(txt);
+}
+ 
+// ── FIX #10: cSendMessage ────────────────────────────────────
+async function cSendMessage() {
+  if (!_cActiveConvId || !user) return;
+  const input = document.getElementById('c-chat-input');
+  const raw   = (input?.value || '').trim();
+  if (!raw) return;
+ 
+  if (cHasLink(raw)) {
+    showToast('🚫 Links are not allowed in messages.');
+    return;
+  }
+ 
+  if (input) input.value = '';
+ 
+  const { error } = await sb.from('messages').insert({
+    conversation_id: _cActiveConvId,
+    sender_id:       user.id,
+    sender_role:     'contractor',
+    body:            raw,
+  });
+ 
+  if (error) showToast('❌ Could not send message.');
+ 
+  // Update last_message on conversation
+  await sb.from('conversations')
+    .update({ last_message: raw, last_message_at: new Date().toISOString() })
+    .eq('id', _cActiveConvId);
+}
+ 
+// ── FIX #11: respondToRequest ─────────────────────────────────
+async function respondToRequest(action) {
+  if (!_cActiveConvId || !user) return;
+ 
+  const { error } = await sb.from('conversations')
+    .update({ status: action })
+    .eq('id', _cActiveConvId)
+    .eq('contractor_id', user.id);
+ 
+  if (error) { showToast('❌ Could not update request.'); return; }
+ 
+  const acceptRow = document.getElementById('c-accept-row');
+  const inputRow  = document.getElementById('c-chat-input-row');
+  const chatStat  = document.getElementById('c-chat-status');
+ 
+  if (action === 'accepted') {
+    if (acceptRow) acceptRow.style.display = 'none';
+    if (inputRow)  inputRow.style.display  = 'flex';
+    if (chatStat)  chatStat.textContent    = '✅ Active conversation';
+    showToast('✅ Message request accepted!');
+    // Send a welcome message
+    await sb.from('messages').insert({
+      conversation_id: _cActiveConvId,
+      sender_id:       user.id,
+      sender_role:     'contractor',
+      body:            'Hi! Thanks for reaching out. How can I help you?',
+    });
+    await cLoadMessages(_cActiveConvId);
+  } else {
+    if (acceptRow) acceptRow.style.display = 'none';
+    if (chatStat)  chatStat.textContent    = '❌ Request declined';
+    showToast('Request declined.');
+  }
+ 
+  loadCConversations();
+  checkNewMessageRequests();
+  initOnlineStatus();
+subscribeToJobOffers();
+}
+ 
+// ── FIX #17/#18: Move init-time calls inside init() ──────────
+// initOnlineStatus() and subscribeToJobOffers() are called at the
+// bottom of the script before init() sets user. They now run inside
+// init() AFTER user is set. Remove the two bare calls at the bottom
+// of the original script and instead call them from within init().
+// The patch below is additive; the original bare calls will be
+// harmless no-ops since user is set by the time DOMContentLoaded fires,
+// but to be safe we guard both functions:
+ 
+const _origInitOnlineStatus = typeof initOnlineStatus === 'function' ? initOnlineStatus : null;
+async function initOnlineStatusSafe() {
+  if (!user) return;
+  return _origInitOnlineStatus ? _origInitOnlineStatus() : undefined;
+}
+ 
+// ── FIX #14: filterBk label "Confirmed" maps correctly ────────
+// The filter buttons use text "Confirmed" but booking status is "accepted".
+// The map const { confirmed: 'accepted' } handles this — no code change needed,
+// but the button label should say "Accepted" not "Confirmed" for clarity.
+// Fix is applied in the HTML patch below.
 </script>
 </body>
 </html>

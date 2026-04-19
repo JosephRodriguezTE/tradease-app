@@ -349,7 +349,7 @@ async function loadAll() {
     sb.from('bookings').select('id', { count:'exact', head:true }),
     sb.from('contractors').select('id', { count:'exact', head:true }),
     sb.from('users').select('id', { count:'exact', head:true }).eq('role','customer'),
-    sb.from('payments').select('platform_fee').eq('status','captured'),
+    sb.from('payments').select('platform_fee').in('status',['captured','completed','succeeded'])
   ]);
   document.getElementById('s-jobs').textContent        = jobs.count || 0;
   document.getElementById('s-contractors').textContent = contrs.count || 0;

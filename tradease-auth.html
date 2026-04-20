@@ -8,250 +8,84 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* ═══════════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════════ */
 :root {
-  --bg:        #0F0F0F;
-  --bg2:       #161616;
-  --bg3:       #1E1E1E;
-  --bg4:       #252525;
-  --border:    #2E2E2E;
-  --border-hi: #3D3D3D;
-  --orange:    #FF6B2B;
-  --orange-dk: #E05520;
-  --orange-lt: rgba(255,107,43,.12);
-  --white:     #FFFFFF;
-  --grey1:     #F0F0EE;
-  --grey2:     #A8A8A8;
-  --grey3:     #606060;
-  --green:     #22C55E;
-  --red:       #EF4444;
-  --display:   'Barlow Condensed', sans-serif;
-  --body:      'Barlow', sans-serif;
-  --r-sm:      10px;
-  --r-md:      14px;
-  --r-lg:      20px;
-  --r-xl:      28px;
-  --sh:        0 4px 24px rgba(0,0,0,.5);
-  --sh-lg:     0 16px 64px rgba(0,0,0,.6);
-  --sh-or:     0 8px 32px rgba(255,107,43,.3);
+  --bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--bg4:#252525;
+  --border:#2E2E2E;--border-hi:#3D3D3D;
+  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.12);
+  --white:#FFFFFF;--grey1:#F0F0EE;--grey2:#A8A8A8;--grey3:#606060;
+  --green:#22C55E;--red:#EF4444;
+  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
+  --r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:28px;
+  --sh:0 4px 24px rgba(0,0,0,.5);--sh-lg:0 16px 64px rgba(0,0,0,.6);
+  --sh-or:0 8px 32px rgba(255,107,43,.3);
 }
-
-/* ═══════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:auto;}
-body{
-  font-family:var(--body);
-  background:var(--bg);
-  color:var(--grey1);
-  min-height:100vh;
-  overflow-x:hidden;
-  font-size:15px;
-  /* Hidden until session check resolves — prevents flash/flicker */
-  opacity:0;
-  transition:opacity .18s ease;
-  line-height:1.6;
-}
+body{font-family:var(--body);background:var(--bg);color:var(--grey1);min-height:100vh;overflow-x:hidden;font-size:15px;opacity:0;transition:opacity .18s ease;line-height:1.6;}
 a{text-decoration:none;color:inherit;}
 button{cursor:pointer;border:none;background:none;font-family:var(--body);}
 input,select,textarea{font-family:var(--body);}
 ul{list-style:none;}
 
-/* ═══════════════════════════════════════════
-   PAGE ROUTER
-═══════════════════════════════════════════ */
 .screen{display:none;min-height:100vh;}
 .screen.active{display:flex;animation:authFade .15s ease both;}
 @keyframes authFade{from{opacity:0;}to{opacity:1;}}
 
-/* ═══════════════════════════════════════════
-   SPLIT LAYOUT
-═══════════════════════════════════════════ */
 .split{display:grid;grid-template-columns:420px 1fr;min-height:100vh;width:100%;}
-.split-left{
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  padding:52px 48px;
-  display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;
-  overflow:hidden;
-}
-.split-right{
-  background:var(--bg);
-  padding:52px 56px;
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-  min-height:100vh;
-}
+.split-left{background:var(--bg2);border-right:1px solid var(--border);padding:52px 48px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;}
+.split-right{background:var(--bg);padding:52px 56px;display:flex;flex-direction:column;overflow-y:auto;min-height:100vh;}
 
-/* Branding panel */
-.brand-logo{
-  font-family:var(--display);
-  font-size:28px;font-weight:900;
-  color:var(--white);
-  text-transform:uppercase;
-  letter-spacing:.03em;
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:auto;
-}
+.brand-logo{font-family:var(--display);font-size:28px;font-weight:900;color:var(--white);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;gap:8px;margin-bottom:auto;}
 .brand-dot{width:10px;height:10px;background:var(--orange);border-radius:50%;flex-shrink:0;}
 .brand-hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0;}
-.brand-hero h2{
-  font-family:var(--display);
-  font-size:clamp(32px,3.5vw,52px);
-  font-weight:900;
-  color:var(--white);
-  text-transform:uppercase;
-  line-height:1.05;
-  letter-spacing:-.01em;
-  margin-bottom:16px;
-}
+.brand-hero h2{font-family:var(--display);font-size:clamp(32px,3.5vw,52px);font-weight:900;color:var(--white);text-transform:uppercase;line-height:1.05;letter-spacing:-.01em;margin-bottom:16px;}
 .brand-hero h2 em{color:var(--orange);font-style:normal;}
 .brand-hero p{font-size:15px;color:var(--grey2);line-height:1.7;max-width:300px;}
 .brand-features{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
-.brand-feat{
-  display:flex;align-items:center;gap:12px;
-  font-size:13px;color:var(--grey2);
-}
-.brand-feat-icon{
-  width:28px;height:28px;border-radius:8px;
-  background:var(--orange-lt);
-  color:var(--orange);
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;flex-shrink:0;
-}
-.brand-bottom{
-  padding-top:32px;
-  border-top:1px solid var(--border);
-  font-size:12px;color:var(--grey3);
-}
+.brand-feat{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--grey2);}
+.brand-feat-icon{width:28px;height:28px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.brand-bottom{padding-top:32px;border-top:1px solid var(--border);font-size:12px;color:var(--grey3);}
+.brand-orb{position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(255,107,43,.18) 0%,transparent 70%);border-radius:50%;bottom:-80px;right:-80px;pointer-events:none;}
 
-/* Decorative orb */
-.brand-orb{
-  position:absolute;
-  width:280px;height:280px;
-  background:radial-gradient(circle,rgba(255,107,43,.18) 0%,transparent 70%);
-  border-radius:50%;
-  bottom:-80px;right:-80px;
-  pointer-events:none;
-}
-
-/* ═══════════════════════════════════════════
-   FORM ELEMENTS
-═══════════════════════════════════════════ */
-.form-title{
-  font-family:var(--display);
-  font-size:clamp(28px,3vw,40px);
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:-.01em;
-  color:var(--white);
-  margin-bottom:6px;
-}
+.form-title{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;color:var(--white);margin-bottom:6px;}
 .form-sub{font-size:14px;color:var(--grey2);margin-bottom:32px;}
 
-/* User type toggle */
-.type-toggle{
-  display:flex;
-  background:var(--bg3);
-  border-radius:var(--r-md);
-  padding:4px;
-  margin-bottom:32px;
-  border:1px solid var(--border);
-}
-.type-btn{
-  flex:1;padding:11px 16px;
-  border-radius:10px;
-  font-family:var(--display);
-  font-size:14px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.05em;
-  color:var(--grey2);
-  transition:background .12s ease, color .12s ease, box-shadow .12s ease;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-}
-.type-btn.active{
-  background:var(--orange);color:var(--white);
-  box-shadow:var(--sh-or);
-}
+.type-toggle{display:flex;background:var(--bg3);border-radius:var(--r-md);padding:4px;margin-bottom:32px;border:1px solid var(--border);}
+.type-btn{flex:1;padding:11px 16px;border-radius:10px;font-family:var(--display);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--grey2);transition:background .12s ease,color .12s ease,box-shadow .12s ease;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+.type-btn.active{background:var(--orange);color:var(--white);box-shadow:var(--sh-or);}
 .type-btn:not(.active):hover{color:var(--white);}
 
-/* Input groups */
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
-.fg label{
-  font-size:12px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.07em;
-  color:var(--grey2);
-}
-.fg input,.fg select,.fg textarea{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:var(--r-sm);
-  padding:13px 16px;
-  color:var(--grey1);
-  font-size:15px;
-  outline:none;
-  transition:border-color .2s,box-shadow .2s;
-  width:100%;
-}
-.fg input:focus,.fg select:focus,.fg textarea:focus{
-  border-color:var(--orange);
-  box-shadow:0 0 0 3px rgba(255,107,43,.15);
-}
+.fg label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey2);}
+.fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;color:var(--grey1);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.15);}
 .fg input::placeholder,.fg textarea::placeholder{color:var(--grey3);}
 .fg select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23606060' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
 .fg select option{background:var(--bg3);}
 .fg textarea{resize:vertical;min-height:90px;}
-
-/* Input row */
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 
-/* Password wrapper */
 .pw-wrap{position:relative;}
 .pw-wrap input{padding-right:46px;}
-.pw-toggle{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  color:var(--grey3);font-size:17px;cursor:pointer;
-  background:none;border:none;
-  transition:color .18s;
-}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--grey3);font-size:17px;cursor:pointer;background:none;border:none;transition:color .18s;}
 .pw-toggle:hover{color:var(--orange);}
 
-/* Input hint / error */
 .hint{font-size:12px;color:var(--grey3);margin-top:4px;}
 .err{font-size:12px;color:var(--red);margin-top:4px;display:none;}
 .err.show{display:block;}
 
-/* Password strength */
 .pw-strength{margin-top:8px;}
 .pw-bar{height:3px;border-radius:4px;background:var(--bg4);overflow:hidden;}
 .pw-fill{height:100%;border-radius:4px;width:0%;transition:width .3s,background .3s;}
 .pw-label{font-size:11px;color:var(--grey3);margin-top:4px;}
 
-/* Checkbox */
 .check-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
-.check-row input[type=checkbox]{
-  width:18px;height:18px;flex-shrink:0;
-  accent-color:var(--orange);
-  cursor:pointer;margin-top:2px;
-}
+.check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:var(--orange);cursor:pointer;margin-top:2px;}
 .check-row label{font-size:13px;color:var(--grey2);line-height:1.6;cursor:pointer;}
 .check-row label a{color:var(--orange);}
 
-/* Radio group */
 .radio-group{display:flex;gap:10px;flex-wrap:wrap;}
-.radio-opt{
-  flex:1;min-width:120px;
-  border:1px solid var(--border);
-  border-radius:var(--r-sm);
-  padding:14px;
-  cursor:pointer;
-  transition:border-color .12s ease, background .12s ease;
-  display:flex;flex-direction:column;gap:4px;
-}
+.radio-opt{flex:1;min-width:120px;border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;cursor:pointer;transition:border-color .12s ease,background .12s ease;display:flex;flex-direction:column;gap:4px;}
 .radio-opt:hover{border-color:var(--border-hi);}
 .radio-opt.selected{border-color:var(--orange);background:var(--orange-lt);}
 .radio-opt input{display:none;}
@@ -259,80 +93,37 @@ ul{list-style:none;}
 .radio-opt-desc{font-size:12px;color:var(--grey2);}
 .radio-opt.selected .radio-opt-title{color:var(--orange);}
 
-/* Divider */
-.or-divider{
-  display:flex;align-items:center;gap:12px;
-  margin:20px 0;color:var(--grey3);font-size:13px;
-}
+.or-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--grey3);font-size:13px;}
 .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* Buttons */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  font-family:var(--display);font-weight:800;font-size:15px;
-  text-transform:uppercase;letter-spacing:.06em;
-  padding:15px 28px;border-radius:var(--r-sm);
-  transition:background .12s ease, box-shadow .12s ease, transform .12s ease, border-color .12s ease;
-  cursor:pointer;width:100%;
-  will-change:transform;
-}
-.btn-orange{
-  background:var(--orange);color:var(--white);
-  box-shadow:var(--sh-or);
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.06em;padding:15px 28px;border-radius:var(--r-sm);transition:background .12s ease,box-shadow .12s ease,transform .12s ease,border-color .12s ease;cursor:pointer;width:100%;will-change:transform;}
+.btn-orange{background:var(--orange);color:var(--white);box-shadow:var(--sh-or);}
 .btn-orange:hover{background:var(--orange-dk);transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,107,43,.4);}
 .btn-orange:active{transform:translateY(0);}
-.btn-ghost{
-  background:var(--bg3);color:var(--grey1);
-  border:1px solid var(--border);
-}
+.btn-orange:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-ghost{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);}
 .btn-ghost:hover{border-color:var(--border-hi);background:var(--bg4);}
-.btn-google{
-  background:var(--bg3);color:var(--grey1);
-  border:1px solid var(--border);
-  font-family:var(--body);font-weight:600;font-size:14px;
-  text-transform:none;letter-spacing:0;
-}
+.btn-google{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);font-family:var(--body);font-weight:600;font-size:14px;text-transform:none;letter-spacing:0;}
 .btn-google:hover{border-color:var(--border-hi);}
-.btn-github{
-  background:var(--bg3);color:var(--grey1);
-  border:1px solid var(--border);
-  font-family:var(--body);font-weight:600;font-size:14px;
-  text-transform:none;letter-spacing:0;
-}
+.btn-github{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);font-family:var(--body);font-weight:600;font-size:14px;text-transform:none;letter-spacing:0;}
 .btn-github:hover{border-color:var(--border-hi);}
 .oauth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;}
 .btn-sm{padding:11px 20px;font-size:13px;}
 
-/* Link text */
 .link{color:var(--orange);cursor:pointer;transition:opacity .18s;}
 .link:hover{opacity:.75;}
 .switch-text{text-align:center;font-size:13px;color:var(--grey2);margin-top:20px;}
 
-/* ═══════════════════════════════════════════
-   PROGRESS BAR (contractor steps)
-═══════════════════════════════════════════ */
+/* Alert box for errors */
+.alert-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;color:#FCA5A5;margin-bottom:16px;display:none;}
+.alert-box.show{display:block;}
+
 .progress-wrap{margin-bottom:36px;}
 .progress-steps{display:flex;gap:0;margin-bottom:10px;}
-.prog-step{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
-  position:relative;
-}
-.prog-step:not(:last-child)::after{
-  content:'';
-  position:absolute;top:13px;left:50%;
-  width:100%;height:2px;
-  background:var(--border);
-  z-index:0;
-}
+.prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;}
+.prog-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
 .prog-step.done::after,.prog-step.active::after{background:var(--orange);}
-.prog-dot{
-  width:26px;height:26px;border-radius:50%;
-  background:var(--bg4);border:2px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--grey3);
-  position:relative;z-index:1;transition:background .15s ease, border-color .15s ease, color .15s ease;flex-shrink:0;
-}
+.prog-dot{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--grey3);position:relative;z-index:1;transition:background .15s ease,border-color .15s ease,color .15s ease;flex-shrink:0;}
 .prog-step.done .prog-dot{background:var(--orange);border-color:var(--orange);color:white;}
 .prog-step.active .prog-dot{background:var(--bg);border-color:var(--orange);color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.2);}
 .prog-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey3);}
@@ -340,278 +131,50 @@ ul{list-style:none;}
 .progress-bar-wrap{height:3px;background:var(--bg4);border-radius:4px;overflow:hidden;}
 .progress-bar-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s ease;}
 
-/* ═══════════════════════════════════════════
-   STEP PANELS
-═══════════════════════════════════════════ */
 .step-panel{display:none;}
 .step-panel.active{display:block;animation:fadeIn .3s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 .step-nav{display:flex;gap:10px;margin-top:28px;}
 
-/* Section headers within steps */
-.step-section{
-  margin-bottom:6px;margin-top:28px;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
-}
+.step-section{margin-bottom:6px;margin-top:28px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
 .step-section:first-of-type{margin-top:0;}
-.step-section-icon{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--orange-lt);color:var(--orange);
-  display:flex;align-items:center;justify-content:center;font-size:15px;
-}
-.step-section h4{
-  font-family:var(--display);font-size:15px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.06em;color:var(--white);
-}
+.step-section-icon{width:32px;height:32px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.step-section h4{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
 
-/* ═══════════════════════════════════════════
-   DASHBOARD
-═══════════════════════════════════════════ */
-.dash-screen{
-  min-height:100vh;
-  background:var(--bg);
-  display:none;flex-direction:column;
-}
-.dash-screen.active{display:flex;}
-
-.dash-topbar{
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  padding:0 32px;height:64px;
-  display:flex;align-items:center;gap:16px;
-  position:sticky;top:0;z-index:100;
-}
-.dash-logo{
-  font-family:var(--display);font-size:22px;font-weight:900;
-  color:var(--white);text-transform:uppercase;letter-spacing:.03em;
-  display:flex;align-items:center;gap:7px;
-}
-.dash-logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;}
-.dash-nav{display:flex;align-items:center;gap:2px;margin-left:24px;flex:1;}
-.dash-nav-item{
-  font-size:13px;font-weight:600;color:var(--grey2);
-  padding:8px 14px;border-radius:8px;cursor:pointer;
-  transition:background .12s ease, color .12s ease;
-}
-.dash-nav-item:hover{color:var(--white);background:var(--bg3);}
-.dash-nav-item.active{color:var(--white);background:var(--bg3);}
-.dash-user{
-  margin-left:auto;display:flex;align-items:center;gap:10px;
-}
-.dash-avatar{
-  width:36px;height:36px;border-radius:50%;
-  background:linear-gradient(135deg,var(--orange),var(--orange-dk));
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-size:14px;font-weight:900;color:white;
-}
-.dash-upgrade{
-  background:var(--orange);color:white;
-  font-family:var(--display);font-size:12px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;
-  padding:7px 14px;border-radius:8px;cursor:pointer;
-  transition:background .12s ease;
-}
-.dash-upgrade:hover{background:var(--orange-dk);}
-
-.dash-body{flex:1;padding:40px 32px;max-width:1100px;margin:0 auto;width:100%;}
-
-/* Welcome banner */
-.dash-welcome{
-  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
-  border:1px solid var(--border);
-  border-radius:var(--r-xl);
-  padding:36px 40px;
-  display:flex;align-items:center;gap:24px;
-  margin-bottom:32px;
-  position:relative;overflow:hidden;
-}
-.dash-welcome::before{
-  content:'';
-  position:absolute;top:-40px;right:-40px;
-  width:200px;height:200px;
-  background:radial-gradient(circle,rgba(255,107,43,.15) 0%,transparent 70%);
-  border-radius:50%;pointer-events:none;
-}
-.dash-welcome-avatar{
-  width:64px;height:64px;border-radius:16px;
-  background:linear-gradient(135deg,var(--orange),var(--orange-dk));
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-size:24px;font-weight:900;color:white;
-  flex-shrink:0;
-  box-shadow:0 8px 24px rgba(255,107,43,.3);
-}
-.dash-welcome-text h2{
-  font-family:var(--display);font-size:26px;font-weight:900;
-  text-transform:uppercase;color:var(--white);letter-spacing:-.01em;
-  margin-bottom:4px;
-}
-.dash-welcome-text p{font-size:14px;color:var(--grey2);}
-.dash-welcome-actions{margin-left:auto;display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;}
-
-/* Profile completion */
-.completion-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:24px;margin-bottom:20px;
-}
-.completion-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.completion-pct{
-  font-family:var(--display);font-size:32px;font-weight:900;color:var(--orange);
-}
-.completion-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey2);}
-.completion-bar{height:6px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:14px;}
-.completion-fill{height:100%;background:linear-gradient(90deg,var(--orange),#FF9A5C);border-radius:4px;transition:width .6s ease;}
-.completion-tasks{display:flex;flex-direction:column;gap:8px;}
-.completion-task{
-  display:flex;align-items:center;gap:10px;
-  font-size:13px;color:var(--grey2);
-  padding:8px 12px;border-radius:8px;
-  background:var(--bg3);cursor:pointer;transition:background .18s;
-}
-.completion-task:hover{background:var(--bg4);}
-.completion-task-icon{font-size:15px;width:24px;text-align:center;}
-.completion-task.done{color:var(--grey3);text-decoration:line-through;}
-.completion-task.done .completion-task-icon{opacity:.4;}
-
-/* Stats grid */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
-.stat-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:24px;
-  transition:border-color .2s;
-}
-.stat-card:hover{border-color:var(--border-hi);}
-.stat-icon{font-size:20px;margin-bottom:12px;}
-.stat-val{
-  font-family:var(--display);font-size:36px;font-weight:900;
-  color:var(--white);line-height:1;margin-bottom:4px;
-}
-.stat-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey3);}
-.stat-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:11px;font-weight:700;padding:3px 8px;border-radius:50px;
-  margin-top:8px;
-}
-.stat-badge.up{background:rgba(34,197,94,.15);color:var(--green);}
-.stat-badge.new{background:var(--orange-lt);color:var(--orange);}
-
-/* Upgrade banner */
-.upgrade-banner{
-  background:linear-gradient(135deg,rgba(255,107,43,.15) 0%,rgba(255,107,43,.05) 100%);
-  border:1px solid rgba(255,107,43,.3);
-  border-radius:var(--r-lg);
-  padding:24px 28px;
-  display:flex;align-items:center;gap:20px;
-  margin-bottom:32px;
-}
-.upgrade-text h4{
-  font-family:var(--display);font-size:20px;font-weight:900;
-  text-transform:uppercase;color:var(--orange);margin-bottom:4px;
-}
-.upgrade-text p{font-size:13px;color:var(--grey2);}
-.upgrade-btn{
-  margin-left:auto;flex-shrink:0;
-  background:var(--orange);color:white;
-  font-family:var(--display);font-size:13px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;
-  padding:12px 20px;border-radius:var(--r-sm);cursor:pointer;
-  transition:background .12s ease;
-}
-.upgrade-btn:hover{background:var(--orange-dk);}
-
-/* Quick actions */
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
-.quick-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:24px;cursor:pointer;
-  transition:border-color .14s ease, background .14s ease, transform .14s ease;
-  will-change:transform;
-  display:flex;flex-direction:column;gap:10px;
-}
-.quick-card:hover{border-color:var(--orange);background:var(--bg3);transform:translateY(-3px);}
-.quick-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:var(--orange-lt);color:var(--orange);
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-}
-.quick-title{font-family:var(--display);font-size:16px;font-weight:800;text-transform:uppercase;color:var(--white);}
-.quick-desc{font-size:13px;color:var(--grey2);}
-
-/* ═══════════════════════════════════════════
-   SUCCESS / VERIFICATION
-═══════════════════════════════════════════ */
-.success-screen{
-  min-height:100vh;display:none;
-  align-items:center;justify-content:center;
-  flex-direction:column;
-  background:var(--bg);
-  text-align:center;
-  padding:40px;
-}
+.success-screen{min-height:100vh;display:none;align-items:center;justify-content:center;flex-direction:column;background:var(--bg);text-align:center;padding:40px;}
 .success-screen.active{display:flex;}
-.success-icon{
-  width:80px;height:80px;border-radius:50%;
-  background:rgba(34,197,94,.15);
-  display:flex;align-items:center;justify-content:center;
-  font-size:36px;margin-bottom:24px;
-  border:2px solid rgba(34,197,94,.3);
-}
-.success-screen h2{
-  font-family:var(--display);font-size:40px;font-weight:900;
-  text-transform:uppercase;color:var(--white);margin-bottom:10px;
-}
+.success-icon{width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:24px;border:2px solid rgba(34,197,94,.3);}
+.success-screen h2{font-family:var(--display);font-size:40px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:10px;}
 .success-screen p{font-size:16px;color:var(--grey2);max-width:420px;margin-bottom:32px;}
 
-/* ═══════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════ */
-.toast{
-  position:fixed;bottom:28px;right:28px;z-index:9999;
-  background:var(--bg3);color:var(--grey1);
-  border:1px solid var(--border);
-  padding:14px 20px;border-radius:var(--r-sm);
-  font-size:14px;font-weight:500;
-  box-shadow:var(--sh-lg);
-  transform:translateY(80px);opacity:0;
-  transition:transform .25s ease,opacity .25s ease;max-width:320px;
-}
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--bg3);color:var(--grey1);border:1px solid var(--border);padding:14px 20px;border-radius:var(--r-sm);font-size:14px;font-weight:500;box-shadow:var(--sh-lg);transform:translateY(80px);opacity:0;transition:transform .25s ease,opacity .25s ease;max-width:320px;}
 .toast.show{transform:translateY(0);opacity:1;}
-.toast-or{color:var(--orange);}
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
 @media(max-width:900px){
   .split{grid-template-columns:1fr;}
   .split-left{display:none;}
   .split-right{padding:36px 28px;}
-  .stats-grid,.quick-grid{grid-template-columns:1fr 1fr;}
   .fg-row{grid-template-columns:1fr;}
-  .dash-welcome{flex-direction:column;align-items:flex-start;}
-  .dash-welcome-actions{margin-left:0;}
 }
 @media(max-width:600px){
-  .stats-grid,.quick-grid{grid-template-columns:1fr;}
-  .dash-body{padding:24px 16px;}
-  .dash-topbar{padding:0 16px;}
+  .split-right{padding:24px 16px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 1: LOGIN
-═══════════════════════════════════════════ -->
+<!-- SCREEN: LOGIN -->
 <div class="screen active" id="screen-login">
   <div class="split">
-
-    <!-- LEFT BRAND -->
     <div class="split-left">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;"><img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;margin-right:8px;vertical-align:middle;"/>Tradease<span class="brand-dot"></span></div>
+      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        Tradease<span class="brand-dot"></span>
+      </div>
       <div class="brand-hero">
         <h2>Welcome<br><em>Back.</em></h2>
-        <p>New York's fastest-growing service booking platform — connecting pros with the people who need them.</p>
+        <p>New York's fastest-growing service booking platform.</p>
         <div class="brand-features">
           <div class="brand-feat"><div class="brand-feat-icon">⚡</div>Book in under 60 seconds</div>
           <div class="brand-feat"><div class="brand-feat-icon">✅</div>Verified local contractors</div>
@@ -619,14 +182,12 @@ ul{list-style:none;}
           <div class="brand-feat"><div class="brand-feat-icon">🛡️</div>Protected bookings guaranteed</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f1828481819e8385b18583909594908294df929e9c">[email&#160;protected]</a></div>
+      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
     </div>
 
-    <!-- RIGHT FORM -->
     <div class="split-right" style="justify-content:center;">
       <div style="max-width:440px;width:100%;">
 
-        <!-- User type toggle -->
         <div class="type-toggle" id="login-toggle">
           <button class="type-btn active" onclick="setLoginType('customer',this)">👤 Customer</button>
           <button class="type-btn" onclick="setLoginType('contractor',this)">👷 Contractor</button>
@@ -634,6 +195,9 @@ ul{list-style:none;}
 
         <div class="form-title">Sign In</div>
         <div class="form-sub" id="login-sub">Welcome back, homeowner.</div>
+
+        <!-- Error box -->
+        <div class="alert-box" id="login-error"></div>
 
         <div class="oauth-row">
           <button class="btn btn-google" onclick="signInWithGoogle()">
@@ -650,14 +214,16 @@ ul{list-style:none;}
 
         <div class="fg">
           <label>Email Address</label>
-          <input type="email" id="login-email" placeholder="you@example.com" oninput="clearErr('login-email-err')"/>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('login-email-err');clearAlert('login-error')"/>
           <span class="err" id="login-email-err">Please enter a valid email.</span>
         </div>
 
         <div class="fg">
           <label>Password</label>
           <div class="pw-wrap">
-            <input type="password" id="login-pw" placeholder="Your password" oninput="clearErr('login-pw-err')"/>
+            <input type="password" id="login-pw" placeholder="Your password" autocomplete="current-password"
+              oninput="clearErr('login-pw-err');clearAlert('login-error')"
+              onkeydown="if(event.key==='Enter')handleLogin()"/>
             <button class="pw-toggle" onclick="togglePw('login-pw',this)">👁</button>
           </div>
           <span class="err" id="login-pw-err">Password is required.</span>
@@ -677,15 +243,15 @@ ul{list-style:none;}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 2: CUSTOMER SIGNUP
-═══════════════════════════════════════════ -->
+<!-- SCREEN: CUSTOMER SIGNUP -->
 <div class="screen" id="screen-signup" style="flex-direction:column;">
   <div class="split">
-
     <div class="split-left">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;"><img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;margin-right:8px;vertical-align:middle;"/>Tradease<span class="brand-dot"></span></div>
+      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        Tradease<span class="brand-dot"></span>
+      </div>
       <div class="brand-hero">
         <h2>Find a Pro<br><em>Fast.</em></h2>
         <p>Create a free account and get matched with trusted, local contractors in seconds.</p>
@@ -696,7 +262,7 @@ ul{list-style:none;}
           <div class="brand-feat"><div class="brand-feat-icon">🔒</div>Your data is always secure</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f2818782829d8086b28680939697938197dc919d9f">[email&#160;protected]</a></div>
+      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
     </div>
 
     <div class="split-right" style="justify-content:center;">
@@ -709,6 +275,8 @@ ul{list-style:none;}
 
         <div class="form-title">Create Account</div>
         <div class="form-sub">It takes less than 2 minutes.</div>
+
+        <div class="alert-box" id="signup-error"></div>
 
         <div class="oauth-row">
           <button class="btn btn-google" style="margin-bottom:0;" onclick="signInWithGoogle()">
@@ -725,26 +293,24 @@ ul{list-style:none;}
 
         <div class="fg">
           <label>Full Name</label>
-          <input type="text" id="cu-name" placeholder="e.g. Maria Lopez" oninput="clearErr('cu-name-err')"/>
+          <input type="text" id="cu-name" placeholder="e.g. Maria Lopez" autocomplete="name" oninput="clearErr('cu-name-err')"/>
           <span class="err" id="cu-name-err">Full name is required.</span>
         </div>
-
         <div class="fg">
           <label>Email Address</label>
-          <input type="email" id="cu-email" placeholder="you@example.com" oninput="clearErr('cu-email-err')"/>
+          <input type="email" id="cu-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('cu-email-err')"/>
           <span class="err" id="cu-email-err">Please enter a valid email.</span>
         </div>
-
         <div class="fg">
           <label>Location (City or ZIP)</label>
           <input type="text" id="cu-loc" placeholder="e.g. Brooklyn, NY or 11201" oninput="clearErr('cu-loc-err')"/>
           <span class="err" id="cu-loc-err">Location is required.</span>
         </div>
-
         <div class="fg">
           <label>Password</label>
           <div class="pw-wrap">
-            <input type="password" id="cu-pw" placeholder="Min. 8 characters" oninput="checkPwStrength('cu-pw','cu-pw-str','cu-pw-lbl');clearErr('cu-pw-err')"/>
+            <input type="password" id="cu-pw" placeholder="Min. 8 characters" autocomplete="new-password"
+              oninput="checkPwStrength('cu-pw','cu-pw-str','cu-pw-lbl');clearErr('cu-pw-err')"/>
             <button class="pw-toggle" onclick="togglePw('cu-pw',this)">👁</button>
           </div>
           <div class="pw-strength">
@@ -753,34 +319,29 @@ ul{list-style:none;}
           </div>
           <span class="err" id="cu-pw-err">Password must be at least 8 characters.</span>
         </div>
-
         <div class="check-row">
           <input type="checkbox" id="cu-terms"/>
-          <label for="cu-terms">I agree to the <a onclick="showToast('Opening Terms of Service…')">Terms of Service</a> and <a onclick="showToast('Opening Privacy Policy…')">Privacy Policy</a>.</label>
+          <label for="cu-terms">I agree to the <a onclick="showToast('Terms of Service coming soon')">Terms of Service</a> and <a onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>.</label>
         </div>
-
         <button id="cu-signup-btn" class="btn btn-orange" onclick="handleCustomerSignup()">Create My Account →</button>
-
-        <div class="switch-text">
-          Already have an account? <span class="link" onclick="goScreen('screen-login')">Sign in</span>
-        </div>
+        <div class="switch-text">Already have an account? <span class="link" onclick="goScreen('screen-login')">Sign in</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 3: CONTRACTOR MULTI-STEP SIGNUP
-═══════════════════════════════════════════ -->
+<!-- SCREEN: CONTRACTOR SIGNUP -->
 <div class="screen" id="screen-contractor" style="flex-direction:column;">
   <div class="split">
-
     <div class="split-left">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;"><img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;margin-right:8px;vertical-align:middle;"/>Tradease<span class="brand-dot"></span></div>
+      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        Tradease<span class="brand-dot"></span>
+      </div>
       <div class="brand-hero">
         <h2>Grow Your<br><em>Business.</em></h2>
-        <p>Join New York's fastest-growing contractor marketplace. Get more jobs, build your reputation, and get paid faster.</p>
+        <p>Join New York's fastest-growing contractor marketplace.</p>
         <div class="brand-features">
           <div class="brand-feat"><div class="brand-feat-icon">📈</div>More job leads every week</div>
           <div class="brand-feat"><div class="brand-feat-icon">🗓️</div>Set your own schedule</div>
@@ -788,7 +349,7 @@ ul{list-style:none;}
           <div class="brand-feat"><div class="brand-feat-icon">⭐</div>Build a verified reputation</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92e1e7e2e2fde0e6d2e6e0f3f6f7f3e1f7bcf1fdff">[email&#160;protected]</a></div>
+      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
     </div>
 
     <div class="split-right">
@@ -802,7 +363,6 @@ ul{list-style:none;}
         <div class="form-title">Contractor Signup</div>
         <div class="form-sub">4 quick steps — takes about 5 minutes.</div>
 
-        <!-- Quick OAuth for contractors -->
         <div class="oauth-row" style="margin-bottom:16px;">
           <button class="btn btn-google" onclick="signInWithOAuthContractor('google')">
             <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
@@ -815,210 +375,95 @@ ul{list-style:none;}
         </div>
         <div class="or-divider" style="margin-bottom:16px;">or continue with email</div>
 
-        <!-- Progress indicator -->
+        <div class="alert-box" id="contractor-error"></div>
+
         <div class="progress-wrap">
           <div class="progress-steps" id="prog-steps">
-            <div class="prog-step active" id="ps-1">
-              <div class="prog-dot">1</div>
-              <div class="prog-label">Account</div>
-            </div>
-            <div class="prog-step" id="ps-2">
-              <div class="prog-dot">2</div>
-              <div class="prog-label">Business</div>
-            </div>
-            <div class="prog-step" id="ps-3">
-              <div class="prog-dot">3</div>
-              <div class="prog-label">Services</div>
-            </div>
-            <div class="prog-step" id="ps-4">
-              <div class="prog-dot">4</div>
-              <div class="prog-label">Legal</div>
-            </div>
+            <div class="prog-step active" id="ps-1"><div class="prog-dot">1</div><div class="prog-label">Account</div></div>
+            <div class="prog-step" id="ps-2"><div class="prog-dot">2</div><div class="prog-label">Business</div></div>
+            <div class="prog-step" id="ps-3"><div class="prog-dot">3</div><div class="prog-label">Services</div></div>
+            <div class="prog-step" id="ps-4"><div class="prog-dot">4</div><div class="prog-label">Legal</div></div>
           </div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="prog-bar" style="width:25%"></div>
-          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-bar" style="width:25%"></div></div>
         </div>
 
-        <!-- ── STEP 1: Account ── -->
+        <!-- STEP 1 -->
         <div class="step-panel active" id="step-1">
-          <div class="step-section">
-            <div class="step-section-icon">🔐</div>
-            <h4>Account Credentials</h4>
-          </div>
-
+          <div class="step-section"><div class="step-section-icon">🔐</div><h4>Account Credentials</h4></div>
           <div class="fg-row">
-            <div class="fg">
-              <label>First Name</label>
-              <input type="text" id="c-fname" placeholder="Joseph" oninput="clearErr('c-fname-err')"/>
-              <span class="err" id="c-fname-err">Required.</span>
-            </div>
-            <div class="fg">
-              <label>Last Name</label>
-              <input type="text" id="c-lname" placeholder="Rodriguez" oninput="clearErr('c-lname-err')"/>
-              <span class="err" id="c-lname-err">Required.</span>
-            </div>
+            <div class="fg"><label>First Name</label><input type="text" id="c-fname" placeholder="Joseph" autocomplete="given-name" oninput="clearErr('c-fname-err')"/><span class="err" id="c-fname-err">Required.</span></div>
+            <div class="fg"><label>Last Name</label><input type="text" id="c-lname" placeholder="Rodriguez" autocomplete="family-name" oninput="clearErr('c-lname-err')"/><span class="err" id="c-lname-err">Required.</span></div>
           </div>
-
-          <div class="fg">
-            <label>Email Address</label>
-            <input type="email" id="c-email" placeholder="you@yourbusiness.com" oninput="clearErr('c-email-err')"/>
-            <span class="err" id="c-email-err">Valid email required.</span>
-          </div>
-
-          <div class="fg">
-            <label>Phone Number</label>
-            <input type="tel" id="c-phone" placeholder="(917) 555-0000" oninput="clearErr('c-phone-err')"/>
-            <span class="err" id="c-phone-err">Phone number required.</span>
-          </div>
-
+          <div class="fg"><label>Email Address</label><input type="email" id="c-email" placeholder="you@yourbusiness.com" autocomplete="email" oninput="clearErr('c-email-err')"/><span class="err" id="c-email-err">Valid email required.</span></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" id="c-phone" placeholder="(917) 555-0000" autocomplete="tel" oninput="clearErr('c-phone-err')"/><span class="err" id="c-phone-err">Phone number required.</span></div>
           <div class="fg">
             <label>Password</label>
             <div class="pw-wrap">
-              <input type="password" id="c-pw" placeholder="Min. 8 characters" oninput="checkPwStrength('c-pw','c-pw-str','c-pw-lbl');clearErr('c-pw-err')"/>
+              <input type="password" id="c-pw" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwStrength('c-pw','c-pw-str','c-pw-lbl');clearErr('c-pw-err')"/>
               <button class="pw-toggle" onclick="togglePw('c-pw',this)">👁</button>
             </div>
-            <div class="pw-strength">
-              <div class="pw-bar"><div class="pw-fill" id="c-pw-str"></div></div>
-              <div class="pw-label" id="c-pw-lbl"></div>
-            </div>
+            <div class="pw-strength"><div class="pw-bar"><div class="pw-fill" id="c-pw-str"></div></div><div class="pw-label" id="c-pw-lbl"></div></div>
             <span class="err" id="c-pw-err">Password must be at least 8 characters.</span>
           </div>
-
           <div class="fg">
             <label>Confirm Password</label>
             <div class="pw-wrap">
-              <input type="password" id="c-pw2" placeholder="Repeat password" oninput="clearErr('c-pw2-err')"/>
+              <input type="password" id="c-pw2" placeholder="Repeat password" autocomplete="new-password" oninput="clearErr('c-pw2-err')"/>
               <button class="pw-toggle" onclick="togglePw('c-pw2',this)">👁</button>
             </div>
             <span class="err" id="c-pw2-err">Passwords do not match.</span>
           </div>
-
-          <div class="step-nav">
-            <button class="btn btn-orange" onclick="validateStep1()">Continue → Business Info</button>
-          </div>
+          <div class="step-nav"><button class="btn btn-orange" onclick="validateStep1()">Continue → Business Info</button></div>
           <div class="switch-text">Already have an account? <span class="link" onclick="goScreen('screen-login')">Sign in</span></div>
         </div>
 
-        <!-- ── STEP 2: Business Info ── -->
+        <!-- STEP 2 -->
         <div class="step-panel" id="step-2">
-          <div class="step-section">
-            <div class="step-section-icon">🏢</div>
-            <h4>Business Information</h4>
-          </div>
-
-          <div class="fg">
-            <label>Business Name</label>
-            <input type="text" id="b-name" placeholder="e.g. Rodriguez Plumbing LLC" oninput="clearErr('b-name-err')"/>
-            <span class="err" id="b-name-err">Business name required.</span>
-          </div>
-
-          <div class="fg">
-            <label>Business Address</label>
-            <input type="text" id="b-addr" placeholder="123 Main St, Brooklyn, NY 11201" oninput="clearErr('b-addr-err')"/>
-            <span class="err" id="b-addr-err">Address required.</span>
-          </div>
-
+          <div class="step-section"><div class="step-section-icon">🏢</div><h4>Business Information</h4></div>
+          <div class="fg"><label>Business Name</label><input type="text" id="b-name" placeholder="e.g. Rodriguez Plumbing LLC" oninput="clearErr('b-name-err')"/><span class="err" id="b-name-err">Business name required.</span></div>
+          <div class="fg"><label>Business Address</label><input type="text" id="b-addr" placeholder="123 Main St, Brooklyn, NY 11201" oninput="clearErr('b-addr-err')"/><span class="err" id="b-addr-err">Address required.</span></div>
           <div class="fg-row">
-            <div class="fg">
-              <label>City</label>
-              <input type="text" id="b-city" placeholder="Brooklyn" oninput="clearErr('b-city-err')"/>
-              <span class="err" id="b-city-err">Required.</span>
-            </div>
-            <div class="fg">
-              <label>ZIP Code</label>
-              <input type="text" id="b-zip" placeholder="11201" oninput="clearErr('b-zip-err')"/>
-              <span class="err" id="b-zip-err">Required.</span>
-            </div>
+            <div class="fg"><label>City</label><input type="text" id="b-city" placeholder="Brooklyn" oninput="clearErr('b-city-err')"/><span class="err" id="b-city-err">Required.</span></div>
+            <div class="fg"><label>ZIP Code</label><input type="text" id="b-zip" placeholder="11201" oninput="clearErr('b-zip-err')"/><span class="err" id="b-zip-err">Required.</span></div>
           </div>
-
-          <div class="fg">
-            <label>Website (Optional)</label>
-            <input type="url" id="b-web" placeholder="https://yoursite.com"/>
-          </div>
-
+          <div class="fg"><label>Website (Optional)</label><input type="url" id="b-web" placeholder="https://yoursite.com"/></div>
           <div class="step-nav">
             <button class="btn btn-ghost btn-sm" style="width:auto;padding:13px 22px;" onclick="goStep(1)">← Back</button>
             <button class="btn btn-orange" onclick="validateStep2()">Continue → Services</button>
           </div>
         </div>
 
-        <!-- ── STEP 3: Services ── -->
+        <!-- STEP 3 -->
         <div class="step-panel" id="step-3">
-          <div class="step-section">
-            <div class="step-section-icon">🔧</div>
-            <h4>Service Details</h4>
-          </div>
-
+          <div class="step-section"><div class="step-section-icon">🔧</div><h4>Service Details</h4></div>
           <div class="fg">
             <label>Primary Trade</label>
             <select id="s-trade" oninput="clearErr('s-trade-err')">
               <option value="">Select your trade…</option>
-              <option>Plumbing</option>
-              <option>Electrical</option>
-              <option>HVAC</option>
-              <option>Handyman</option>
-              <option>Roofing</option>
-              <option>Cleaning</option>
-              <option>Landscaping</option>
-              <option>Painting</option>
-              <option>Carpentry</option>
-              <option>Flooring</option>
-              <option>General Contracting</option>
-              <option>Other</option>
+              <option>Plumbing</option><option>Electrical</option><option>HVAC</option>
+              <option>Handyman</option><option>Roofing</option><option>Cleaning</option>
+              <option>Landscaping</option><option>Painting</option><option>Carpentry</option>
+              <option>Flooring</option><option>General Contracting</option><option>Other</option>
             </select>
             <span class="err" id="s-trade-err">Please select a trade.</span>
           </div>
-
-          <div class="fg">
-            <label>Service Areas (City/ZIP)</label>
-            <input type="text" id="s-areas" placeholder="e.g. Brooklyn, Queens, Manhattan" oninput="clearErr('s-areas-err')"/>
-            <div class="hint">Separate multiple areas with commas.</div>
-            <span class="err" id="s-areas-err">At least one service area required.</span>
-          </div>
-
+          <div class="fg"><label>Service Areas</label><input type="text" id="s-areas" placeholder="e.g. Brooklyn, Queens, Manhattan" oninput="clearErr('s-areas-err')"/><div class="hint">Separate multiple areas with commas.</div><span class="err" id="s-areas-err">At least one service area required.</span></div>
           <div class="fg">
             <label>Years of Experience</label>
             <select id="s-exp" oninput="clearErr('s-exp-err')">
               <option value="">Select range…</option>
-              <option>Less than 1 year</option>
-              <option>1–3 years</option>
-              <option>3–5 years</option>
-              <option>5–10 years</option>
-              <option>10–15 years</option>
-              <option>15+ years</option>
+              <option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option>
+              <option>5–10 years</option><option>10–15 years</option><option>15+ years</option>
             </select>
             <span class="err" id="s-exp-err">Please select experience.</span>
           </div>
+          <div class="fg"><label>Describe Your Services</label><textarea id="s-desc" placeholder="Tell customers what you do and what makes you the best choice…" oninput="clearErr('s-desc-err')"></textarea><span class="err" id="s-desc-err">Please add a short description.</span></div>
 
-          <div class="fg">
-            <label>Describe Your Services</label>
-            <textarea id="s-desc" placeholder="Tell customers what you do and what makes you the best choice…" oninput="clearErr('s-desc-err')"></textarea>
-            <span class="err" id="s-desc-err">Please add a short description.</span>
-          </div>
-
-          <!-- Plan selection -->
-          <div class="step-section" style="margin-top:28px;">
-            <div class="step-section-icon">💳</div>
-            <h4>Choose Your Plan</h4>
-          </div>
-
+          <div class="step-section" style="margin-top:28px;"><div class="step-section-icon">💳</div><h4>Choose Your Plan</h4></div>
           <div class="radio-group" id="plan-select">
-            <div class="radio-opt selected" onclick="selectPlan(this,'free')">
-              <input type="radio" name="plan" value="free" checked/>
-              <div class="radio-opt-title">Free</div>
-              <div class="radio-opt-desc">Basic listing · Receive bookings · 5 portfolio images · 15% fee</div>
-            </div>
-            <div class="radio-opt" onclick="selectPlan(this,'leads')" style="border-color:rgba(96,165,250,.25);">
-              <input type="radio" name="plan" value="leads"/>
-              <div class="radio-opt-title" style="color:#60A5FA;">📋 Just Leads — $5/mo</div>
-              <div class="radio-opt-desc">Profile visibility · AI recommended · No booking system · Zero fees</div>
-            </div>
-            <div class="radio-opt" onclick="selectPlan(this,'pro')">
-              <input type="radio" name="plan" value="pro"/>
-              <div class="radio-opt-title">⚡ Pro — $19/mo</div>
-              <div class="radio-opt-desc">Top ranking · Verified badge · 25 images · Analytics · 10% fee</div>
-            </div>
+            <div class="radio-opt selected" onclick="selectPlan(this,'free')"><input type="radio" name="plan" value="free" checked/><div class="radio-opt-title">Free</div><div class="radio-opt-desc">Basic listing · Receive bookings · 15% fee</div></div>
+            <div class="radio-opt" onclick="selectPlan(this,'leads')" style="border-color:rgba(96,165,250,.25);"><input type="radio" name="plan" value="leads"/><div class="radio-opt-title" style="color:#60A5FA;">📋 Just Leads $5/mo</div><div class="radio-opt-desc">Profile visibility · AI recommended · Zero fees</div></div>
+            <div class="radio-opt" onclick="selectPlan(this,'pro')"><input type="radio" name="plan" value="pro"/><div class="radio-opt-title">⚡ Pro $19/mo</div><div class="radio-opt-desc">Top ranking · Verified badge · 25 images</div></div>
           </div>
 
           <div class="step-nav">
@@ -1027,52 +472,25 @@ ul{list-style:none;}
           </div>
         </div>
 
-        <!-- ── STEP 4: Legal & Trust ── -->
+        <!-- STEP 4 -->
         <div class="step-panel" id="step-4">
-          <div class="step-section">
-            <div class="step-section-icon">📄</div>
-            <h4>Legal & Trust</h4>
-          </div>
-
-          <div class="fg">
-            <label>Business License Number <span style="color:var(--grey3);font-weight:400;text-transform:none;">(Recommended)</span></label>
-            <input type="text" id="l-license" placeholder="e.g. NYC-PLB-00012345"/>
-            <div class="hint">Adding your license number builds customer trust and increases bookings.</div>
-          </div>
-
+          <div class="step-section"><div class="step-section-icon">📄</div><h4>Legal & Trust</h4></div>
+          <div class="fg"><label>Business License Number <span style="color:var(--grey3);font-weight:400;text-transform:none;">(Recommended)</span></label><input type="text" id="l-license" placeholder="e.g. NYC-PLB-00012345"/><div class="hint">Adds trust and increases bookings.</div></div>
           <div class="fg">
             <label>Insurance Status</label>
             <div class="radio-group" id="ins-select" style="margin-top:6px;">
-              <div class="radio-opt" onclick="selectRadio(this,'ins-select')">
-                <input type="radio" name="insurance" value="yes"/>
-                <div class="radio-opt-title">✅ Insured</div>
-                <div class="radio-opt-desc">I carry active liability insurance.</div>
-              </div>
-              <div class="radio-opt" onclick="selectRadio(this,'ins-select')">
-                <input type="radio" name="insurance" value="no"/>
-                <div class="radio-opt-title">Not Yet</div>
-                <div class="radio-opt-desc">I'm working on getting insured.</div>
-              </div>
+              <div class="radio-opt" onclick="selectRadio(this,'ins-select')"><input type="radio" name="insurance" value="yes"/><div class="radio-opt-title">✅ Insured</div><div class="radio-opt-desc">I carry active liability insurance.</div></div>
+              <div class="radio-opt" onclick="selectRadio(this,'ins-select')"><input type="radio" name="insurance" value="no"/><div class="radio-opt-title">Not Yet</div><div class="radio-opt-desc">I'm working on getting insured.</div></div>
             </div>
             <span class="err" id="ins-err">Please select your insurance status.</span>
           </div>
-
           <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;margin-bottom:16px;">
             <div style="font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--grey2);margin-bottom:10px;">Agreement</div>
-            <p style="font-size:13px;color:var(--grey2);line-height:1.7;">By creating a contractor account, you confirm that your business information is accurate, your business is legally operating, and you have the right to perform the services listed.</p>
+            <p style="font-size:13px;color:var(--grey2);line-height:1.7;">By creating a contractor account, you confirm your business information is accurate and you have the right to perform the services listed.</p>
           </div>
-
-          <div class="check-row">
-            <input type="checkbox" id="l-legal"/>
-            <label for="l-legal">I confirm that my business is legally registered and I agree to the <a onclick="showToast('Opening Terms of Service…')">Tradease Terms of Service</a> and <a onclick="showToast('Opening Privacy Policy…')">Privacy Policy</a>.</label>
-          </div>
+          <div class="check-row"><input type="checkbox" id="l-legal"/><label for="l-legal">I confirm my business is legally registered and I agree to the <a onclick="showToast('Terms coming soon')">Terms of Service</a> and <a onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>.</label></div>
           <span class="err" id="l-legal-err">You must agree to continue.</span>
-
-          <div class="check-row">
-            <input type="checkbox" id="l-email"/>
-            <label for="l-email">Send me tips on getting more customers and growing my business.</label>
-          </div>
-
+          <div class="check-row"><input type="checkbox" id="l-email"/><label for="l-email">Send me tips on getting more customers and growing my business.</label></div>
           <div class="step-nav">
             <button class="btn btn-ghost btn-sm" style="width:auto;padding:13px 22px;" onclick="goStep(3)">← Back</button>
             <button id="contractor-signup-btn" class="btn btn-orange" onclick="handleContractorSignup()">🚀 Create My Account</button>
@@ -1084,14 +502,15 @@ ul{list-style:none;}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 4: FORGOT PASSWORD
-═══════════════════════════════════════════ -->
+<!-- SCREEN: FORGOT PASSWORD -->
 <div class="screen" id="screen-forgot">
   <div class="split">
     <div class="split-left">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;"><img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;margin-right:8px;vertical-align:middle;"/>Tradease<span class="brand-dot"></span></div>
+      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        Tradease<span class="brand-dot"></span>
+      </div>
       <div class="brand-hero">
         <h2>Reset Your<br><em>Password.</em></h2>
         <p>Enter the email you signed up with and we'll send you a reset link right away.</p>
@@ -1102,10 +521,7 @@ ul{list-style:none;}
       <div style="max-width:420px;width:100%;">
         <div class="form-title">Forgot Password</div>
         <div class="form-sub">We'll email you a secure reset link.</div>
-        <div class="fg">
-          <label>Email Address</label>
-          <input type="email" id="forgot-email" placeholder="you@example.com"/>
-        </div>
+        <div class="fg"><label>Email Address</label><input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')handleForgot()"/></div>
         <button id="forgot-btn" class="btn btn-orange" onclick="handleForgot()">Send Reset Link →</button>
         <div class="switch-text"><span class="link" onclick="goScreen('screen-login')">← Back to Sign In</span></div>
       </div>
@@ -1113,18 +529,14 @@ ul{list-style:none;}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 5: CUSTOMER SUCCESS
-═══════════════════════════════════════════ -->
+<!-- SCREEN: CUSTOMER SUCCESS (email verification) -->
 <div class="success-screen" id="screen-customer-success">
-  <div style="width:100%;height:4px;background:var(--bg3);position:fixed;top:0;left:0;">
-    <div style="height:100%;width:100%;background:var(--orange);"></div>
-  </div>
+  <div style="width:100%;height:4px;background:var(--bg3);position:fixed;top:0;left:0;"><div style="height:100%;width:100%;background:var(--orange);"></div></div>
   <div class="success-icon">✉️</div>
   <h2>Check Your Email</h2>
-  <p style="max-width:380px;text-align:center;line-height:1.7;">We sent a confirmation link to your email address. Click the link to verify your account and you'll be taken straight to your dashboard.</p>
+  <p>We sent a confirmation link to <strong id="confirm-email-display" style="color:var(--orange);"></strong>. Click it to verify your account.</p>
   <div style="background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);border-radius:12px;padding:16px 20px;margin:8px 0;font-size:13px;color:var(--orange);max-width:380px;text-align:center;">
-    📬 Didn't get it? Check your spam folder or wait a minute and try again.
+    📬 Didn't get it? Check your spam folder or wait a minute.
   </div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
     <button class="btn btn-orange" style="width:auto;" onclick="resendConfirmation()">Resend Email</button>
@@ -1132,168 +544,32 @@ ul{list-style:none;}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 6: CONTRACTOR DASHBOARD
-═══════════════════════════════════════════ -->
-<div class="screen" id="screen-dashboard" style="flex-direction:column;display:none;">
-  <div class="dash-topbar">
-    <div class="dash-logo">Tradease<span class="dash-logo-dot"></span></div>
-    <div class="dash-nav">
-      <div class="dash-nav-item active">Dashboard</div>
-      <div class="dash-nav-item" onclick="showToast('Profile editor — connect Supabase!')">My Profile</div>
-      <div class="dash-nav-item" onclick="showToast('Bookings — connect Supabase!')">Bookings</div>
-      <div class="dash-nav-item" onclick="showToast('Reviews — connect Supabase!')">Reviews</div>
-    </div>
-    <div class="dash-user">
-      <button class="dash-upgrade" onclick="showToast('⚡ Pro plan coming soon!')">⚡ Upgrade to Pro</button>
-      <div class="dash-avatar" id="dash-avatar-initials">JR</div>
-    </div>
-  </div>
-
-  <div class="dash-body">
-
-    <!-- Welcome -->
-    <div class="dash-welcome">
-      <div class="dash-welcome-avatar" id="dash-welcome-avatar">JR</div>
-      <div class="dash-welcome-text">
-        <h2>Welcome to Tradease, <span id="dash-name">Joseph</span>!</h2>
-        <p>Your contractor profile is live. Here's what to do next to start getting jobs.</p>
-      </div>
-      <div class="dash-welcome-actions">
-        <button class="btn btn-orange btn-sm" style="width:auto;" onclick="showToast('📸 Profile editor — connect Supabase!')">Complete Profile</button>
-        <button class="btn btn-ghost btn-sm" style="width:auto;" onclick="showToast('👁 Your profile is now visible to customers!')">View Profile →</button>
-      </div>
-    </div>
-
-    <!-- Profile completion -->
-    <div class="completion-card">
-      <div class="completion-header">
-        <div>
-          <div style="font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:2px;">Profile Completion</div>
-          <div style="font-size:13px;color:var(--grey2);">Complete your profile to rank higher in search results.</div>
-        </div>
-        <div>
-          <div class="completion-pct">40%</div>
-          <div class="completion-label">Complete</div>
-        </div>
-      </div>
-      <div class="completion-bar"><div class="completion-fill" style="width:40%;"></div></div>
-      <div class="completion-tasks">
-        <div class="completion-task done"><span class="completion-task-icon">✅</span> Account created</div>
-        <div class="completion-task done"><span class="completion-task-icon">✅</span> Business info added</div>
-        <div class="completion-task" onclick="showToast('📸 Upload a profile photo — connect Supabase storage!')"><span class="completion-task-icon">📸</span> Upload profile photo → <strong style="color:var(--orange);margin-left:auto;">+15%</strong></div>
-        <div class="completion-task" onclick="showToast('🖼️ Add portfolio images — connect Supabase storage!')"><span class="completion-task-icon">🖼️</span> Add portfolio photos → <strong style="color:var(--orange);margin-left:auto;">+20%</strong></div>
-        <div class="completion-task" onclick="showToast('📄 Add your license number for a trust boost!')"><span class="completion-task-icon">📄</span> Add license number → <strong style="color:var(--orange);margin-left:auto;">+15%</strong></div>
-        <div class="completion-task" onclick="showToast('✉️ Check your email to verify your account!')"><span class="completion-task-icon">✉️</span> Verify email address → <strong style="color:var(--orange);margin-left:auto;">+10%</strong></div>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">👁️</div>
-        <div class="stat-val">0</div>
-        <div class="stat-lbl">Profile Views</div>
-        <div class="stat-badge new">Just joined</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-val">0</div>
-        <div class="stat-lbl">Bookings</div>
-        <div class="stat-badge new">Complete profile to start</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⭐</div>
-        <div class="stat-val">—</div>
-        <div class="stat-lbl">Reviews</div>
-        <div class="stat-badge new">First job = first review</div>
-      </div>
-    </div>
-
-    <!-- Upgrade banner -->
-    <div class="upgrade-banner">
-      <div style="font-size:32px;">⚡</div>
-      <div class="upgrade-text">
-        <h4>Unlock Tradease Pro</h4>
-        <p>Get top search placement, a verified badge, more job leads, analytics, and lower fees — for just $19/month.</p>
-      </div>
-      <button class="upgrade-btn" onclick="showToast('💳 Pro plan coming soon!')">Upgrade Now →</button>
-    </div>
-
-    <!-- Quick actions -->
-    <div style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--white);margin-bottom:16px;">Next Steps</div>
-    <div class="quick-grid">
-      <div class="quick-card" onclick="showToast('📸 Photo upload — connect Supabase storage!')">
-        <div class="quick-icon">📸</div>
-        <div class="quick-title">Add Photos</div>
-        <div class="quick-desc">Upload portfolio images to show off your work and win more customers.</div>
-      </div>
-      <div class="quick-card" onclick="showToast('⚡ Upgrade to Pro for top ranking!')">
-        <div class="quick-icon">⚡</div>
-        <div class="quick-title">Upgrade to Pro</div>
-        <div class="quick-desc">Appear at the top of search results and get 3x more booking requests.</div>
-      </div>
-      <div class="quick-card" onclick="showToast('📣 Share your profile link with your existing customers!')">
-        <div class="quick-icon">📣</div>
-        <div class="quick-title">Share Profile</div>
-        <div class="quick-desc">Send your Tradease profile to your existing customers and collect reviews.</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════════
-     SUPABASE CDN
-═══════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ═══════════════════════════════════════════
-// ⚙️  SUPABASE CONFIG
-// Replace these two values with your own from:
-// supabase.com → Project → Settings → API
-// ═══════════════════════════════════════════
 const SUPABASE_URL      = 'https://linqsojbszglbgpoxgtv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ═══════════════════════════════════════════
-// SCREEN ROUTER — cached, instant
-// ═══════════════════════════════════════════
-const SCREENS = ['screen-login','screen-signup','screen-contractor','screen-forgot','screen-customer-success','screen-dashboard'];
-const SCREEN_CACHE = {};
-SCREENS.forEach(id => { SCREEN_CACHE[id] = document.getElementById(id); });
-
+// ── SCREEN ROUTER ────────────────────────────────────────────
+const SCREENS = ['screen-login','screen-signup','screen-contractor','screen-forgot','screen-customer-success'];
 let _activeScreen = 'screen-login';
 
 function goScreen(id) {
-  if (!SCREEN_CACHE[id]) return;
+  if (!document.getElementById(id)) return;
   if (id === _activeScreen) return;
-
-  // Hide current
-  const prev = SCREEN_CACHE[_activeScreen];
-  if (prev) {
-    prev.classList.remove('active');
-    prev.style.display = 'none';
-  }
-
-  // Show next
-  const next = SCREEN_CACHE[id];
+  const prev = document.getElementById(_activeScreen);
+  if (prev) { prev.classList.remove('active'); prev.style.display = 'none'; }
+  const next = document.getElementById(id);
   next.style.display = 'flex';
-  // Force reflow so animation fires fresh
-  next.offsetHeight; // eslint-disable-line
+  next.offsetHeight; // force reflow
   next.classList.add('active');
-
   _activeScreen = id;
   window.scrollTo(0, 0);
 }
 
-// ═══════════════════════════════════════════
-// LOGIN TYPE TOGGLE (UI only)
-// ═══════════════════════════════════════════
+// ── HELPERS ──────────────────────────────────────────────────
 function setLoginType(type, btn) {
   document.querySelectorAll('#login-toggle .type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1302,44 +578,39 @@ function setLoginType(type, btn) {
     : 'Welcome back, professional.';
 }
 
-// ═══════════════════════════════════════════
-// PASSWORD UTILITIES
-// ═══════════════════════════════════════════
 function togglePw(id, btn) {
   const inp = document.getElementById(id);
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁'; }
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
 }
 
 function checkPwStrength(inputId, barId, labelId) {
-  const pw = document.getElementById(inputId).value;
-  const bar = document.getElementById(barId);
-  const lbl = document.getElementById(labelId);
+  const pw = document.getElementById(inputId)?.value || '';
   let score = 0;
   if (pw.length >= 8) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   const levels = [
-    {w:'0%',  c:'transparent', t:''},
-    {w:'25%', c:'#EF4444', t:'Weak'},
-    {w:'50%', c:'#F97316', t:'Fair'},
-    {w:'75%', c:'#EAB308', t:'Good'},
-    {w:'100%',c:'#22C55E', t:'Strong'},
+    { w: '0%',   c: 'transparent', t: '' },
+    { w: '25%',  c: '#EF4444',     t: 'Weak' },
+    { w: '50%',  c: '#F97316',     t: 'Fair' },
+    { w: '75%',  c: '#EAB308',     t: 'Good' },
+    { w: '100%', c: '#22C55E',     t: 'Strong' },
   ];
   const lvl = levels[score];
-  bar.style.width      = lvl.w;
-  bar.style.background = lvl.c;
-  lbl.textContent      = lvl.t;
-  lbl.style.color      = lvl.c;
+  const bar = document.getElementById(barId);
+  const lbl = document.getElementById(labelId);
+  if (bar) { bar.style.width = lvl.w; bar.style.background = lvl.c; }
+  if (lbl) { lbl.textContent = lvl.t; lbl.style.color = lvl.c; }
 }
 
-// ═══════════════════════════════════════════
-// ERROR / LOADING HELPERS
-// ═══════════════════════════════════════════
-function clearErr(id) { const el = document.getElementById(id); if (el) el.classList.remove('show'); }
-function showErr(id)  { const el = document.getElementById(id); if (el) el.classList.add('show'); return false; }
-function isEmail(v)   { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function clearErr(id)   { document.getElementById(id)?.classList.remove('show'); }
+function showErr(id)    { document.getElementById(id)?.classList.add('show'); return false; }
+function clearAlert(id) { const el = document.getElementById(id); if (el) { el.textContent = ''; el.classList.remove('show'); } }
+function showAlert(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = msg; el.classList.add('show'); } }
+function isEmail(v)     { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
 function setBtnLoading(btnId, loading, label) {
   const btn = document.getElementById(btnId);
@@ -1348,464 +619,6 @@ function setBtnLoading(btnId, loading, label) {
   btn.textContent = loading ? '⏳ Please wait…' : label;
 }
 
-// ═══════════════════════════════════════════
-// ── SUPABASE: LOGIN ──────────────────────
-// ═══════════════════════════════════════════
-async function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pw    = document.getElementById('login-pw').value;
-  let ok = true;
-  if (!isEmail(email)) { showErr('login-email-err'); ok = false; }
-  if (!pw)             { showErr('login-pw-err');    ok = false; }
-  if (!ok) return;
-
-  setBtnLoading('login-btn', true, 'Sign In →');
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
-
-  setBtnLoading('login-btn', false, 'Sign In →');
-
-  if (error) {
-    showToast('❌ ' + (error.message === 'Invalid login credentials'
-      ? 'Invalid email or password. Please try again.'
-      : error.message));
-    return;
-  }
-
-  // Fetch role from users table and route correctly
-  const { data: profile } = await sb.from('users')
-    .select('role, username')
-    .eq('id', data.user.id)
-    .single();
-
-  const role = profile?.role || data.user.user_metadata?.role || 'customer';
-
-  // Update last_login
-  const table = role === 'contractor' ? 'contractors' : 'users';
-  await sb.from(table).update({ last_login: new Date().toISOString() }).eq('id', data.user.id);
-
-  showToast('✅ Welcome back, ' + (profile?.username || email.split('@')[0]).split(' ')[0] + '!');
-  setTimeout(() => {
-    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
-  }, 900);
-}
-
-// ═══════════════════════════════════════════
-// ── SUPABASE: CUSTOMER SIGNUP ────────────
-// ═══════════════════════════════════════════
-async function handleCustomerSignup() {
-  const name  = document.getElementById('cu-name').value.trim();
-  const email = document.getElementById('cu-email').value.trim();
-  const loc   = document.getElementById('cu-loc').value.trim();
-  const pw    = document.getElementById('cu-pw').value;
-  const terms = document.getElementById('cu-terms').checked;
-  let ok = true;
-  if (!name)           { showErr('cu-name-err');  ok = false; }
-  if (!isEmail(email)) { showErr('cu-email-err'); ok = false; }
-  if (!loc)            { showErr('cu-loc-err');   ok = false; }
-  if (pw.length < 8)   { showErr('cu-pw-err');    ok = false; }
-  if (!ok) return;
-  if (!terms) { showToast('⚠️ Please agree to the Terms of Service to continue.'); return; }
-
-  setBtnLoading('cu-signup-btn', true, 'Create My Account →');
-  _lastResendEmail = email;
-
-  // 1. Create Supabase auth account
-  const { data: authData, error: authErr } = await sb.auth.signUp({
-    email,
-    password: pw,
-    options: {
-      data: { display_name: name, role: 'customer' },
-      emailRedirectTo: window.location.origin + '/auth-callback.html',
-    }
-  });
-
-  if (authErr) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showToast('❌ ' + authErr.message);
-    return;
-  }
-
-  // 2. Insert profile row into public.users
-  const { error: dbErr } = await sb.from('users').insert({
-    id:       authData.user.id,
-    username: name,
-    email,
-    location: loc,
-    role:     'customer',
-  });
-
-  setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-
-  if (dbErr) {
-    // Profile row will be created on first dashboard load via upsert
-  }
-
-  // If session exists immediately — no email confirmation needed, go straight to dashboard
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showToast('🎉 Account created! Welcome to Tradease!');
-    setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 300);
-  } else {
-    // Email confirmation required — show screen
-    goScreen('screen-customer-success');
-  }
-}
-
-// ═══════════════════════════════════════════
-// CONTRACTOR MULTI-STEP STATE
-// ═══════════════════════════════════════════
-let currentStep = 1;
-
-function goStep(n) {
-  document.getElementById('step-' + currentStep).classList.remove('active');
-  document.getElementById('step-' + n).classList.add('active');
-  currentStep = n;
-  updateProgress(n);
-  window.scrollTo(0, 0);
-}
-
-function updateProgress(step) {
-  const pct = { 1:25, 2:50, 3:75, 4:100 };
-  document.getElementById('prog-bar').style.width = pct[step] + '%';
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('ps-' + i);
-    el.className = 'prog-step';
-    if (i < step)   el.classList.add('done');
-    if (i === step) el.classList.add('active');
-    el.querySelector('.prog-dot').textContent = i < step ? '✓' : i;
-  }
-}
-
-function validateStep1() {
-  const fn  = document.getElementById('c-fname').value.trim();
-  const ln  = document.getElementById('c-lname').value.trim();
-  const em  = document.getElementById('c-email').value.trim();
-  const ph  = document.getElementById('c-phone').value.trim();
-  const pw  = document.getElementById('c-pw').value;
-  const pw2 = document.getElementById('c-pw2').value;
-  let ok = true;
-  if (!fn)           { showErr('c-fname-err'); ok = false; }
-  if (!ln)           { showErr('c-lname-err'); ok = false; }
-  if (!isEmail(em))  { showErr('c-email-err'); ok = false; }
-  if (!ph)           { showErr('c-phone-err'); ok = false; }
-  if (pw.length < 8) { showErr('c-pw-err');    ok = false; }
-  if (pw !== pw2)    { showErr('c-pw2-err');   ok = false; }
-  if (ok) goStep(2);
-}
-
-function validateStep2() {
-  const nm   = document.getElementById('b-name').value.trim();
-  const addr = document.getElementById('b-addr').value.trim();
-  const city = document.getElementById('b-city').value.trim();
-  const zip  = document.getElementById('b-zip').value.trim();
-  let ok = true;
-  if (!nm)   { showErr('b-name-err'); ok = false; }
-  if (!addr) { showErr('b-addr-err'); ok = false; }
-  if (!city) { showErr('b-city-err'); ok = false; }
-  if (!zip)  { showErr('b-zip-err');  ok = false; }
-  if (ok) goStep(3);
-}
-
-function validateStep3() {
-  const trade = document.getElementById('s-trade').value;
-  const areas = document.getElementById('s-areas').value.trim();
-  const exp   = document.getElementById('s-exp').value;
-  const desc  = document.getElementById('s-desc').value.trim();
-  let ok = true;
-  if (!trade) { showErr('s-trade-err'); ok = false; }
-  if (!areas) { showErr('s-areas-err'); ok = false; }
-  if (!exp)   { showErr('s-exp-err');   ok = false; }
-  if (!desc)  { showErr('s-desc-err');  ok = false; }
-  if (ok) goStep(4);
-}
-
-// ═══════════════════════════════════════════
-// ── SUPABASE: CONTRACTOR SIGNUP ──────────
-// ═══════════════════════════════════════════
-async function handleContractorSignup() {
-  const legal  = document.getElementById('l-legal').checked;
-  const hasIns = document.querySelector('#ins-select .radio-opt.selected');
-  let ok = true;
-  if (!hasIns) { showErr('ins-err');     ok = false; }
-  if (!legal)  { showErr('l-legal-err'); ok = false; }
-  if (!ok) return;
-
-  // Collect all step data
-  const fn          = document.getElementById('c-fname').value.trim();
-  const ln          = document.getElementById('c-lname').value.trim();
-  const email       = document.getElementById('c-email').value.trim();
-  const phone       = document.getElementById('c-phone').value.trim();
-  const pw          = document.getElementById('c-pw').value;
-  const companyName = document.getElementById('b-name').value.trim();
-  const address     = document.getElementById('b-addr').value.trim();
-  const city        = document.getElementById('b-city').value.trim();
-  const zip         = document.getElementById('b-zip').value.trim();
-  const website     = document.getElementById('b-web').value.trim();
-  const tradeType   = document.getElementById('s-trade').value;
-  const serviceAreas= document.getElementById('s-areas').value.trim();
-  const experience  = document.getElementById('s-exp').value;
-  const description = document.getElementById('s-desc').value.trim();
-  const license     = document.getElementById('l-license').value.trim();
-  const insured     = hasIns.querySelector('.radio-opt-title').textContent.includes('Insured');
-  const plan        = document.querySelector('#plan-select .radio-opt.selected input')?.value || 'free';
-  const initials    = (fn[0]||'') + (ln[0]||'');
-  const location    = `${city}, NY ${zip}`;
-  const fullName    = `${fn} ${ln}`;
-
-  setBtnLoading('contractor-signup-btn', true, '🚀 Create My Account');
-
-  // 1. Create Supabase auth account
-  const { data: authData, error: authErr } = await sb.auth.signUp({
-    email,
-    password: pw,
-    options: {
-      data: { display_name: companyName, role: 'contractor' },
-      emailRedirectTo: window.location.origin + '/auth-callback.html',
-    }
-  });
-
-  if (authErr) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showToast('❌ ' + authErr.message);
-    return;
-  }
-
-  const userId = authData.user.id;
-
-  // 2. Insert into public.users
-  await sb.from('users').insert({
-    id:       userId,
-    username: fullName,
-    email,
-    phone,
-    role:     'contractor',
-    location,
-  });
-
-  // 3. Insert into public.contractors (mirrors "contractors subscription")
-  const { error: proErr } = await sb.from('contractors').insert({
-    id:              userId,
-    company_name:    companyName,
-    trade_type:      tradeType,
-    phone,
-    email,
-    location,
-    address:         `${address}, ${city}, NY ${zip}`,
-    website:         website || '',
-    service_areas:   serviceAreas,
-    experience,
-    description,
-    license_url:     license || '',
-    insured,
-    verified:        false,
-    rating:          5,
-    review_count:    0,
-    hourly_rate:     85,
-    plan,
-    total_bookings:  0,
-    profile_views:   0,
-    portfolio:       [],
-    avatar_url:          `https://picsum.photos/seed/${encodeURIComponent(companyName)}/200/200`,
-  });
-
-  setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-
-  if (proErr) {
-    // Non-fatal — profile will be completed on first dashboard login
-  }
-
-  // Safely update dashboard preview elements (non-critical)
-  try {
-    const dnEl = document.getElementById('dash-name');
-    const daEl = document.getElementById('dash-avatar-initials');
-    const dwEl = document.getElementById('dash-welcome-avatar');
-    if (dnEl) dnEl.textContent = fn;
-    if (daEl) daEl.textContent = initials || 'ME';
-    if (dwEl) dwEl.textContent = initials || 'ME';
-  } catch(e) { /* non-fatal */ }
-
-  showToast('🎉 Welcome to Tradease, ' + fn + '!');
-  // Always redirect regardless of any DOM errors above
-  setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 500);
-}
-
-async function launchDashboard() {
-  // Hide all screens using cache
-  SCREENS.forEach(s => {
-    const el = SCREEN_CACHE[s];
-    if (el) { el.classList.remove('active'); el.style.display = 'none'; }
-  });
-
-  const dash = SCREEN_CACHE['screen-dashboard'];
-  dash.style.display = 'flex';
-  dash.offsetHeight; // force reflow for animation
-  dash.classList.add('active');
-  _activeScreen = 'screen-dashboard';
-  window.scrollTo(0, 0);
-
-  // Load live stats in background — doesn't block dashboard render
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return;
-
-  const { data: profile } = await sb.from('contractors')
-    .select('company_name, total_bookings, profile_views, review_count, plan, rating')
-    .eq('id', user.id)
-    .single();
-
-  if (profile) {
-    const statCards = document.querySelectorAll('.stat-val');
-    if (statCards[0]) statCards[0].textContent = profile.profile_views  || 0;
-    if (statCards[1]) statCards[1].textContent = profile.total_bookings || 0;
-    if (statCards[2]) statCards[2].textContent = profile.review_count > 0
-      ? profile.rating.toFixed(1) + ' ⭐' : '—';
-    if (profile.plan === 'pro') {
-      const upgradeBtn = document.querySelector('.dash-upgrade');
-      if (upgradeBtn) {
-        upgradeBtn.textContent = '⚡ Pro Active';
-        upgradeBtn.style.background = '#22C55E';
-      }
-    }
-  }
-}
-
-// ═══════════════════════════════════════════
-// PLAN & RADIO SELECTION (UI)
-// ═══════════════════════════════════════════
-function selectPlan(el, val) {
-  document.querySelectorAll('#plan-select .radio-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function selectRadio(el, groupId) {
-  document.querySelectorAll('#' + groupId + ' .radio-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  clearErr(groupId === 'ins-select' ? 'ins-err' : '');
-}
-
-// ═══════════════════════════════════════════
-// ── SUPABASE: FORGOT PASSWORD ────────────
-// ═══════════════════════════════════════════
-async function handleForgot() {
-  const email = document.getElementById('forgot-email').value.trim();
-  if (!isEmail(email)) { showToast('⚠️ Please enter a valid email address.'); return; }
-
-  setBtnLoading('forgot-btn', true, 'Send Reset Link →');
-
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/tradease-auth.html'
-  });
-
-  setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-
-  if (error) { showToast('❌ ' + error.message); return; }
-  showToast('✉️ Reset link sent to ' + email + '! Check your inbox.');
-}
-
-// ═══════════════════════════════════════════
-// ── RESEND CONFIRMATION EMAIL ─────────────
-// ═══════════════════════════════════════════
-let _lastResendEmail = '';
-async function resendConfirmation() {
-  // Get email from the signup form field that was last used
-  const email = _lastResendEmail
-    || document.getElementById('cu-email')?.value?.trim()
-    || document.getElementById('c-email')?.value?.trim()
-    || '';
-
-  if (!email) {
-    showToast('⚠️ Could not find your email. Please try signing up again.');
-    return;
-  }
-  const { error } = await sb.auth.resend({
-    type: 'signup',
-    email,
-    options: {
-      emailRedirectTo: window.location.origin + '/auth-callback.html',
-    }
-  });
-  if (error) { showToast('❌ ' + error.message); return; }
-  showToast('✅ Confirmation email resent! Check your inbox.');
-}
-
-// ═══════════════════════════════════════════
-// ── GOOGLE OAUTH ─────────────────────────────────────────────
-async function signInWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin + '/auth-callback.html' }
-  });
-  if (error) showToast('❌ Google sign-in failed: ' + error.message);
-}
-
-// ── GITHUB OAUTH ─────────────────────────────────────────────
-async function signInWithGitHub() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'github',
-    options: { redirectTo: window.location.origin + '/auth-callback.html' }
-  });
-  if (error) showToast('❌ GitHub sign-in failed: ' + error.message);
-}
-
-// ── CONTRACTOR OAUTH (stores role=contractor hint before redirect) ──
-async function signInWithOAuthContractor(provider) {
-  // Store a flag so auth-callback knows this is a contractor signup
-  sessionStorage.setItem('oauth_role', 'contractor');
-  const { error } = await sb.auth.signInWithOAuth({
-    provider,
-    options: { redirectTo: window.location.origin + '/auth-callback.html?role=contractor' }
-  });
-  if (error) showToast('❌ ' + provider + ' sign-in failed: ' + error.message);
-}
-
-// ── SUPABASE: CHECK SESSION ON LOAD ──────
-// Body starts hidden (opacity:0). We only
-// reveal it once we know we're staying here.
-// If redirecting, we never show the page at all.
-// ═══════════════════════════════════════════
-async function checkExistingSession() {
-  const intentional = sessionStorage.getItem('auth_intentional');
-
-  if (intentional) {
-    sessionStorage.removeItem('auth_intentional');
-    document.body.style.opacity = '1';
-    return;
-  }
-
-  const { data: { session } } = await sb.auth.getSession();
-
-  if (!session) {
-    document.body.style.opacity = '1';
-    return;
-  }
-
-  // Try DB first, fall back to JWT metadata — either way we redirect
-  let role = session.user.user_metadata?.role || 'customer';
-  try {
-    const { data: profile } = await sb.from('users')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-    if (profile?.role) role = profile.role;
-  } catch (e) {
-    // DB query failed — use metadata role as fallback
-  }
-
-  window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
-}
-
-// ═══════════════════════════════════════════
-// SIGN OUT
-// ═══════════════════════════════════════════
-async function signOut() {
-  await sb.auth.signOut();
-  sessionStorage.setItem('auth_intentional', '1');
-  window.location.replace('/tradease-auth.html');
-}
-
-// ═══════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1815,37 +628,444 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
 }
 
-// ═══════════════════════════════════════════
-// INIT — check session on page load
-// ═══════════════════════════════════════════
-checkExistingSession();
+// ── EMAIL LOGIN ───────────────────────────────────────────────
+// FIX: removed last_login update that crashed if column missing
+// FIX: proper error display in UI instead of just toast
+async function handleLogin() {
+  const email = (document.getElementById('login-email')?.value || '').trim();
+  const pw    =  document.getElementById('login-pw')?.value    || '';
+  clearAlert('login-error');
+  let ok = true;
+  if (!isEmail(email)) { showErr('login-email-err'); ok = false; }
+  if (!pw)             { showErr('login-pw-err');    ok = false; }
+  if (!ok) return;
 
-// Auto-switch to contractor tab if URL param says so
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('type') === 'contractor') {
-    setTimeout(() => goScreen('screen-contractor'), 100);
+  setBtnLoading('login-btn', true, 'Sign In →');
+
+  let data, error;
+  try {
+    ({ data, error } = await sb.auth.signInWithPassword({ email, password: pw }));
+  } catch (e) {
+    setBtnLoading('login-btn', false, 'Sign In →');
+    showAlert('login-error', '❌ Network error. Please check your connection and try again.');
+    return;
   }
-})();
 
-// If user was trying to message a contractor before login, restore that intent
-// after successful auth so customer-dashboard knows to open the chat
+  if (error) {
+    setBtnLoading('login-btn', false, 'Sign In →');
+    const msg = error.message?.toLowerCase() || '';
+    if (msg.includes('invalid') || msg.includes('credentials')) {
+      showAlert('login-error', '❌ Incorrect email or password. Please try again.');
+    } else if (msg.includes('confirm') || msg.includes('verified')) {
+      showAlert('login-error', '❌ Please verify your email before signing in. Check your inbox for the confirmation link.');
+    } else {
+      showAlert('login-error', '❌ ' + error.message);
+    }
+    return;
+  }
+
+  // Fetch role — use DB as source of truth, metadata as fallback only
+  let role = 'customer';
+  try {
+    const { data: profile } = await sb.from('users')
+      .select('role, username')
+      .eq('id', data.user.id)
+      .single();
+    if (profile?.role) role = profile.role;
+    else role = data.user.user_metadata?.role || 'customer';
+  } catch (e) {
+    role = data.user.user_metadata?.role || 'customer';
+  }
+
+  setBtnLoading('login-btn', false, 'Sign In →');
+  showToast('✅ Signing you in…');
+
+  // FIX: removed last_login update — was crashing silently if column missing
+  // Redirect based on role
+  setTimeout(() => {
+    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
+  }, 400);
+}
+
+// ── CUSTOMER SIGNUP ───────────────────────────────────────────
+let _lastResendEmail = '';
+
+async function handleCustomerSignup() {
+  const name  = (document.getElementById('cu-name')?.value  || '').trim();
+  const email = (document.getElementById('cu-email')?.value || '').trim();
+  const loc   = (document.getElementById('cu-loc')?.value   || '').trim();
+  const pw    =  document.getElementById('cu-pw')?.value    || '';
+  const terms =  document.getElementById('cu-terms')?.checked;
+  clearAlert('signup-error');
+  let ok = true;
+  if (!name)           { showErr('cu-name-err');  ok = false; }
+  if (!isEmail(email)) { showErr('cu-email-err'); ok = false; }
+  if (!loc)            { showErr('cu-loc-err');   ok = false; }
+  if (pw.length < 8)   { showErr('cu-pw-err');    ok = false; }
+  if (!ok) return;
+  if (!terms) { showAlert('signup-error', '⚠️ Please agree to the Terms of Service to continue.'); return; }
+
+  setBtnLoading('cu-signup-btn', true, 'Create My Account →');
+  _lastResendEmail = email;
+
+  let authData, authErr;
+  try {
+    ({ data: authData, error: authErr } = await sb.auth.signUp({
+      email,
+      password: pw,
+      options: {
+        data: { display_name: name, role: 'customer' },
+        emailRedirectTo: window.location.origin + '/auth-callback.html',
+      },
+    }));
+  } catch (e) {
+    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+    showAlert('signup-error', '❌ Network error. Please try again.');
+    return;
+  }
+
+  if (authErr) {
+    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+    showAlert('signup-error', '❌ ' + authErr.message);
+    return;
+  }
+
+  // Upsert users row — safe if row already exists
+  await sb.from('users').upsert({
+    id:       authData.user.id,
+    username: name,
+    email,
+    location: loc,
+    role:     'customer',
+  }, { onConflict: 'id' });
+
+  setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+
+  // If Supabase auto-confirms (e.g. no email confirmation required in project settings)
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showToast('🎉 Account created! Welcome to Tradease!');
+    setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 400);
+    return;
+  }
+
+  // Email confirmation required
+  const displayEl = document.getElementById('confirm-email-display');
+  if (displayEl) displayEl.textContent = email;
+  goScreen('screen-customer-success');
+}
+
+// ── CONTRACTOR MULTI-STEP ─────────────────────────────────────
+let currentStep = 1;
+
+function goStep(n) {
+  document.getElementById('step-' + currentStep)?.classList.remove('active');
+  document.getElementById('step-' + n)?.classList.add('active');
+  currentStep = n;
+  updateProgress(n);
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(step) {
+  const pct = { 1: 25, 2: 50, 3: 75, 4: 100 };
+  const fill = document.getElementById('prog-bar');
+  if (fill) fill.style.width = pct[step] + '%';
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('ps-' + i);
+    if (!el) continue;
+    el.className = 'prog-step';
+    if (i < step)   el.classList.add('done');
+    if (i === step) el.classList.add('active');
+    const dot = el.querySelector('.prog-dot');
+    if (dot) dot.textContent = i < step ? '✓' : i;
+  }
+}
+
+function validateStep1() {
+  const fn  = (document.getElementById('c-fname')?.value || '').trim();
+  const ln  = (document.getElementById('c-lname')?.value || '').trim();
+  const em  = (document.getElementById('c-email')?.value || '').trim();
+  const ph  = (document.getElementById('c-phone')?.value || '').trim();
+  const pw  =  document.getElementById('c-pw')?.value    || '';
+  const pw2 =  document.getElementById('c-pw2')?.value   || '';
+  let ok = true;
+  if (!fn)          { showErr('c-fname-err'); ok = false; }
+  if (!ln)          { showErr('c-lname-err'); ok = false; }
+  if (!isEmail(em)) { showErr('c-email-err'); ok = false; }
+  if (!ph)          { showErr('c-phone-err'); ok = false; }
+  if (pw.length < 8){ showErr('c-pw-err');    ok = false; }
+  if (pw !== pw2)   { showErr('c-pw2-err');   ok = false; }
+  if (ok) goStep(2);
+}
+
+function validateStep2() {
+  const nm   = (document.getElementById('b-name')?.value || '').trim();
+  const addr = (document.getElementById('b-addr')?.value || '').trim();
+  const city = (document.getElementById('b-city')?.value || '').trim();
+  const zip  = (document.getElementById('b-zip')?.value  || '').trim();
+  let ok = true;
+  if (!nm)   { showErr('b-name-err'); ok = false; }
+  if (!addr) { showErr('b-addr-err'); ok = false; }
+  if (!city) { showErr('b-city-err'); ok = false; }
+  if (!zip)  { showErr('b-zip-err');  ok = false; }
+  if (ok) goStep(3);
+}
+
+function validateStep3() {
+  const trade = document.getElementById('s-trade')?.value || '';
+  const areas = (document.getElementById('s-areas')?.value || '').trim();
+  const exp   = document.getElementById('s-exp')?.value   || '';
+  const desc  = (document.getElementById('s-desc')?.value || '').trim();
+  let ok = true;
+  if (!trade) { showErr('s-trade-err'); ok = false; }
+  if (!areas) { showErr('s-areas-err'); ok = false; }
+  if (!exp)   { showErr('s-exp-err');   ok = false; }
+  if (!desc)  { showErr('s-desc-err');  ok = false; }
+  if (ok) goStep(4);
+}
+
+function selectPlan(el, val) {
+  document.querySelectorAll('#plan-select .radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectRadio(el, groupId) {
+  document.querySelectorAll('#' + groupId + ' .radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (groupId === 'ins-select') clearErr('ins-err');
+}
+
+async function handleContractorSignup() {
+  const legal  = document.getElementById('l-legal')?.checked;
+  const hasIns = document.querySelector('#ins-select .radio-opt.selected');
+  clearAlert('contractor-error');
+  let ok = true;
+  if (!hasIns) { showErr('ins-err');     ok = false; }
+  if (!legal)  { showErr('l-legal-err'); ok = false; }
+  if (!ok) return;
+
+  const fn          = (document.getElementById('c-fname')?.value || '').trim();
+  const ln          = (document.getElementById('c-lname')?.value || '').trim();
+  const email       = (document.getElementById('c-email')?.value || '').trim();
+  const phone       = (document.getElementById('c-phone')?.value || '').trim();
+  const pw          =  document.getElementById('c-pw')?.value    || '';
+  const companyName = (document.getElementById('b-name')?.value  || '').trim();
+  const address     = (document.getElementById('b-addr')?.value  || '').trim();
+  const city        = (document.getElementById('b-city')?.value  || '').trim();
+  const zip         = (document.getElementById('b-zip')?.value   || '').trim();
+  const website     = (document.getElementById('b-web')?.value   || '').trim();
+  const tradeType   =  document.getElementById('s-trade')?.value || '';
+  const serviceAreas= (document.getElementById('s-areas')?.value || '').trim();
+  const experience  =  document.getElementById('s-exp')?.value   || '';
+  const description = (document.getElementById('s-desc')?.value  || '').trim();
+  const license     = (document.getElementById('l-license')?.value || '').trim();
+  const insured     = hasIns.querySelector('.radio-opt-title')?.textContent.includes('Insured') || false;
+  const plan        = document.querySelector('#plan-select .radio-opt.selected input')?.value || 'free';
+  const location    = city ? `${city}, NY ${zip}`.trim() : zip;
+  const fullName    = `${fn} ${ln}`.trim();
+
+  setBtnLoading('contractor-signup-btn', true, '🚀 Create My Account');
+
+  let authData, authErr;
+  try {
+    ({ data: authData, error: authErr } = await sb.auth.signUp({
+      email,
+      password: pw,
+      options: {
+        data: { display_name: companyName || fullName, role: 'contractor' },
+        emailRedirectTo: window.location.origin + '/auth-callback.html',
+      },
+    }));
+  } catch (e) {
+    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+    showAlert('contractor-error', '❌ Network error. Please try again.');
+    return;
+  }
+
+  if (authErr) {
+    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+    showAlert('contractor-error', '❌ ' + authErr.message);
+    return;
+  }
+
+  const userId = authData.user.id;
+
+  // Upsert both rows — safe on retry
+  await sb.from('users').upsert({
+    id:       userId,
+    username: fullName,
+    email,
+    phone,
+    role:     'contractor',
+    location,
+  }, { onConflict: 'id' });
+
+  await sb.from('contractors').upsert({
+    id:              userId,
+    company_name:    companyName,
+    trade_type:      tradeType,
+    phone,
+    email,
+    location,
+    address:         `${address}, ${city}, NY ${zip}`.trim(),
+    website:         website || '',
+    service_areas:   serviceAreas,
+    experience,
+    description,
+    license_url:     license || '',
+    insured,
+    verified:        false,
+    rating:          0,
+    review_count:    0,
+    plan,
+    total_bookings:  0,
+    profile_views:   0,
+    portfolio:       [],
+    // FIX: was 'avatar', dashboard reads 'avatar_url'
+    avatar_url:      '',
+    approval_status: 'pending',
+    approved:        false,
+  }, { onConflict: 'id' });
+
+  setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+
+  // Check if auto-confirmed
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showToast('🎉 Welcome to Tradease, ' + fn + '!');
+    setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 400);
+    return;
+  }
+
+  _lastResendEmail = email;
+  const displayEl = document.getElementById('confirm-email-display');
+  if (displayEl) displayEl.textContent = email;
+  goScreen('screen-customer-success');
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────────────
+async function handleForgot() {
+  const email = (document.getElementById('forgot-email')?.value || '').trim();
+  if (!isEmail(email)) { showToast('⚠️ Please enter a valid email address.'); return; }
+  setBtnLoading('forgot-btn', true, 'Send Reset Link →');
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/tradease-auth.html',
+  });
+  setBtnLoading('forgot-btn', false, 'Send Reset Link →');
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✉️ Reset link sent to ' + email + '! Check your inbox.');
+}
+
+// ── RESEND CONFIRMATION ───────────────────────────────────────
+// FIX: was looking for 'co-email' which doesn't exist, now uses _lastResendEmail
+async function resendConfirmation() {
+  const email = _lastResendEmail;
+  if (!email) {
+    showToast('⚠️ Please sign up again to get a new link.');
+    goScreen('screen-signup');
+    return;
+  }
+  const { error } = await sb.auth.resend({
+    type: 'signup',
+    email,
+    options: { emailRedirectTo: window.location.origin + '/auth-callback.html' },
+  });
+  if (error) { showToast('❌ ' + error.message); return; }
+  showToast('✅ Confirmation email resent! Check your inbox.');
+}
+
+// ── GOOGLE OAUTH ──────────────────────────────────────────────
+async function signInWithGoogle() {
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/auth-callback.html',
+      queryParams: { access_type: 'offline', prompt: 'consent' },
+    },
+  });
+  if (error) showToast('❌ Google sign-in failed: ' + error.message);
+}
+
+async function signInWithGitHub() {
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'github',
+    options: { redirectTo: window.location.origin + '/auth-callback.html' },
+  });
+  if (error) showToast('❌ GitHub sign-in failed: ' + error.message);
+}
+
+async function signInWithOAuthContractor(provider) {
+  sessionStorage.setItem('oauth_role', 'contractor');
+  const { error } = await sb.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: window.location.origin + '/auth-callback.html',
+      ...(provider === 'google' ? { queryParams: { access_type: 'offline', prompt: 'consent' } } : {}),
+    },
+  });
+  if (error) showToast('❌ ' + provider + ' sign-in failed: ' + error.message);
+}
+
+// ── SESSION CHECK ON LOAD ─────────────────────────────────────
+async function checkExistingSession() {
+  const intentional = sessionStorage.getItem('auth_intentional');
+  if (intentional) {
+    sessionStorage.removeItem('auth_intentional');
+    document.body.style.opacity = '1';
+    return;
+  }
+
+  let session = null;
+  try {
+    const result = await sb.auth.getSession();
+    session = result.data?.session || null;
+  } catch (e) {
+    document.body.style.opacity = '1';
+    return;
+  }
+
+  if (!session) {
+    document.body.style.opacity = '1';
+    return;
+  }
+
+  // Already logged in — get role and redirect
+  let role = session.user.user_metadata?.role || 'customer';
+  try {
+    const { data: profile } = await sb.from('users')
+      .select('role')
+      .eq('id', session.user.id)
+      .single();
+    if (profile?.role) role = profile.role;
+  } catch (e) { /* use metadata fallback */ }
+
+  window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
+}
+
+// Handle post-auth chat intent
 (function() {
   const action = sessionStorage.getItem('post_auth_action');
   if (action) {
     try {
       const parsed = JSON.parse(action);
       if (parsed.action === 'message' && parsed.contractorId) {
-        // Move from post_auth_action → open_chat so customer-dashboard picks it up
         sessionStorage.removeItem('post_auth_action');
         sessionStorage.setItem('open_chat', JSON.stringify({
           contractorId:   parsed.contractorId,
           contractorName: parsed.contractorName || 'Contractor',
         }));
       }
-    } catch(e) { sessionStorage.removeItem('post_auth_action'); }
+    } catch (e) { sessionStorage.removeItem('post_auth_action'); }
+  }
+
+  // Auto-switch to contractor tab if URL param says so
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('type') === 'contractor') {
+    setTimeout(() => goScreen('screen-contractor'), 100);
   }
 })();
+
+checkExistingSession();
 </script>
 </body>
 </html>

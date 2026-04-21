@@ -43,7 +43,7 @@ input,select,textarea{font-family:var(--body);}
 .view.active{display:block;animation:fi .15s ease both;}
 
 /* ── TOPBAR ── */
-.topbar{background:rgba(10,10,12,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:62px;padding:0 28px;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+.topbar{background:rgba(10,10,12,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:62px;padding:0 28px;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:200;flex-shrink:0;}
 .logo{display:flex;align-items:center;gap:9px;cursor:pointer;transition:opacity .12s;flex-shrink:0;text-decoration:none;}
 .logo:hover{opacity:.8;}
 .logo-img{width:30px;height:30px;border-radius:8px;object-fit:cover;flex-shrink:0;}
@@ -237,7 +237,7 @@ input,select,textarea{font-family:var(--body);}
 .empty p{font-size:13px;color:var(--g3);}
 
 /* ── MODAL ── */
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
 .mbg.open{display:flex;}
 .mdl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-2xl);width:100%;max-width:520px;overflow:hidden;animation:fi .18s ease both;max-height:90vh;overflow-y:auto;}
 .mh{background:linear-gradient(135deg,var(--orange),var(--orange-dk));padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
@@ -715,14 +715,12 @@ input,select,textarea{font-family:var(--body);}
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/jobs/job-backend.js"></script>
 <script>
 const SB_URL = 'https://linqsojbszglbgpoxgtv.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 let user = null, prof = null, bookings = [], allContractors = [], activeConvId = null, chatChannel = null, activeBookC = null;
-let jobBackend = null, jobMetaByBooking = {};
 
 const VIEWS = ['home','find','bk','msgs','pricing','learn','help','profile'];
 let _redirecting = false;
@@ -735,8 +733,11 @@ function showV(v) {
   });
   document.getElementById('view-'+v)?.classList.add('active');
   document.getElementById('tab-'+v)?.classList.add('on');
+  document.getElementById('nav-av')?.classList.toggle('on', v==='profile');
   window.scrollTo(0,0);
-  if(v==='msgs') loadConversations();
+  if (v === 'msgs') loadConversations();
+  if (v === 'bk')   loadBookings();
+  if (v === 'find')  doFind();
 }
 
 // ── INIT ───────────────────────────────────────────────────
@@ -744,9 +745,6 @@ async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { if(!_redirecting){_redirecting=true;window.location.replace('/tradease-auth.html');} return; }
   user = session.user;
-  if (window.TradeaseJobBackend?.create) {
-    jobBackend = window.TradeaseJobBackend.create(sb);
-  }
 
   const { data: p, error } = await sb.from('users').select('*').eq('id', user.id).single();
   if (error || !p) {
@@ -790,7 +788,52 @@ async function init() {
 
   await Promise.all([loadContractors(), loadBookings()]);
   subscribeToBookings();
+  subscribeToUserProfile();
   buildFAQ();
+}
+
+// ── LIVE: Own profile changes from other sessions ──────────
+function subscribeToUserProfile() {
+  sb.channel('own-user-profile')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'users',
+      filter: `id=eq.${user.id}`,
+    }, payload => {
+      prof = { ...prof, ...payload.new };
+      fillUI();
+    })
+    .subscribe();
+
+  // Conversation status changes (contractor accepts/declines message requests)
+  sb.channel('customer-conv-updates')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations',
+      filter: `customer_id=eq.${user.id}`,
+    }, payload => {
+      const conv = payload.new;
+      // Refresh conversation list live
+      loadConversations();
+      // If this conversation is open, update the chat header status
+      if (activeConvId === conv.id) {
+        const statusEl = document.getElementById('chat-status');
+        const pendBan  = document.getElementById('chat-pend-ban');
+        const inputRow = document.getElementById('chat-input-row');
+        if (conv.status === 'accepted') {
+          if (statusEl) statusEl.textContent = '✅ Active';
+          if (pendBan)  pendBan.style.display = 'none';
+          if (inputRow) inputRow.style.display = 'flex';
+          showToast('✅ Your message request was accepted! You can now chat.');
+        } else if (conv.status === 'declined') {
+          if (statusEl) statusEl.textContent = '❌ Request declined';
+          showToast('❌ Your message request was declined.');
+        }
+      }
+    })
+    .subscribe();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -852,14 +895,88 @@ const SAMPLE_CONTRACTORS = [
 
 let _homeFilter = '';
 
+// Trade → color map so every contractor card has a meaningful color
+const TRADE_COLORS = {
+  'Plumbing':            'linear-gradient(135deg,#3B82F6,#1D4ED8)',
+  'Electrical':          'linear-gradient(135deg,#F59E0B,#B45309)',
+  'HVAC':                'linear-gradient(135deg,#06B6D4,#0284C7)',
+  'Handyman':            'linear-gradient(135deg,#8B5CF6,#6D28D9)',
+  'Roofing':             'linear-gradient(135deg,#64748B,#334155)',
+  'Cleaning':            'linear-gradient(135deg,#EC4899,#BE185D)',
+  'Landscaping':         'linear-gradient(135deg,#22C55E,#15803D)',
+  'Painting':            'linear-gradient(135deg,#A78BFA,#7C3AED)',
+  'Carpentry':           'linear-gradient(135deg,#92400E,#78350F)',
+  'Flooring':            'linear-gradient(135deg,#D97706,#92400E)',
+  'General Contracting': 'linear-gradient(135deg,#FF6B2B,#E05520)',
+};
+function tradeColor(trade, idx) {
+  return TRADE_COLORS[trade] || COLS[idx % COLS.length];
+}
+
 async function loadContractors() {
-  const { data } = await sb.from('contractors').select('*').order('rating',{ascending:false}).limit(50);
-  allContractors = (data && data.length > 0)
-    ? data.map(c => ({...c, initials:(c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(), color:'linear-gradient(135deg,#FF6B2B,#E05520)', _live:true}))
-    : SAMPLE_CONTRACTORS;
+  // contractor_profiles is a view that joins contractors + users
+  // and only returns approved contractors
+  const { data } = await sb.from('contractor_profiles')
+    .select('*')
+    .order('rating', {ascending:false})
+    .limit(100);
+
+  if (data && data.length > 0) {
+    allContractors = data.map((c,i) => ({
+      ...c,
+      initials: (c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+      color: tradeColor(c.trade_type, i),
+      _live: true,
+    }));
+  } else {
+    allContractors = SAMPLE_CONTRACTORS;
+  }
+
   renderContractors('home-cg', _homeFilter, 6);
   renderContractors('find-cg', '', 0);
   updateFindCount();
+  subscribeToContractors(); // live updates
+}
+
+// ── LIVE: Contractors table changes refresh the lists ──────
+let _contractorChannel = null;
+function subscribeToContractors() {
+  if (_contractorChannel) sb.removeChannel(_contractorChannel);
+  _contractorChannel = sb.channel('public-contractors')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'contractors',
+    }, async payload => {
+      const updated = payload.new;
+      if (!updated || !updated.approved) return;
+      // Re-fetch full profile (includes username join from view)
+      const { data: freshProfile } = await sb
+        .from('contractor_profiles')
+        .select('*')
+        .eq('id', updated.id)
+        .maybeSingle();
+      const merged = freshProfile || updated;
+      const idx = allContractors.findIndex(c => c.id === merged.id);
+      const enriched = {
+        ...merged,
+        initials: (merged.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+        color: tradeColor(merged.trade_type, idx >= 0 ? idx : allContractors.length),
+        _live: true,
+      };
+      if (idx >= 0) {
+        allContractors[idx] = enriched;
+      } else if (payload.eventType === 'INSERT' && merged.approved) {
+        allContractors.push(enriched);
+        // Re-sort by rating
+        allContractors.sort((a,b) => (b.rating||0) - (a.rating||0));
+      }
+      // Re-render both grids with current data
+      renderContractors('home-cg', _homeFilter, 6);
+      renderContractors('find-cg', '', 0);
+      updateFindCount();
+    })
+    .subscribe();
 }
 
 function filterHome(trade, el) {
@@ -909,22 +1026,38 @@ function renderContractors(elId, tradeFilter, limit) {
     return;
   }
   el.innerHTML = list.map(c => {
-    const stars = c.rating ? '★'.repeat(Math.round(c.rating)).substring(0,5) + ' ' + Number(c.rating).toFixed(1) : 'New';
-    const isLeads = c.plan === 'leads';
-    const cta = isLeads
-      ? `<button class="cc-btn" style="background:var(--bg4);color:var(--blue);border:1px solid rgba(96,165,250,.3);" onclick="event.stopPropagation();openCoModal('${c.id}')">View Profile</button>`
-      : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">Book Now</button>`;
+    const stars    = c.rating && c.review_count > 0 ? '★'.repeat(Math.min(5,Math.round(c.rating))) + ' ' + Number(c.rating).toFixed(1) : '';
+    const isLeads   = c.plan === 'leads';
+    const isOnline  = c.is_online;
+    const canBook   = !isLeads && c.accepts_bookings !== false;
+    const cta       = isLeads
+      ? `<button class="cc-btn" style="background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.25);font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;" onclick="event.stopPropagation();openCoModal('${c.id}')">📋 View & Contact</button>`
+      : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">📅 Book Now</button>`;
+    const onlineDot = isOnline
+      ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22C55E;margin-right:4px;box-shadow:0 0 6px rgba(34,197,94,.7);flex-shrink:0;"></span>`
+      : '';
+    const insuredBadge = c.insured
+      ? `<span style="font-size:9px;background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.2);padding:1px 6px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;">🛡 Insured</span>`
+      : '';
+    const reviewStr = c.review_count > 0 ? ` <span style="font-size:11px;color:var(--g3);">(${c.review_count})</span>` : '';
     return `<div class="cc" onclick="openCoModal('${c.id}')">
+      ${c.verified ? '<div class="cc-verified">✓ Verified</div>' : ''}
+      ${c.plan === 'leads' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">📋 Leads</div>' : c.plan === 'pro' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">⚡ Pro</div>' : ''}
       <div class="cc-top">
-        <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'};">${c.avatar_url?`<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>`:''}${!c.avatar_url?c.initials:''}</div>
-        <div>
+        <div style="position:relative;flex-shrink:0;">
+          <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'}">${c.avatar_url ? `<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>` : c.initials}</div>
+          ${isOnline ? `<span style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:#22C55E;border:2px solid var(--bg2);box-shadow:0 0 6px rgba(34,197,94,.6);"></span>` : ''}
+        </div>
+        <div style="flex:1;min-width:0;">
           <div class="cc-name">${c.company_name||'—'}</div>
           <div class="cc-trade">${c.trade_type||'Contractor'}</div>
         </div>
-        ${c.verified?'<div class="cc-verified">✓ Verified</div>':''}
       </div>
       <div class="cc-loc">📍 ${c.location||'New York'}</div>
-      <div class="cc-stars">${stars} ${c.review_count?'('+c.review_count+')':''}</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap;">
+        ${stars ? `<span class="cc-stars" style="margin:0;">${stars}${reviewStr}</span>` : '<span style="font-size:11px;color:var(--g3);">New</span>'}
+        ${insuredBadge}
+      </div>
       <div class="cc-about">${(c.description||'').substring(0,80)}${(c.description||'').length>80?'…':''}</div>
       ${cta}
     </div>`;
@@ -938,6 +1071,14 @@ function openCoModal(id) {
   const c = allContractors.find(x => String(x.id) === String(id));
   if (!c) return;
   _activeCoId = id;
+
+  // Increment profile views (fire-and-forget, no await)
+  if (c._live && c.id && user) {
+    sb.from('contractors')
+      .update({ profile_views: (c.profile_views || 0) + 1 })
+      .eq('id', c.id)
+      .then(() => { c.profile_views = (c.profile_views||0)+1; });
+  }
 
   // Banner
   const bannerImg = document.getElementById('co-modal-banner-img');
@@ -975,18 +1116,41 @@ function openCoModal(id) {
     portGrid.innerHTML = port.map(url => `<div class="co-modal-port-img"><img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`).join('');
   } else { portWrap.style.display = 'none'; }
 
-  // Buttons
+  // Buttons — plan-specific
   const isLeads = c.plan === 'leads';
-  const bookBtn = document.getElementById('co-modal-book-btn');
-  const msgBtn  = document.getElementById('co-modal-msg-btn');
+  const canBook  = !isLeads && c.accepts_bookings !== false;
+  const bookBtn  = document.getElementById('co-modal-book-btn');
+  const msgBtn   = document.getElementById('co-modal-msg-btn');
+
   if (isLeads) {
-    bookBtn.textContent = '📞 Contact Directly';
-    bookBtn.onclick = () => { if(c.phone) window.location.href='tel:'+c.phone; else showToast('Contact them via their listed info.'); };
+    // Just Leads: no platform booking — show contact options only
+    bookBtn.style.display = 'none'; // hide book button entirely
+    msgBtn.style.flex     = '1';    // msg takes full width
+    msgBtn.textContent    = '💬 Send Message';
+    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
+
+    // Show plan badge in modal
+    let leadsBadgeEl = document.getElementById('co-leads-badge');
+    if (!leadsBadgeEl) {
+      leadsBadgeEl = document.createElement('div');
+      leadsBadgeEl.id = 'co-leads-badge';
+      leadsBadgeEl.style.cssText = 'padding:8px 20px;font-size:12px;color:var(--blue);background:rgba(96,165,250,.08);border-top:1px solid rgba(96,165,250,.15);text-align:center;';
+      document.querySelector('.co-mdl-btns').before(leadsBadgeEl);
+    }
+    leadsBadgeEl.innerHTML = '📋 <strong>Just Leads</strong> plan — connect directly, no platform booking.';
+    leadsBadgeEl.style.display = 'block';
   } else {
-    bookBtn.textContent = '📅 Book Now';
-    bookBtn.onclick = () => { closeCoModal(); openBookModal(id); };
+    bookBtn.style.display = 'flex';
+    msgBtn.style.flex     = '';
+    bookBtn.textContent   = '📅 Book Now';
+    bookBtn.onclick       = () => { closeCoModal(); openBookModal(id); };
+    msgBtn.textContent    = '💬 Message';
+    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
+
+    // Remove leads badge if present
+    const leadsBadgeEl = document.getElementById('co-leads-badge');
+    if (leadsBadgeEl) leadsBadgeEl.style.display = 'none';
   }
-  msgBtn.onclick = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
 
   document.getElementById('co-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1046,15 +1210,6 @@ async function submitBook() {
 async function loadBookings() {
   const { data } = await sb.from('bookings').select('*').eq('customer_id', user.id).order('created_at',{ascending:false});
   bookings = data || [];
-  if (jobBackend) {
-    try {
-      jobMetaByBooking = await jobBackend.getJobsMetaForBookings(bookings);
-    } catch (e) {
-      jobMetaByBooking = {};
-      showToast('⚠️ Could not load job metadata.');
-      console.error('[job] customer metadata load failed', e);
-    }
-  }
   document.getElementById('ii-bk').textContent = bookings.length;
   renderBookings('home-bl', bookings.slice(0,3));
   renderBookings('all-bl', bookings);
@@ -1110,80 +1265,11 @@ function filterBk(s, btn) {
 
 async function cancelBooking(id) {
   if (!confirm('Cancel this booking?')) return;
-  if (jobBackend) {
-    await safeJobAction('Cancel booking', async () => {
-      const booking = bookings.find(b => String(b.id) === String(id));
-      if (!booking) throw new Error('Booking not found');
-      const reason = prompt('Cancellation reason for contractor:', 'Customer request');
-      if (reason === null) return;
-      await jobBackend.cancelJob(booking, 'customer', user.id, reason);
-      bookings = bookings.map(b => b.id===id ? {...b,status:'cancelled'} : b);
-      renderBookings('home-bl',bookings.slice(0,3));
-      renderBookings('all-bl',bookings);
-      showToast('✅ Booking cancelled and contractor notified.');
-    });
-    return;
-  }
   await sb.from('bookings').update({status:'cancelled'}).eq('id',id).eq('customer_id',user.id);
   bookings = bookings.map(b => b.id===id ? {...b,status:'cancelled'} : b);
   renderBookings('home-bl',bookings.slice(0,3));
   renderBookings('all-bl',bookings);
   showToast('✅ Booking cancelled.');
-}
-
-async function safeJobAction(label, action) {
-  try {
-    if (!jobBackend) {
-      showToast('⚠️ Job tools are not available right now.');
-      return;
-    }
-    await action();
-  } catch (e) {
-    console.error(`[job] ${label} failed`, e);
-    showToast(`❌ ${label} failed. Please try again.`);
-  }
-}
-
-async function openBookingChat(bookingId){
-  await safeJobAction('Open chat', async () => {
-    const booking = bookings.find(b => String(b.id) === String(bookingId));
-    if (!booking) throw new Error('Booking not found');
-    const conversation = await jobBackend.ensureConversationForBooking(booking);
-    showV('msgs');
-    await loadConversations();
-    await openConversation(conversation.id);
-  });
-}
-
-async function acceptJobUpdate(bookingId){
-  await safeJobAction('Accept job update', async () => {
-    const booking = bookings.find(b => String(b.id) === String(bookingId));
-    if (!booking) throw new Error('Booking not found');
-    const meta = jobMetaByBooking[String(bookingId)];
-    if (!meta?.latestProposal) {
-      showToast('⚠️ No pending update to accept.');
-      return;
-    }
-    await jobBackend.acceptLatestProposal(booking, 'customer', user.id, meta.latestProposal);
-    showToast('✅ Job update accepted.');
-    await loadBookings();
-  });
-}
-
-async function confirmJobPayment(bookingId){
-  await safeJobAction('Confirm payment', async () => {
-    const booking = bookings.find(b => String(b.id) === String(bookingId));
-    if (!booking) throw new Error('Booking not found');
-    const meta = jobMetaByBooking[String(bookingId)];
-    if (!meta?.paymentPending) {
-      showToast('⚠️ No pending payment request found.');
-      return;
-    }
-    const amount = Number(meta.paymentPending.amount) || 0;
-    await jobBackend.confirmPaymentCompleted(booking, 'customer', user.id, amount);
-    showToast('💳 Payment confirmed. Job marked complete.');
-    await loadBookings();
-  });
 }
 
 function subscribeToBookings() {

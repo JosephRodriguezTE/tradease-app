@@ -169,7 +169,7 @@ ul{list-style:none;}
     <div class="split-left">
       <div class="brand-orb"></div>
       <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
         Tradease<span class="brand-dot"></span>
       </div>
       <div class="brand-hero">
@@ -249,7 +249,7 @@ ul{list-style:none;}
     <div class="split-left">
       <div class="brand-orb"></div>
       <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
         Tradease<span class="brand-dot"></span>
       </div>
       <div class="brand-hero">
@@ -336,7 +336,7 @@ ul{list-style:none;}
     <div class="split-left">
       <div class="brand-orb"></div>
       <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
         Tradease<span class="brand-dot"></span>
       </div>
       <div class="brand-hero">
@@ -508,7 +508,7 @@ ul{list-style:none;}
     <div class="split-left">
       <div class="brand-orb"></div>
       <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        <img src="/tradease-logo.png" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
         Tradease<span class="brand-dot"></span>
       </div>
       <div class="brand-hero">
@@ -918,10 +918,11 @@ async function handleContractorSignup() {
     rating:          0,
     review_count:    0,
     plan,
+    // Just Leads plan does NOT use platform booking system
+    accepts_bookings: plan !== 'leads',
     total_bookings:  0,
     profile_views:   0,
     portfolio:       [],
-    // FIX: was 'avatar', dashboard reads 'avatar_url'
     avatar_url:      '',
     approval_status: 'pending',
     approved:        false,

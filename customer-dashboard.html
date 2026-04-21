@@ -733,11 +733,8 @@ function showV(v) {
   });
   document.getElementById('view-'+v)?.classList.add('active');
   document.getElementById('tab-'+v)?.classList.add('on');
-  document.getElementById('nav-av')?.classList.toggle('on', v==='profile');
   window.scrollTo(0,0);
-  if (v === 'msgs') loadConversations();
-  if (v === 'bk')   loadBookings();
-  if (v === 'find')  doFind();
+  if(v==='msgs') loadConversations();
 }
 
 // ── INIT ───────────────────────────────────────────────────
@@ -788,52 +785,7 @@ async function init() {
 
   await Promise.all([loadContractors(), loadBookings()]);
   subscribeToBookings();
-  subscribeToUserProfile();
   buildFAQ();
-}
-
-// ── LIVE: Own profile changes from other sessions ──────────
-function subscribeToUserProfile() {
-  sb.channel('own-user-profile')
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'users',
-      filter: `id=eq.${user.id}`,
-    }, payload => {
-      prof = { ...prof, ...payload.new };
-      fillUI();
-    })
-    .subscribe();
-
-  // Conversation status changes (contractor accepts/declines message requests)
-  sb.channel('customer-conv-updates')
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'conversations',
-      filter: `customer_id=eq.${user.id}`,
-    }, payload => {
-      const conv = payload.new;
-      // Refresh conversation list live
-      loadConversations();
-      // If this conversation is open, update the chat header status
-      if (activeConvId === conv.id) {
-        const statusEl = document.getElementById('chat-status');
-        const pendBan  = document.getElementById('chat-pend-ban');
-        const inputRow = document.getElementById('chat-input-row');
-        if (conv.status === 'accepted') {
-          if (statusEl) statusEl.textContent = '✅ Active';
-          if (pendBan)  pendBan.style.display = 'none';
-          if (inputRow) inputRow.style.display = 'flex';
-          showToast('✅ Your message request was accepted! You can now chat.');
-        } else if (conv.status === 'declined') {
-          if (statusEl) statusEl.textContent = '❌ Request declined';
-          showToast('❌ Your message request was declined.');
-        }
-      }
-    })
-    .subscribe();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -895,88 +847,14 @@ const SAMPLE_CONTRACTORS = [
 
 let _homeFilter = '';
 
-// Trade → color map so every contractor card has a meaningful color
-const TRADE_COLORS = {
-  'Plumbing':            'linear-gradient(135deg,#3B82F6,#1D4ED8)',
-  'Electrical':          'linear-gradient(135deg,#F59E0B,#B45309)',
-  'HVAC':                'linear-gradient(135deg,#06B6D4,#0284C7)',
-  'Handyman':            'linear-gradient(135deg,#8B5CF6,#6D28D9)',
-  'Roofing':             'linear-gradient(135deg,#64748B,#334155)',
-  'Cleaning':            'linear-gradient(135deg,#EC4899,#BE185D)',
-  'Landscaping':         'linear-gradient(135deg,#22C55E,#15803D)',
-  'Painting':            'linear-gradient(135deg,#A78BFA,#7C3AED)',
-  'Carpentry':           'linear-gradient(135deg,#92400E,#78350F)',
-  'Flooring':            'linear-gradient(135deg,#D97706,#92400E)',
-  'General Contracting': 'linear-gradient(135deg,#FF6B2B,#E05520)',
-};
-function tradeColor(trade, idx) {
-  return TRADE_COLORS[trade] || COLS[idx % COLS.length];
-}
-
 async function loadContractors() {
-  // contractor_profiles is a view that joins contractors + users
-  // and only returns approved contractors
-  const { data } = await sb.from('contractor_profiles')
-    .select('*')
-    .order('rating', {ascending:false})
-    .limit(100);
-
-  if (data && data.length > 0) {
-    allContractors = data.map((c,i) => ({
-      ...c,
-      initials: (c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
-      color: tradeColor(c.trade_type, i),
-      _live: true,
-    }));
-  } else {
-    allContractors = SAMPLE_CONTRACTORS;
-  }
-
+  const { data } = await sb.from('contractors').select('*').order('rating',{ascending:false}).limit(50);
+  allContractors = (data && data.length > 0)
+    ? data.map(c => ({...c, initials:(c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(), color:'linear-gradient(135deg,#FF6B2B,#E05520)', _live:true}))
+    : SAMPLE_CONTRACTORS;
   renderContractors('home-cg', _homeFilter, 6);
   renderContractors('find-cg', '', 0);
   updateFindCount();
-  subscribeToContractors(); // live updates
-}
-
-// ── LIVE: Contractors table changes refresh the lists ──────
-let _contractorChannel = null;
-function subscribeToContractors() {
-  if (_contractorChannel) sb.removeChannel(_contractorChannel);
-  _contractorChannel = sb.channel('public-contractors')
-    .on('postgres_changes', {
-      event: '*',
-      schema: 'public',
-      table: 'contractors',
-    }, async payload => {
-      const updated = payload.new;
-      if (!updated || !updated.approved) return;
-      // Re-fetch full profile (includes username join from view)
-      const { data: freshProfile } = await sb
-        .from('contractor_profiles')
-        .select('*')
-        .eq('id', updated.id)
-        .maybeSingle();
-      const merged = freshProfile || updated;
-      const idx = allContractors.findIndex(c => c.id === merged.id);
-      const enriched = {
-        ...merged,
-        initials: (merged.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
-        color: tradeColor(merged.trade_type, idx >= 0 ? idx : allContractors.length),
-        _live: true,
-      };
-      if (idx >= 0) {
-        allContractors[idx] = enriched;
-      } else if (payload.eventType === 'INSERT' && merged.approved) {
-        allContractors.push(enriched);
-        // Re-sort by rating
-        allContractors.sort((a,b) => (b.rating||0) - (a.rating||0));
-      }
-      // Re-render both grids with current data
-      renderContractors('home-cg', _homeFilter, 6);
-      renderContractors('find-cg', '', 0);
-      updateFindCount();
-    })
-    .subscribe();
 }
 
 function filterHome(trade, el) {
@@ -1026,38 +904,22 @@ function renderContractors(elId, tradeFilter, limit) {
     return;
   }
   el.innerHTML = list.map(c => {
-    const stars    = c.rating && c.review_count > 0 ? '★'.repeat(Math.min(5,Math.round(c.rating))) + ' ' + Number(c.rating).toFixed(1) : '';
-    const isLeads   = c.plan === 'leads';
-    const isOnline  = c.is_online;
-    const canBook   = !isLeads && c.accepts_bookings !== false;
-    const cta       = isLeads
-      ? `<button class="cc-btn" style="background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.25);font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;" onclick="event.stopPropagation();openCoModal('${c.id}')">📋 View & Contact</button>`
-      : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">📅 Book Now</button>`;
-    const onlineDot = isOnline
-      ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22C55E;margin-right:4px;box-shadow:0 0 6px rgba(34,197,94,.7);flex-shrink:0;"></span>`
-      : '';
-    const insuredBadge = c.insured
-      ? `<span style="font-size:9px;background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.2);padding:1px 6px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;">🛡 Insured</span>`
-      : '';
-    const reviewStr = c.review_count > 0 ? ` <span style="font-size:11px;color:var(--g3);">(${c.review_count})</span>` : '';
+    const stars = c.rating ? '★'.repeat(Math.round(c.rating)).substring(0,5) + ' ' + Number(c.rating).toFixed(1) : 'New';
+    const isLeads = c.plan === 'leads';
+    const cta = isLeads
+      ? `<button class="cc-btn" style="background:var(--bg4);color:var(--blue);border:1px solid rgba(96,165,250,.3);" onclick="event.stopPropagation();openCoModal('${c.id}')">View Profile</button>`
+      : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">Book Now</button>`;
     return `<div class="cc" onclick="openCoModal('${c.id}')">
-      ${c.verified ? '<div class="cc-verified">✓ Verified</div>' : ''}
-      ${c.plan === 'leads' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">📋 Leads</div>' : c.plan === 'pro' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">⚡ Pro</div>' : ''}
       <div class="cc-top">
-        <div style="position:relative;flex-shrink:0;">
-          <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'}">${c.avatar_url ? `<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>` : c.initials}</div>
-          ${isOnline ? `<span style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:#22C55E;border:2px solid var(--bg2);box-shadow:0 0 6px rgba(34,197,94,.6);"></span>` : ''}
-        </div>
-        <div style="flex:1;min-width:0;">
+        <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'};">${c.avatar_url?`<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>`:''}${!c.avatar_url?c.initials:''}</div>
+        <div>
           <div class="cc-name">${c.company_name||'—'}</div>
           <div class="cc-trade">${c.trade_type||'Contractor'}</div>
         </div>
+        ${c.verified?'<div class="cc-verified">✓ Verified</div>':''}
       </div>
       <div class="cc-loc">📍 ${c.location||'New York'}</div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap;">
-        ${stars ? `<span class="cc-stars" style="margin:0;">${stars}${reviewStr}</span>` : '<span style="font-size:11px;color:var(--g3);">New</span>'}
-        ${insuredBadge}
-      </div>
+      <div class="cc-stars">${stars} ${c.review_count?'('+c.review_count+')':''}</div>
       <div class="cc-about">${(c.description||'').substring(0,80)}${(c.description||'').length>80?'…':''}</div>
       ${cta}
     </div>`;
@@ -1071,14 +933,6 @@ function openCoModal(id) {
   const c = allContractors.find(x => String(x.id) === String(id));
   if (!c) return;
   _activeCoId = id;
-
-  // Increment profile views (fire-and-forget, no await)
-  if (c._live && c.id && user) {
-    sb.from('contractors')
-      .update({ profile_views: (c.profile_views || 0) + 1 })
-      .eq('id', c.id)
-      .then(() => { c.profile_views = (c.profile_views||0)+1; });
-  }
 
   // Banner
   const bannerImg = document.getElementById('co-modal-banner-img');
@@ -1116,41 +970,18 @@ function openCoModal(id) {
     portGrid.innerHTML = port.map(url => `<div class="co-modal-port-img"><img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`).join('');
   } else { portWrap.style.display = 'none'; }
 
-  // Buttons — plan-specific
+  // Buttons
   const isLeads = c.plan === 'leads';
-  const canBook  = !isLeads && c.accepts_bookings !== false;
-  const bookBtn  = document.getElementById('co-modal-book-btn');
-  const msgBtn   = document.getElementById('co-modal-msg-btn');
-
+  const bookBtn = document.getElementById('co-modal-book-btn');
+  const msgBtn  = document.getElementById('co-modal-msg-btn');
   if (isLeads) {
-    // Just Leads: no platform booking — show contact options only
-    bookBtn.style.display = 'none'; // hide book button entirely
-    msgBtn.style.flex     = '1';    // msg takes full width
-    msgBtn.textContent    = '💬 Send Message';
-    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
-
-    // Show plan badge in modal
-    let leadsBadgeEl = document.getElementById('co-leads-badge');
-    if (!leadsBadgeEl) {
-      leadsBadgeEl = document.createElement('div');
-      leadsBadgeEl.id = 'co-leads-badge';
-      leadsBadgeEl.style.cssText = 'padding:8px 20px;font-size:12px;color:var(--blue);background:rgba(96,165,250,.08);border-top:1px solid rgba(96,165,250,.15);text-align:center;';
-      document.querySelector('.co-mdl-btns').before(leadsBadgeEl);
-    }
-    leadsBadgeEl.innerHTML = '📋 <strong>Just Leads</strong> plan — connect directly, no platform booking.';
-    leadsBadgeEl.style.display = 'block';
+    bookBtn.textContent = '📞 Contact Directly';
+    bookBtn.onclick = () => { if(c.phone) window.location.href='tel:'+c.phone; else showToast('Contact them via their listed info.'); };
   } else {
-    bookBtn.style.display = 'flex';
-    msgBtn.style.flex     = '';
-    bookBtn.textContent   = '📅 Book Now';
-    bookBtn.onclick       = () => { closeCoModal(); openBookModal(id); };
-    msgBtn.textContent    = '💬 Message';
-    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
-
-    // Remove leads badge if present
-    const leadsBadgeEl = document.getElementById('co-leads-badge');
-    if (leadsBadgeEl) leadsBadgeEl.style.display = 'none';
+    bookBtn.textContent = '📅 Book Now';
+    bookBtn.onclick = () => { closeCoModal(); openBookModal(id); };
   }
+  msgBtn.onclick = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
 
   document.getElementById('co-modal').classList.add('open');
   document.body.style.overflow = 'hidden';

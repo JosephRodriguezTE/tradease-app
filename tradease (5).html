@@ -13,8 +13,8 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Tradease – Book Trusted Local Contractors"/>
 <meta name="twitter:description" content="Verified contractors, instant booking, guaranteed work. New York's fastest contractor platform."/>
-<link rel="icon" type="image/png" href="/tradease-logo.png"/>
-<link rel="apple-touch-icon" href="/tradease-logo.png"/>
+<link rel="icon" type="image/svg+xml" href="/tradease-logo.svg"/>
+<link rel="apple-touch-icon" href="/tradease-logo.svg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -86,7 +86,7 @@ body {
   font-size: 16px;
   overflow-x: hidden;
   /* Fixed concrete wall background across the entire site */
-  background-image: url('./wall-bg.jpg');
+  background-image: radial-gradient(1200px 600px at 20% -10%, rgba(255,107,43,.18), transparent 60%), radial-gradient(1000px 500px at 80% 110%, rgba(255,107,43,.12), transparent 60%);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -170,6 +170,7 @@ h4 { font-size: 20px; font-weight: 700; }
   background: rgba(255,255,255,0.06);
   color: var(--text-hi);
   border: 1.5px solid var(--border-hi);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 .btn-outline:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
@@ -211,6 +212,7 @@ h4 { font-size: 20px; font-weight: 700; }
 nav {
   position: sticky; top: 0; z-index: 999;
   background: rgba(10, 10, 14, 0.85);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -264,6 +266,7 @@ nav {
    ============================================================ */
 footer {
   background: rgba(5,5,8,0.92);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   color: var(--text-mid);
@@ -321,6 +324,7 @@ footer {
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   padding: 7px 14px; border-radius: 50px;
   font-size: 13px; font-weight: 600; color: rgba(255,255,255,.95);
@@ -339,6 +343,7 @@ footer {
 .search-bar {
   display: flex; align-items: center;
   background: rgba(10,10,14,0.75);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--border-hi);
@@ -361,6 +366,7 @@ footer {
 .categories-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
 .category-card {
   background: rgba(15,15,18,0.65);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -420,6 +426,7 @@ footer {
 .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
 .how-card {
   background: rgba(15,15,18,0.72);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -466,6 +473,7 @@ footer {
    ============================================================ */
 .profile-header {
   background: rgba(5,5,8,0.82);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   padding: 64px 0;
@@ -544,8 +552,8 @@ footer {
 /* ============================================================
    HELP CENTER PAGE
    ============================================================ */
-.help-hero { background: rgba(5,5,8,0.75); backdrop-filter: blur(20px); padding: 72px 0; text-align: center; border-bottom: 1px solid var(--border); }
-.help-search { max-width: 520px; margin: 28px auto 0; display: flex; background: rgba(15,15,18,0.8); backdrop-filter: blur(12px); border-radius: var(--radius-sm); border: 1.5px solid var(--border-hi); overflow: hidden; }
+.help-hero { background: rgba(5,5,8,0.75); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); padding: 72px 0; text-align: center; border-bottom: 1px solid var(--border); }
+.help-search { max-width: 520px; margin: 28px auto 0; display: flex; background: rgba(15,15,18,0.8); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: var(--radius-sm); border: 1.5px solid var(--border-hi); overflow: hidden; }
 .help-search input { flex: 1; padding: 14px 16px; border: none; outline: none; font-family: var(--font-body); font-size: 15px; background: transparent; color: var(--white); }
 .help-search input::placeholder { color: var(--text-soft); }
 .help-search button { padding: 14px 20px; background: var(--orange); color: white; font-weight: 600; font-size: 14px; box-shadow: var(--glow-or-sm); }
@@ -561,7 +569,7 @@ footer {
 /* ============================================================
    LEARN MORE PAGE
    ============================================================ */
-.learn-hero { background: rgba(5,5,8,0.85); backdrop-filter: blur(20px); padding: 100px 0; border-bottom: 1px solid var(--border); }
+.learn-hero { background: rgba(5,5,8,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); padding: 100px 0; border-bottom: 1px solid var(--border); }
 .learn-hero h1 { color: white; }
 .learn-hero h1 em { color: var(--orange); font-style: normal; text-shadow: var(--glow-or-sm); }
 .learn-hero p { color: var(--text-mid); font-size: 19px; margin-top: 16px; max-width: 560px; }
@@ -591,7 +599,7 @@ footer {
 .contact-item-icon { width: 44px; height: 44px; background: var(--orange-light); color: var(--orange); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; box-shadow: 0 0 16px rgba(255,107,43,0.3); border: 1px solid rgba(255,107,43,0.25); }
 .contact-item-text strong { display: block; font-weight: 700; font-size: 14px; margin-bottom: 2px; color: var(--white); }
 .contact-item-text span { font-size: 14px; color: var(--text-mid); }
-.contact-form { background: rgba(10,10,14,0.72); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 44px; box-shadow: var(--shadow-lg); }
+.contact-form { background: rgba(10,10,14,0.72); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 44px; box-shadow: var(--shadow-lg); }
 .contact-form h3 { margin-bottom: 28px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 6px; }
@@ -611,7 +619,7 @@ footer {
 /* ============================================================
    POLICY PAGES
    ============================================================ */
-.policy-hero { background: rgba(5,5,8,0.82); backdrop-filter: blur(20px); padding: 64px 0; border-bottom: 1px solid var(--border); }
+.policy-hero { background: rgba(5,5,8,0.82); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); padding: 64px 0; border-bottom: 1px solid var(--border); }
 .policy-body { max-width: 720px; margin: 0 auto; padding: 64px 24px; }
 .policy-body h2 { font-size: 24px; margin-top: 40px; margin-bottom: 14px; color: var(--white); }
 .policy-body p { margin-bottom: 16px; font-size: 15px; color: var(--text-mid); }
@@ -624,11 +632,12 @@ footer {
    ============================================================ */
 #bookingModal {
   position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.75); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center; padding: 20px;
 }
 #bookingModal .modal-box {
   background: rgba(10,10,14,0.92) !important;
+  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   border: 1px solid var(--border-hi) !important;
   box-shadow: var(--shadow-lg), 0 0 40px rgba(255,107,43,0.1) !important;
@@ -640,6 +649,7 @@ footer {
 .toast {
   position: fixed; bottom: 28px; right: 28px; z-index: 9999;
   background: rgba(10,10,14,0.95);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-hi);
   color: var(--white); padding: 14px 20px; border-radius: var(--radius-sm);
@@ -685,7 +695,7 @@ h1, h2, h3, h4 { text-shadow: var(--shadow-text); }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
 }
 /* ── INSTANT MATCH FLOW ─────────────────────────────────── */
-#match-overlay{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,0.88);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px;}
+#match-overlay{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,0.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:16px;}
 #match-overlay.open{display:flex;}
 .match-panel{background:rgba(10,10,14,0.97);border:1px solid rgba(255,107,43,0.25);border-radius:28px;width:100%;max-width:540px;overflow:hidden;box-shadow:0 0 80px rgba(255,107,43,0.15),0 24px 80px rgba(0,0,0,0.8);animation:slideUp .22s ease both;}
 @keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
@@ -879,7 +889,7 @@ h1, h2, h3, h4 { text-shadow: var(--shadow-text); }
 <nav>
   <div class="nav-inner">
     <div class="nav-logo" onclick="goHome()">
-      <img class="nav-logo-img" src="/tradease-logo.png"/>
+      <img class="nav-logo-img" src="/tradease-logo.svg" alt="Tradease"/>
       Tradease<span class="nav-logo-dot"></span>
     </div>
     <div class="nav-links">

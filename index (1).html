@@ -899,7 +899,8 @@ h1, h2, h3, h4 { text-shadow: var(--shadow-text); }
       <!-- Logged-IN state (shown by JS after session check) -->
       <div id="nav-logged-in" style="display:none;align-items:center;gap:10px;">
         <div id="nav-user-greeting" style="font-size:13px;font-weight:600;color:var(--ink-soft);"></div>
-        <div id="nav-user-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:900;color:white;cursor:pointer;" onclick="goTo('contractor')"></div>
+        <button id="nav-dashboard-btn" onclick="goToDashboard()" style="padding:7px 16px;border-radius:8px;background:var(--orange);color:white;font-family:var(--font-display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border:none;transition:background .1s;box-shadow:0 4px 12px rgba(255,107,43,.25);" onmouseover="this.style.background='#E05520'" onmouseout="this.style.background='var(--orange)'">My Dashboard →</button>
+        <div id="nav-user-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:900;color:white;cursor:pointer;" onclick="goToDashboard()"></div>
         <button class="btn btn-ghost btn-sm" onclick="authSignOut()">Sign Out</button>
       </div>
     </div>
@@ -3251,11 +3252,34 @@ function renderNavLoggedIn(user) {
   document.getElementById('nav-user-greeting').textContent = 'Hi, ' + name.split(' ')[0];
   document.getElementById('nav-user-avatar').textContent   = initials;
 
+  // Set dashboard button label based on role
+  const role = user.user_metadata?.role || 'customer';
+  const dashBtn = document.getElementById('nav-dashboard-btn');
+  if (dashBtn) {
+    dashBtn.textContent = role === 'contractor' ? '🔧 My Dashboard →' : 'My Dashboard →';
+  }
+
   // Mobile menu: swap Log in → Sign Out
   const mobileAuthBtn  = document.getElementById('mobile-auth-btn');
   const mobileSignout  = document.getElementById('mobile-signout-row');
   if (mobileAuthBtn) mobileAuthBtn.style.display = 'none';
   if (mobileSignout) mobileSignout.style.display = 'block';
+}
+
+// Route logged-in user to the right dashboard
+async function goToDashboard() {
+  if (!currentUser) {
+    sessionStorage.setItem('auth_intentional', '1');
+    window.location.href = '/tradease-auth.html';
+    return;
+  }
+  // Try to get role from DB (more reliable than metadata)
+  let role = currentUser.user_metadata?.role || 'customer';
+  try {
+    const { data } = await sb.from('users').select('role').eq('id', currentUser.id).single();
+    if (data?.role) role = data.role;
+  } catch(e) { /* use metadata fallback */ }
+  window.location.href = role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html';
 }
 
 function renderNavLoggedOut() {

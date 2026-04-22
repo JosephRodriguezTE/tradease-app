@@ -722,6 +722,8 @@ input,select,textarea{font-family:var(--body);}
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/jobs/job-backend.js"></script>
+<script src="js/jobs/job-frontend.js"></script>
 <script>
 const SB_URL = 'https://linqsojbszglbgpoxgtv.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
@@ -729,6 +731,7 @@ const sb = supabase.createClient(SB_URL, SB_KEY);
 
 let user = null, cProf = null, bkData = [], rvData = [], avData = [], pricingServices = [], portfolio = [];
 let _redirecting = false, _isOnline = false, _activeConvId = null, _chatChannel = null, _usernameTimer = null, _usernameValid = true;
+let jobBackend = null;
 
 const VIEWS = ['dash','bookings','msgs','profile','pricing','avail','reviews','learn','help'];
 
@@ -741,7 +744,10 @@ function showV(v) {
   document.getElementById('view-'+v)?.classList.add('active');
   document.getElementById('tab-'+v)?.classList.add('on');
   window.scrollTo(0,0);
-  if (v==='msgs') loadCConversations();
+  if (v === 'msgs')     loadCConversations();
+  if (v === 'bookings') loadBookings();
+  if (v === 'reviews')  loadReviews();
+  if (v === 'avail')    loadAvailability();
 }
 
 // ── INIT ───────────────────────────────────────────────────
@@ -770,9 +776,65 @@ async function init() {
   if (!p || !p.company_name) { showV('profile'); showToast('👋 Welcome! Complete your company profile to start getting bookings.'); }
   else showV('dash');
 
-  await Promise.all([loadBookings(), loadReviews(), loadAvailability()]);
+  await Promise.all([loadBookings(), loadReviews(), loadAvailability(), loadCConversations()]);
   subscribeToBookings();
+  subscribeToOwnProfile();
+  subscribeToConversationUpdates();
   buildFAQ();
+}
+
+// ── LIVE: Own contractor profile row (updates from any session/save) ───────
+function subscribeToOwnProfile() {
+  sb.channel('own-contractor-profile')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'contractors',
+      filter: `id=eq.${user.id}`,
+    }, payload => {
+      // Merge in updates (e.g. rating recalculated by trigger, profile_views from customer clicks)
+      cProf = { ...cProf, ...payload.new };
+      pricingServices = Array.isArray(payload.new.pricing_services) ? payload.new.pricing_services : pricingServices;
+      portfolio       = Array.isArray(payload.new.portfolio)        ? payload.new.portfolio        : portfolio;
+      fillUI();
+    })
+    .subscribe();
+}
+
+// ── LIVE: New conversations (message requests badge) ───────────────────────
+function subscribeToConversationUpdates() {
+  // New conversation requests (message badge)
+  sb.channel('contractor-convs')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'conversations',
+      filter: `contractor_id=eq.${user.id}`,
+    }, payload => {
+      const badge = document.getElementById('msg-badge');
+      if (badge) {
+        const current = parseInt(badge.textContent) || 0;
+        badge.textContent = current + 1;
+        badge.style.display = 'inline';
+      }
+      showToast('💬 New message request from ' + (payload.new.customer_name || 'a customer') + '!');
+      // Always refresh conversation list for live preview
+      loadCConversations();
+    })
+    .subscribe();
+
+  // Conversation updates (accepted/declined status changes)
+  sb.channel('contractor-conv-updates')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations',
+      filter: `contractor_id=eq.${user.id}`,
+    }, payload => {
+      // Refresh the conversation list preview
+      loadCConversations();
+    })
+    .subscribe();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -788,18 +850,46 @@ function fillUI() {
   setAvEl('nav-av',   ini, p?.avatar_url);
   setAvEl('ped-av',   ini, p?.avatar_url);
 
-  // Topbar
-  const proBtnEl = document.getElementById('pro-btn');
-  if (isPro) { proBtnEl.textContent='✓ Pro Active'; proBtnEl.classList.add('active'); proBtnEl.onclick=()=>showToast('⚙️ Billing portal coming soon!'); }
+  const isLeads = p?.plan === 'leads';
+  const isFree  = !isPro && !isLeads;
 
-  // Dashboard profile header
+  // Topbar upgrade/plan button
+  const proBtnEl = document.getElementById('pro-btn');
+  if (proBtnEl) {
+    if (isPro) {
+      proBtnEl.textContent = '✓ Pro Active';
+      proBtnEl.classList.add('active');
+      proBtnEl.style.background = 'var(--accent)';
+      proBtnEl.onclick = () => showToast('⚙️ Billing portal coming soon!');
+    } else if (isLeads) {
+      proBtnEl.textContent = '📋 Just Leads';
+      proBtnEl.style.background = 'rgba(96,165,250,.15)';
+      proBtnEl.style.color = '#60A5FA';
+      proBtnEl.style.border = '1px solid rgba(96,165,250,.3)';
+      proBtnEl.onclick = () => showToast('Upgrade to Pro for full booking features!');
+    } else {
+      proBtnEl.textContent = '⚡ Upgrade to Pro';
+      proBtnEl.style.background = 'var(--accent)';
+      proBtnEl.onclick = () => showToast('💳 Pro plan coming soon!');
+    }
+  }
+
+  // Profile header
   document.getElementById('ph-name').textContent     = name;
   document.getElementById('ph-username').textContent  = '@' + username;
   document.getElementById('ph-trade').textContent    = p?.trade_type || 'Contractor';
+
+  // Plan badge
   const planBdg = document.getElementById('plan-bdg');
-  if (isPro) { planBdg.textContent='⚡ Pro'; planBdg.className='bdg bdg-or'; }
-  else planBdg.textContent = 'Free Plan';
-  if (p?.verified) document.getElementById('ver-bdg').style.display='inline-block';
+  if (planBdg) {
+    if (isPro)    { planBdg.textContent = '⚡ Pro';        planBdg.className = 'bdg bdg-or'; }
+    else if (isLeads) { planBdg.textContent = '📋 Just Leads'; planBdg.className = 'bdg'; planBdg.style.cssText = 'background:rgba(96,165,250,.1);color:#60A5FA;border:1px solid rgba(96,165,250,.2);'; }
+    else          { planBdg.textContent = 'Free Plan';    planBdg.className = 'bdg bdg-gy'; planBdg.style.cssText = ''; }
+  }
+  if (p?.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
+
+  // Plan-gated UI — hide/show bookings tab and stats for Just Leads
+  applyPlanGating(isPro, isLeads, isFree);
 
   // Stats
   document.getElementById('s-views').textContent   = p?.profile_views || 0;
@@ -836,6 +926,90 @@ function setAvEl(id, ini, url) {
   const el = document.getElementById(id); if(!el) return;
   if (url) el.innerHTML=`<img src="${url}" onerror="this.parentElement.textContent='${ini}'" style="width:100%;height:100%;object-fit:cover;"/>`;
   else el.textContent = ini;
+}
+
+// ── PLAN GATING ────────────────────────────────────────────
+// Adapts the entire contractor dashboard UI based on plan
+function applyPlanGating(isPro, isLeads, isFree) {
+
+  // ── BOOKINGS TAB ────────────────────────────────────────
+  // Just Leads = no platform booking system, so hide the tab entirely
+  const bkTab = document.getElementById('tab-bookings');
+  if (bkTab) {
+    if (isLeads) {
+      bkTab.style.display = 'none'; // no bookings for leads plan
+    } else {
+      bkTab.style.display = '';
+    }
+  }
+
+  // ── OVERVIEW STATS ──────────────────────────────────────
+  // Just Leads: replace bookings stat with "Leads" stat
+  const bkStatCard = document.querySelector('[id="s-bk"]')?.closest('.sc');
+  if (bkStatCard) {
+    if (isLeads) {
+      bkStatCard.querySelector('.sc-ic').textContent  = '📋';
+      bkStatCard.querySelector('.sc-lbl').textContent = 'Profile Leads';
+    } else {
+      bkStatCard.querySelector('.sc-ic').textContent  = '📅';
+      bkStatCard.querySelector('.sc-lbl').textContent = 'Bookings';
+    }
+  }
+
+  // ── COMPANY PROFILE TAB ─────────────────────────────────
+  // Just Leads: show a "Leads Plan" banner at top of profile tab
+  let leadsBanner = document.getElementById('leads-plan-banner');
+  if (isLeads) {
+    if (!leadsBanner) {
+      leadsBanner = document.createElement('div');
+      leadsBanner.id = 'leads-plan-banner';
+      leadsBanner.style.cssText = 'background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:18px;';
+      leadsBanner.innerHTML = `
+        <span style="font-size:22px;">📋</span>
+        <div style="flex:1;">
+          <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#60A5FA;margin-bottom:2px;">Just Leads Plan Active</div>
+          <div style="font-size:13px;color:var(--g2);">Customers see your profile and contact you directly. No platform booking or fees. Upgrade to Pro for full booking management.</div>
+        </div>
+        <button onclick="showToast('💳 Upgrade coming soon!')" style="padding:8px 14px;background:var(--accent);color:white;border:none;border-radius:8px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;flex-shrink:0;">Upgrade</button>
+      `;
+      // Insert at the top of the profile view's pg div
+      const profilePg = document.querySelector('#view-profile .pg');
+      if (profilePg) profilePg.prepend(leadsBanner);
+    }
+    leadsBanner.style.display = 'flex';
+  } else {
+    if (leadsBanner) leadsBanner.style.display = 'none';
+  }
+
+  // ── PORTFOLIO LIMIT ─────────────────────────────────────
+  // Pro: 25 photos, Free/Leads: 5 photos
+  const limit = isPro ? 25 : 5;
+  const portLabel = document.getElementById('port-limit-label');
+  if (portLabel) portLabel.textContent = '(' + portfolio.length + '/' + limit + ' photos)';
+
+  // ── UPGRADE PROMPT in Overview ─────────────────────────
+  let overviewBanner = document.getElementById('plan-overview-banner');
+  if (!overviewBanner) {
+    overviewBanner = document.createElement('div');
+    overviewBanner.id = 'plan-overview-banner';
+    const dashView = document.querySelector('#view-dash .pg');
+    if (dashView) {
+      // Insert before the profile header card
+      const ph = dashView.querySelector('.online-card');
+      if (ph) dashView.insertBefore(overviewBanner, ph);
+      else    dashView.prepend(overviewBanner);
+    }
+  }
+
+  if (isLeads) {
+    overviewBanner.style.cssText = 'background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.18);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:10px;margin-bottom:14px;';
+    overviewBanner.innerHTML = '<span style="font-size:18px;">📋</span><span style="font-size:13px;color:#60A5FA;flex:1;"><strong>Just Leads</strong> — Your profile is live. Customers view and contact you directly.</span><button onclick="showToast('Upgrade coming soon!')" style="padding:6px 12px;background:var(--accent);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;cursor:pointer;">Upgrade to Pro</button>';
+  } else if (isFree) {
+    overviewBanner.style.cssText = 'background:var(--orange-lt);border:1px solid rgba(255,107,43,.2);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:10px;margin-bottom:14px;';
+    overviewBanner.innerHTML = '<span style="font-size:18px;">⚡</span><span style="font-size:13px;color:var(--orange);flex:1;"><strong>Free Plan</strong> — Upgrade to Pro for top search placement, verified badge, and lower fees.</span><button onclick="showToast('💳 Pro plan coming soon!')" style="padding:6px 12px;background:var(--orange);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;cursor:pointer;">Upgrade</button>';
+  } else {
+    overviewBanner.style.display = 'none';
+  }
 }
 
 // ── COMPLETION ─────────────────────────────────────────────
@@ -1229,18 +1403,21 @@ async function saveProfile(){
   const btn=document.getElementById('e-save');
   btn.disabled=true;btn.textContent='⏳ Saving…';
 
+  const currentPlan = cProf?.plan || 'free';
   const updates={
-    company_name:  company,
-    trade_type:    document.getElementById('e-trade').value,
-    phone:         document.getElementById('e-phone').value,
-    location:      document.getElementById('e-loc').value,
-    service_areas: document.getElementById('e-areas').value,
-    description:   document.getElementById('e-desc').value,
-    experience:    document.getElementById('e-exp').value,
-    license_url:   document.getElementById('e-license').value,
-    insured:       document.getElementById('e-insured').value==='true' ? true : document.getElementById('e-insured').value==='false' ? false : null,
-    hourly_rate:   parseInt(document.getElementById('e-rate').value)||null,
-    pricing_note:  document.getElementById('e-rate-note').value,
+    company_name:     company,
+    trade_type:       document.getElementById('e-trade').value,
+    phone:            document.getElementById('e-phone').value,
+    location:         document.getElementById('e-loc').value,
+    service_areas:    document.getElementById('e-areas').value,
+    description:      document.getElementById('e-desc').value,
+    experience:       document.getElementById('e-exp').value,
+    license_url:      document.getElementById('e-license').value,
+    insured:          document.getElementById('e-insured').value==='true' ? true : document.getElementById('e-insured').value==='false' ? false : null,
+    hourly_rate:      parseInt(document.getElementById('e-rate').value)||null,
+    pricing_note:     document.getElementById('e-rate-note').value,
+    // Keep accepts_bookings consistent with plan
+    accepts_bookings: currentPlan !== 'leads',
   };
 
   const [r1,r2]=await Promise.all([

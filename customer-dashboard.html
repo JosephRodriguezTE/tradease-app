@@ -320,7 +320,6 @@ input,select,textarea{font-family:var(--body);}
   <!-- ══ TOPBAR ══ -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-      <img class="logo-img" src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
       <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="nav">
@@ -328,7 +327,7 @@ input,select,textarea{font-family:var(--body);}
       <span class="nv" id="tab-find"   onclick="showV('find')">Find Contractors</span>
       <span class="nv" id="tab-bk"     onclick="showV('bk')">My Bookings <span class="nbadge" id="bk-badge" style="display:none;">0</span></span>
       <span class="nv" id="tab-msgs"   onclick="showV('msgs')">Messages <span class="nbadge" id="msg-badge" style="display:none;">0</span></span>
-      <span class="nv" id="tab-pricing" onclick="showV('pricing')">Pricing</span>
+      <span class="nv" id="tab-pricing" onclick="showV('pricing')">Become a Contractor</span>
       <span class="nv" id="tab-learn"  onclick="showV('learn')">Learn More</span>
       <span class="nv" id="tab-help"   onclick="showV('help')">Help</span>
       <span class="nv" id="tab-profile" onclick="showV('profile')">My Profile</span>
@@ -473,53 +472,116 @@ input,select,textarea{font-family:var(--body);}
   </div>
 
   <!-- ══ VIEW: PRICING ══ -->
+  <!-- ══ VIEW: BECOME A CONTRACTOR ══ -->
   <div class="view" id="view-pricing">
     <div class="pg">
-      <div class="pg-hdr"><h1>Pricing</h1><p>Choose the plan that's right for your business.</p></div>
-      <div class="pricing-grid">
-        <div class="pc">
-          <div class="pc-badge" style="background:rgba(255,255,255,.08);color:var(--g2);">Free Forever</div>
-          <h3>Basic</h3>
-          <div class="pc-price">$0</div>
-          <div class="pc-period">/ month</div>
-          <div class="pc-features">
-            <div class="pc-feat-item"><span class="ck">✓</span> Browse all contractors</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Book up to 3/month</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Message contractors</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Leave reviews</div>
-            <div class="pc-feat-item"><span class="xx">✗</span> Priority support</div>
-          </div>
-          <button class="btn-gy" style="width:100%;">Current Plan</button>
+      <div class="pg-hdr">
+        <h1>Become a Contractor</h1>
+        <p>Join Tradease and start getting jobs from homeowners near you — free to get started.</p>
+      </div>
+
+      <!-- Hero CTA -->
+      <div style="background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;margin-bottom:28px;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,43,.1),transparent 70%);pointer-events:none;"></div>
+        <div style="font-size:48px;flex-shrink:0;">🔧</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--display);font-size:clamp(22px,3vw,30px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:6px;">Grow Your Business on Tradease</div>
+          <div style="font-size:14px;color:var(--g2);line-height:1.7;max-width:500px;">New York's fastest-growing contractor marketplace. Customers search for your trade every day — get found, get booked, get paid.</div>
         </div>
-        <div class="pc pc-feat">
-          <div class="pc-badge" style="background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);">⚡ Pro</div>
-          <h3>Pro Member</h3>
-          <div class="pc-price">$9</div>
+        <a href="/tradease-auth.html?type=contractor" style="text-decoration:none;flex-shrink:0;">
+          <button style="padding:14px 28px;background:var(--orange);color:white;border:none;border-radius:var(--r);font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:0 6px 24px rgba(255,107,43,.3);transition:background .1s;white-space:nowrap;" onmouseover="this.style.background='var(--orange-dk)'" onmouseout="this.style.background='var(--orange)'">🚀 Sign Up Free →</button>
+        </a>
+      </div>
+
+      <!-- The 3 contractor plans — same as signup page -->
+      <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);margin-bottom:16px;text-align:center;">Choose Your Plan</div>
+      <div class="pricing-grid" style="margin-bottom:32px;">
+
+        <!-- Free Plan -->
+        <div class="pc">
+          <div class="pc-badge" style="background:rgba(255,255,255,.06);color:var(--g2);">Free Forever</div>
+          <h3>Free</h3>
+          <div class="pc-price">$0</div>
+          <div class="pc-period">/ month · no credit card</div>
+          <div class="pc-features">
+            <div class="pc-feat-item"><span class="ck">✓</span> Basic profile listing</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Receive booking requests</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Customer messaging</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Portfolio photos (up to 5)</div>
+            <div class="pc-feat-item"><span class="xx">✗</span> 15% platform fee per booking</div>
+            <div class="pc-feat-item"><span class="xx">✗</span> No priority ranking</div>
+          </div>
+          <a href="/tradease-auth.html?type=contractor" style="text-decoration:none;display:block;">
+            <button style="width:100%;padding:11px;background:var(--bg4);color:var(--g1);border:1px solid var(--border);border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:all .1s;" onmouseover="this.style.borderColor='var(--border-hi)'" onmouseout="this.style.borderColor='var(--border)'">Get Started Free</button>
+          </a>
+        </div>
+
+        <!-- Just Leads Plan -->
+        <div class="pc" style="border-color:rgba(96,165,250,.3);box-shadow:0 0 28px rgba(96,165,250,.06);">
+          <div class="pc-badge" style="background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);">📋 Just Leads</div>
+          <h3>Just Leads</h3>
+          <div class="pc-price" style="color:var(--blue);">$5</div>
           <div class="pc-period">/ month · cancel anytime</div>
           <div class="pc-features">
-            <div class="pc-feat-item"><span class="ck">✓</span> Everything in Basic</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Unlimited bookings</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Priority contractor matching</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> Early access to new pros</div>
-            <div class="pc-feat-item"><span class="ck">✓</span> 24/7 priority support</div>
+            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Profile visibility</div>
+            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> AI-recommended to customers</div>
+            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Zero platform fees</div>
+            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Customers contact you directly</div>
+            <div class="pc-feat-item"><span class="xx">✗</span> No platform booking system</div>
+            <div class="pc-feat-item"><span class="xx">✗</span> No booking management tools</div>
           </div>
-          <button class="btn-or" style="width:100%;" onclick="showToast('💳 Pro plan coming soon!')">Upgrade to Pro →</button>
+          <a href="/tradease-auth.html?type=contractor" style="text-decoration:none;display:block;">
+            <button style="width:100%;padding:11px;background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.3);border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:all .1s;" onmouseover="this.style.background='rgba(96,165,250,.2)'" onmouseout="this.style.background='rgba(96,165,250,.1)'">Get Just Leads — $5/mo</button>
+          </a>
         </div>
-        <div class="pc">
-          <div class="pc-badge" style="background:var(--blue-lt);color:var(--blue);border:1px solid rgba(96,165,250,.25);">🏢 Business</div>
-          <h3>Business</h3>
-          <div class="pc-price" style="color:var(--blue);">$29</div>
-          <div class="pc-period">/ month · billed annually</div>
+
+        <!-- Pro Plan -->
+        <div class="pc pc-pop">
+          <div class="pc-badge" style="background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);">⚡ Pro</div>
+          <h3>Pro</h3>
+          <div class="pc-price">$19</div>
+          <div class="pc-period">/ month · cancel anytime</div>
           <div class="pc-features">
-            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Everything in Pro</div>
-            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Multiple team members</div>
-            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Dedicated account manager</div>
-            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> Custom billing & invoices</div>
-            <div class="pc-feat-item"><span class="ck" style="color:var(--blue);">✓</span> SLA guarantee</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Everything in Free</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Top search ranking</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> ✓ Verified badge</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> 25 portfolio photos</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Only 10% platform fee</div>
+            <div class="pc-feat-item"><span class="ck">✓</span> Analytics & insights</div>
           </div>
-          <button class="btn-gy" style="width:100%;border-color:rgba(96,165,250,.3);color:var(--blue);" onclick="showToast('📬 Contact us at support@tradease.tech')">Contact Sales →</button>
+          <a href="/tradease-auth.html?type=contractor" style="text-decoration:none;display:block;">
+            <button style="width:100%;padding:11px;background:var(--orange);color:white;border:none;border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:0 4px 16px rgba(255,107,43,.25);transition:background .1s;" onmouseover="this.style.background='var(--orange-dk)'" onmouseout="this.style.background='var(--orange)'">⚡ Go Pro — $19/mo</button>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Why join section -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:10px;">📍</div>
+          <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:6px;">Local Customers</div>
+          <div style="font-size:13px;color:var(--g2);">Get matched with homeowners in your exact service area looking for your trade.</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:10px;">⚡</div>
+          <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:6px;">Instant Alerts</div>
+          <div style="font-size:13px;color:var(--g2);">Booking requests come straight to your dashboard in real time — accept or decline in one tap.</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:10px;">⭐</div>
+          <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--white);margin-bottom:6px;">Build Your Reputation</div>
+          <div style="font-size:13px;color:var(--g2);">Earn verified reviews from real customers. More reviews = more jobs.</div>
         </div>
       </div>
+
+      <div style="text-align:center;padding:28px 0 8px;">
+        <a href="/tradease-auth.html?type=contractor" style="text-decoration:none;">
+          <button style="padding:16px 40px;background:var(--orange);color:white;border:none;border-radius:var(--r);font-family:var(--display);font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:0 8px 32px rgba(255,107,43,.3);transition:background .1s;" onmouseover="this.style.background='var(--orange-dk)'" onmouseout="this.style.background='var(--orange)'">🚀 Create Your Contractor Profile — Free</button>
+        </a>
+        <div style="font-size:12px;color:var(--g3);margin-top:10px;">No credit card required · Takes 5 minutes · Start getting jobs today</div>
+      </div>
+
     </div>
   </div>
 
@@ -695,7 +757,7 @@ input,select,textarea{font-family:var(--body);}
       <button class="mc" onclick="closeBook()">✕</button>
     </div>
     <div class="mb">
-      <div class="fg"><label>Describe the Job</label><textarea id="bm-desc" placeholder="e.g. Leaking pipe under kitchen sink, needs fixing ASAP" style="min-height:80px;"></textarea></div>
+      <div class="fg"><label>Describe the Job</label><textarea id="bm-desc" placeholder="e.g. Leaking pipe under kitchen sink, needs fixing ASAP — please bring pipe snake" style="min-height:90px;"></textarea></div>
       <div class="fgr">
         <div class="fg"><label>Preferred Date</label><input type="date" id="bm-date"/></div>
         <div class="fg"><label>Preferred Time</label>
@@ -706,8 +768,19 @@ input,select,textarea{font-family:var(--body);}
           </select>
         </div>
       </div>
-      <button class="ms" id="bm-submit" onclick="submitBook()">Confirm Booking →</button>
-      <p style="text-align:center;font-size:12px;color:var(--g3);margin-top:8px;">No payment now. Contractor will confirm your request.</p>
+
+      <!-- What happens next -->
+      <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;">
+        <div style="font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);margin-bottom:10px;">What happens next</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--g2);"><span style="width:22px;height:22px;border-radius:50%;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">1</span> Your request is sent to the contractor</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--g2);"><span style="width:22px;height:22px;border-radius:50%;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">2</span> They confirm or suggest a new time</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--g2);"><span style="width:22px;height:22px;border-radius:50%;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">3</span> You'll see the update in My Bookings</div>
+        </div>
+      </div>
+
+      <button class="ms" id="bm-submit" onclick="submitBook()">Send Booking Request →</button>
+      <p style="text-align:center;font-size:12px;color:var(--g3);margin-top:8px;">💳 No payment required now · Free to request</p>
     </div>
   </div>
 </div>
@@ -733,8 +806,11 @@ function showV(v) {
   });
   document.getElementById('view-'+v)?.classList.add('active');
   document.getElementById('tab-'+v)?.classList.add('on');
+  document.getElementById('nav-av')?.classList.toggle('on', v==='profile');
   window.scrollTo(0,0);
-  if(v==='msgs') loadConversations();
+  if (v === 'msgs') loadConversations();
+  if (v === 'bk')   loadBookings();
+  if (v === 'find')  doFind();
 }
 
 // ── INIT ───────────────────────────────────────────────────
@@ -785,7 +861,52 @@ async function init() {
 
   await Promise.all([loadContractors(), loadBookings()]);
   subscribeToBookings();
+  subscribeToUserProfile();
   buildFAQ();
+}
+
+// ── LIVE: Own profile changes from other sessions ──────────
+function subscribeToUserProfile() {
+  sb.channel('own-user-profile')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'users',
+      filter: `id=eq.${user.id}`,
+    }, payload => {
+      prof = { ...prof, ...payload.new };
+      fillUI();
+    })
+    .subscribe();
+
+  // Conversation status changes (contractor accepts/declines message requests)
+  sb.channel('customer-conv-updates')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations',
+      filter: `customer_id=eq.${user.id}`,
+    }, payload => {
+      const conv = payload.new;
+      // Refresh conversation list live
+      loadConversations();
+      // If this conversation is open, update the chat header status
+      if (activeConvId === conv.id) {
+        const statusEl = document.getElementById('chat-status');
+        const pendBan  = document.getElementById('chat-pend-ban');
+        const inputRow = document.getElementById('chat-input-row');
+        if (conv.status === 'accepted') {
+          if (statusEl) statusEl.textContent = '✅ Active';
+          if (pendBan)  pendBan.style.display = 'none';
+          if (inputRow) inputRow.style.display = 'flex';
+          showToast('✅ Your message request was accepted! You can now chat.');
+        } else if (conv.status === 'declined') {
+          if (statusEl) statusEl.textContent = '❌ Request declined';
+          showToast('❌ Your message request was declined.');
+        }
+      }
+    })
+    .subscribe();
 }
 
 // ── FILL UI ────────────────────────────────────────────────
@@ -847,14 +968,88 @@ const SAMPLE_CONTRACTORS = [
 
 let _homeFilter = '';
 
+// Trade → color map so every contractor card has a meaningful color
+const TRADE_COLORS = {
+  'Plumbing':            'linear-gradient(135deg,#3B82F6,#1D4ED8)',
+  'Electrical':          'linear-gradient(135deg,#F59E0B,#B45309)',
+  'HVAC':                'linear-gradient(135deg,#06B6D4,#0284C7)',
+  'Handyman':            'linear-gradient(135deg,#8B5CF6,#6D28D9)',
+  'Roofing':             'linear-gradient(135deg,#64748B,#334155)',
+  'Cleaning':            'linear-gradient(135deg,#EC4899,#BE185D)',
+  'Landscaping':         'linear-gradient(135deg,#22C55E,#15803D)',
+  'Painting':            'linear-gradient(135deg,#A78BFA,#7C3AED)',
+  'Carpentry':           'linear-gradient(135deg,#92400E,#78350F)',
+  'Flooring':            'linear-gradient(135deg,#D97706,#92400E)',
+  'General Contracting': 'linear-gradient(135deg,#FF6B2B,#E05520)',
+};
+function tradeColor(trade, idx) {
+  return TRADE_COLORS[trade] || COLS[idx % COLS.length];
+}
+
 async function loadContractors() {
-  const { data } = await sb.from('contractors').select('*').order('rating',{ascending:false}).limit(50);
-  allContractors = (data && data.length > 0)
-    ? data.map(c => ({...c, initials:(c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(), color:'linear-gradient(135deg,#FF6B2B,#E05520)', _live:true}))
-    : SAMPLE_CONTRACTORS;
+  // contractor_profiles is a view that joins contractors + users
+  // and only returns approved contractors
+  const { data } = await sb.from('contractor_profiles')
+    .select('*')
+    .order('rating', {ascending:false})
+    .limit(100);
+
+  if (data && data.length > 0) {
+    allContractors = data.map((c,i) => ({
+      ...c,
+      initials: (c.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+      color: tradeColor(c.trade_type, i),
+      _live: true,
+    }));
+  } else {
+    allContractors = SAMPLE_CONTRACTORS;
+  }
+
   renderContractors('home-cg', _homeFilter, 6);
   renderContractors('find-cg', '', 0);
   updateFindCount();
+  subscribeToContractors(); // live updates
+}
+
+// ── LIVE: Contractors table changes refresh the lists ──────
+let _contractorChannel = null;
+function subscribeToContractors() {
+  if (_contractorChannel) sb.removeChannel(_contractorChannel);
+  _contractorChannel = sb.channel('public-contractors')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'contractors',
+    }, async payload => {
+      const updated = payload.new;
+      if (!updated || !updated.approved) return;
+      // Re-fetch full profile (includes username join from view)
+      const { data: freshProfile } = await sb
+        .from('contractor_profiles')
+        .select('*')
+        .eq('id', updated.id)
+        .maybeSingle();
+      const merged = freshProfile || updated;
+      const idx = allContractors.findIndex(c => c.id === merged.id);
+      const enriched = {
+        ...merged,
+        initials: (merged.company_name||'NA').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(),
+        color: tradeColor(merged.trade_type, idx >= 0 ? idx : allContractors.length),
+        _live: true,
+      };
+      if (idx >= 0) {
+        allContractors[idx] = enriched;
+      } else if (payload.eventType === 'INSERT' && merged.approved) {
+        allContractors.push(enriched);
+        // Re-sort by rating
+        allContractors.sort((a,b) => (b.rating||0) - (a.rating||0));
+      }
+      // Re-render both grids with current data
+      renderContractors('home-cg', _homeFilter, 6);
+      renderContractors('find-cg', '', 0);
+      updateFindCount();
+    })
+    .subscribe();
 }
 
 function filterHome(trade, el) {
@@ -904,22 +1099,40 @@ function renderContractors(elId, tradeFilter, limit) {
     return;
   }
   el.innerHTML = list.map(c => {
-    const stars = c.rating ? '★'.repeat(Math.round(c.rating)).substring(0,5) + ' ' + Number(c.rating).toFixed(1) : 'New';
-    const isLeads = c.plan === 'leads';
-    const cta = isLeads
-      ? `<button class="cc-btn" style="background:var(--bg4);color:var(--blue);border:1px solid rgba(96,165,250,.3);" onclick="event.stopPropagation();openCoModal('${c.id}')">View Profile</button>`
-      : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">Book Now</button>`;
+    const stars    = c.rating && c.review_count > 0 ? '★'.repeat(Math.min(5,Math.round(c.rating))) + ' ' + Number(c.rating).toFixed(1) : '';
+    const isLeads  = c.plan === 'leads';
+    const isOnline = c.is_online;
+    const isSample = !c._live || String(c.id).startsWith('s');
+    const cta      = isSample
+      ? `<button class="cc-btn" style="background:rgba(255,255,255,.04);color:var(--g3);border:1px solid rgba(255,255,255,.08);cursor:default;" onclick="event.stopPropagation();showToast('📋 Sample contractor — real pros appear here once they sign up!')">📋 Sample</button>`
+      : isLeads
+        ? `<button class="cc-btn" style="background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.25);" onclick="event.stopPropagation();openCoModal('${c.id}')">📋 View & Contact</button>`
+        : `<button class="cc-btn" onclick="event.stopPropagation();openBookModal('${c.id}')">📅 Book Now</button>`;
+    const onlineDot = isOnline
+      ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22C55E;margin-right:4px;box-shadow:0 0 6px rgba(34,197,94,.7);flex-shrink:0;"></span>`
+      : '';
+    const insuredBadge = c.insured
+      ? `<span style="font-size:9px;background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.2);padding:1px 6px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;">🛡 Insured</span>`
+      : '';
+    const reviewStr = c.review_count > 0 ? ` <span style="font-size:11px;color:var(--g3);">(${c.review_count})</span>` : '';
     return `<div class="cc" onclick="openCoModal('${c.id}')">
+      ${isSample ? '<div style="position:absolute;top:10px;right:10px;font-size:9px;background:rgba(255,255,255,.06);color:var(--g3);border:1px solid rgba(255,255,255,.1);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">Sample</div>' : c.verified ? '<div class="cc-verified">✓ Verified</div>' : ''}
+      ${!isSample && c.plan === 'leads' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">📋 Leads</div>' : !isSample && c.plan === 'pro' ? '<div style="position:absolute;bottom:60px;right:10px;font-size:9px;background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.25);padding:1px 7px;border-radius:50px;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;pointer-events:none;">⚡ Pro</div>' : ''}
       <div class="cc-top">
-        <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'};">${c.avatar_url?`<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>`:''}${!c.avatar_url?c.initials:''}</div>
-        <div>
+        <div style="position:relative;flex-shrink:0;">
+          <div class="cc-av" style="background:${c.color||'linear-gradient(135deg,#FF6B2B,#E05520)'}">${c.avatar_url ? `<img src="${c.avatar_url}" onerror="this.parentElement.textContent='${c.initials}'"/>` : c.initials}</div>
+          ${isOnline ? `<span style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:#22C55E;border:2px solid var(--bg2);box-shadow:0 0 6px rgba(34,197,94,.6);"></span>` : ''}
+        </div>
+        <div style="flex:1;min-width:0;">
           <div class="cc-name">${c.company_name||'—'}</div>
           <div class="cc-trade">${c.trade_type||'Contractor'}</div>
         </div>
-        ${c.verified?'<div class="cc-verified">✓ Verified</div>':''}
       </div>
       <div class="cc-loc">📍 ${c.location||'New York'}</div>
-      <div class="cc-stars">${stars} ${c.review_count?'('+c.review_count+')':''}</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap;">
+        ${stars ? `<span class="cc-stars" style="margin:0;">${stars}${reviewStr}</span>` : '<span style="font-size:11px;color:var(--g3);">New</span>'}
+        ${insuredBadge}
+      </div>
       <div class="cc-about">${(c.description||'').substring(0,80)}${(c.description||'').length>80?'…':''}</div>
       ${cta}
     </div>`;
@@ -933,6 +1146,14 @@ function openCoModal(id) {
   const c = allContractors.find(x => String(x.id) === String(id));
   if (!c) return;
   _activeCoId = id;
+
+  // Increment profile views (fire-and-forget, no await)
+  if (c._live && c.id && user) {
+    sb.from('contractors')
+      .update({ profile_views: (c.profile_views || 0) + 1 })
+      .eq('id', c.id)
+      .then(() => { c.profile_views = (c.profile_views||0)+1; });
+  }
 
   // Banner
   const bannerImg = document.getElementById('co-modal-banner-img');
@@ -970,18 +1191,41 @@ function openCoModal(id) {
     portGrid.innerHTML = port.map(url => `<div class="co-modal-port-img"><img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`).join('');
   } else { portWrap.style.display = 'none'; }
 
-  // Buttons
+  // Buttons — plan-specific
   const isLeads = c.plan === 'leads';
-  const bookBtn = document.getElementById('co-modal-book-btn');
-  const msgBtn  = document.getElementById('co-modal-msg-btn');
+  const canBook  = !isLeads && c.accepts_bookings !== false;
+  const bookBtn  = document.getElementById('co-modal-book-btn');
+  const msgBtn   = document.getElementById('co-modal-msg-btn');
+
   if (isLeads) {
-    bookBtn.textContent = '📞 Contact Directly';
-    bookBtn.onclick = () => { if(c.phone) window.location.href='tel:'+c.phone; else showToast('Contact them via their listed info.'); };
+    // Just Leads: no platform booking — show contact options only
+    bookBtn.style.display = 'none'; // hide book button entirely
+    msgBtn.style.flex     = '1';    // msg takes full width
+    msgBtn.textContent    = '💬 Send Message';
+    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
+
+    // Show plan badge in modal
+    let leadsBadgeEl = document.getElementById('co-leads-badge');
+    if (!leadsBadgeEl) {
+      leadsBadgeEl = document.createElement('div');
+      leadsBadgeEl.id = 'co-leads-badge';
+      leadsBadgeEl.style.cssText = 'padding:8px 20px;font-size:12px;color:var(--blue);background:rgba(96,165,250,.08);border-top:1px solid rgba(96,165,250,.15);text-align:center;';
+      document.querySelector('.co-mdl-btns').before(leadsBadgeEl);
+    }
+    leadsBadgeEl.innerHTML = '📋 <strong>Just Leads</strong> plan — connect directly, no platform booking.';
+    leadsBadgeEl.style.display = 'block';
   } else {
-    bookBtn.textContent = '📅 Book Now';
-    bookBtn.onclick = () => { closeCoModal(); openBookModal(id); };
+    bookBtn.style.display = 'flex';
+    msgBtn.style.flex     = '';
+    bookBtn.textContent   = '📅 Book Now';
+    bookBtn.onclick       = () => { closeCoModal(); openBookModal(id); };
+    msgBtn.textContent    = '💬 Message';
+    msgBtn.onclick        = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
+
+    // Remove leads badge if present
+    const leadsBadgeEl = document.getElementById('co-leads-badge');
+    if (leadsBadgeEl) leadsBadgeEl.style.display = 'none';
   }
-  msgBtn.onclick = () => { closeCoModal(); handleMessage(String(id), c.company_name); };
 
   document.getElementById('co-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -996,6 +1240,14 @@ function closeCoModal() {
 function openBookModal(id) {
   const c = allContractors.find(x => String(x.id) === String(id));
   if (!c) return;
+
+  // Block sample contractors before opening modal
+  const isSample = !c._live || String(c.id).startsWith('s');
+  if (isSample) {
+    showToast('📋 Sample contractor — real contractors will appear here as they sign up!');
+    return;
+  }
+
   activeBookC = c;
   document.getElementById('bm-title').textContent = 'Book ' + (c.company_name || 'Contractor');
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
@@ -1012,17 +1264,28 @@ function closeBook() {
 
 async function submitBook() {
   if (!activeBookC) return;
+
+  // Block bookings on sample/demo contractors (their IDs are not real UUIDs)
+  const isSample = !activeBookC._live || String(activeBookC.id).startsWith('s');
+  if (isSample) {
+    closeBook();
+    showToast('📋 This is a sample contractor. Sign up real contractors to enable bookings!');
+    return;
+  }
+
   const desc = document.getElementById('bm-desc').value.trim();
   const date = document.getElementById('bm-date').value;
   const time = document.getElementById('bm-time').value;
   if (!desc) { showToast('⚠️ Please describe the job.'); return; }
   if (!date) { showToast('⚠️ Please pick a date.'); return; }
+
   const btn = document.getElementById('bm-submit');
-  btn.disabled = true; btn.textContent = '⏳ Booking…';
+  btn.disabled = true; btn.textContent = '⏳ Sending request…';
+
   const { error } = await sb.from('bookings').insert({
     customer_id:     user.id,
     customer_name:   prof.username || user.email.split('@')[0],
-    contractor_id:   String(activeBookC.id),
+    contractor_id:   activeBookC.id,   // already a UUID for real contractors
     contractor_name: activeBookC.company_name,
     trade:           activeBookC.trade_type,
     description:     desc,
@@ -1030,8 +1293,10 @@ async function submitBook() {
     booking_time:    time,
     status:          'pending',
   });
+
   btn.disabled = false; btn.textContent = 'Confirm Booking →';
   if (error) { showToast('❌ Could not save: ' + error.message); return; }
+
   closeBook();
   showToast('✅ Booking request sent! The contractor will confirm shortly.');
   loadBookings();

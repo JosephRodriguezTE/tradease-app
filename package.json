@@ -1,0 +1,18 @@
+{
+  "name": "tradease-app",
+  "version": "1.0.0",
+  "description": "Tradease - New York's fastest contractor booking platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "resend": "^3.2.0"
+  },
+  "devDependencies": {},
+  "keywords": ["contractor", "booking", "platform"],
+  "author": "Tradease Inc.",
+  "license": "MIT"
+}

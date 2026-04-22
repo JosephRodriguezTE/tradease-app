@@ -529,6 +529,55 @@ ul{list-style:none;}
   </div>
 </div>
 
+<!-- SCREEN: RESET PASSWORD -->
+<div class="screen" id="screen-reset-password">
+  <div class="split">
+    <div class="split-left">
+      <div class="brand-orb"></div>
+      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
+        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
+        Tradease<span class="brand-dot"></span>
+      </div>
+      <div class="brand-hero">
+        <h2>Choose a New<br><em>Password.</em></h2>
+        <p>Enter a strong password for your account.</p>
+      </div>
+      <div class="brand-bottom">© 2025 Tradease, Inc.</div>
+    </div>
+    <div class="split-right" style="justify-content:center;">
+      <div style="max-width:420px;width:100%;">
+        <div class="form-title">Reset Password</div>
+        <div class="form-sub">Create a new password for your account.</div>
+        <div class="alert-box" id="reset-error"></div>
+        <div class="fg">
+          <label>New Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reset-pw" placeholder="Min. 8 characters" autocomplete="new-password"
+              oninput="checkPwStrength('reset-pw','reset-pw-str','reset-pw-lbl');clearErr('reset-pw-err')"/>
+            <button class="pw-toggle" onclick="togglePw('reset-pw',this)">👁</button>
+          </div>
+          <div class="pw-strength">
+            <div class="pw-bar"><div class="pw-fill" id="reset-pw-str"></div></div>
+            <div class="pw-label" id="reset-pw-lbl"></div>
+          </div>
+          <span class="err" id="reset-pw-err">Password must be at least 8 characters.</span>
+        </div>
+        <div class="fg">
+          <label>Confirm New Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reset-pw2" placeholder="Repeat password" autocomplete="new-password"
+              oninput="clearErr('reset-pw2-err')"/>
+            <button class="pw-toggle" onclick="togglePw('reset-pw2',this)">👁</button>
+          </div>
+          <span class="err" id="reset-pw2-err">Passwords do not match.</span>
+        </div>
+        <button id="reset-btn" class="btn btn-orange" onclick="handlePasswordReset()">Update Password →</button>
+        <div class="switch-text"><span class="link" onclick="goScreen('screen-login')">← Back to Sign In</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SCREEN: CUSTOMER SUCCESS (email verification) -->
 <div class="success-screen" id="screen-customer-success">
   <div style="width:100%;height:4px;background:var(--bg3);position:fixed;top:0;left:0;"><div style="height:100%;width:100%;background:var(--orange);"></div></div>
@@ -708,6 +757,35 @@ async function handleCustomerSignup() {
   setBtnLoading('cu-signup-btn', true, 'Create My Account →');
   _lastResendEmail = email;
 
+  // Generate confirmation link
+  const linkRes = await fetch('/api/generate-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm' })
+  });
+
+  if (!linkRes.ok) {
+    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+    showAlert('signup-error', '❌ Failed to generate confirmation link. Please try again.');
+    return;
+  }
+
+  const { link } = await linkRes.json();
+
+  // Send custom confirmation email
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm', link, name })
+  });
+
+  if (!emailRes.ok) {
+    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+    showAlert('signup-error', '❌ Failed to send confirmation email. Please try again.');
+    return;
+  }
+
+  // Create Supabase account (without email confirmation)
   let authData, authErr;
   try {
     ({ data: authData, error: authErr } = await sb.auth.signUp({
@@ -715,6 +793,7 @@ async function handleCustomerSignup() {
       password: pw,
       options: {
         data: { display_name: name, role: 'customer' },
+        // Disable auto-confirmation since we're handling it manually
         emailRedirectTo: window.location.origin + '/auth-callback.html',
       },
     }));
@@ -741,15 +820,7 @@ async function handleCustomerSignup() {
 
   setBtnLoading('cu-signup-btn', false, 'Create My Account →');
 
-  // If Supabase auto-confirms (e.g. no email confirmation required in project settings)
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showToast('🎉 Account created! Welcome to Tradease!');
-    setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 400);
-    return;
-  }
-
-  // Email confirmation required
+  // Show success screen for email confirmation
   const displayEl = document.getElementById('confirm-email-display');
   if (displayEl) displayEl.textContent = email;
   goScreen('screen-customer-success');
@@ -865,6 +936,35 @@ async function handleContractorSignup() {
   const fullName    = `${fn} ${ln}`.trim();
 
   setBtnLoading('contractor-signup-btn', true, '🚀 Create My Account');
+  _lastResendEmail = email;
+
+  // Generate confirmation link
+  const linkRes = await fetch('/api/generate-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm' })
+  });
+
+  if (!linkRes.ok) {
+    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+    showAlert('contractor-error', '❌ Failed to generate confirmation link. Please try again.');
+    return;
+  }
+
+  const { link } = await linkRes.json();
+
+  // Send custom confirmation email
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm', link, name: companyName || fullName })
+  });
+
+  if (!emailRes.ok) {
+    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+    showAlert('contractor-error', '❌ Failed to send confirmation email. Please try again.');
+    return;
+  }
 
   let authData, authErr;
   try {
@@ -929,15 +1029,7 @@ async function handleContractorSignup() {
 
   setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
 
-  // Check if auto-confirmed
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showToast('🎉 Welcome to Tradease, ' + fn + '!');
-    setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 400);
-    return;
-  }
-
-  _lastResendEmail = email;
+  // Show success screen for email confirmation
   const displayEl = document.getElementById('confirm-email-display');
   if (displayEl) displayEl.textContent = email;
   goScreen('screen-customer-success');
@@ -948,12 +1040,77 @@ async function handleForgot() {
   const email = (document.getElementById('forgot-email')?.value || '').trim();
   if (!isEmail(email)) { showToast('⚠️ Please enter a valid email address.'); return; }
   setBtnLoading('forgot-btn', true, 'Send Reset Link →');
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/tradease-auth.html',
+
+  // Generate reset link
+  const linkRes = await fetch('/api/generate-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'reset' })
   });
+
+  if (!linkRes.ok) {
+    setBtnLoading('forgot-btn', false, 'Send Reset Link →');
+    showToast('❌ Failed to generate reset link. Please try again.');
+    return;
+  }
+
+  const { link } = await linkRes.json();
+
+  // Send custom reset email
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'reset', link })
+  });
+
   setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-  if (error) { showToast('❌ ' + error.message); return; }
-  showToast('✉️ Reset link sent to ' + email + '! Check your inbox.');
+
+  if (!emailRes.ok) {
+    showToast('❌ Failed to send reset email. Please try again.');
+    return;
+  }
+
+  showToast('✉️ Password reset link sent! Check your inbox.');
+}
+
+// ── PASSWORD RESET ─────────────────────────────────────────────
+async function handlePasswordReset() {
+  const pw  = document.getElementById('reset-pw')?.value  || '';
+  const pw2 = document.getElementById('reset-pw2')?.value || '';
+  clearAlert('reset-error');
+  let ok = true;
+  if (pw.length < 8)  { showErr('reset-pw-err');  ok = false; }
+  if (pw !== pw2)     { showErr('reset-pw2-err'); ok = false; }
+  if (!ok) return;
+
+  setBtnLoading('reset-btn', true, 'Update Password →');
+
+  const resetToken = sessionStorage.getItem('reset_token');
+  const resetEmail = sessionStorage.getItem('reset_email');
+
+  if (!resetToken || !resetEmail) {
+    setBtnLoading('reset-btn', false, 'Update Password →');
+    showAlert('reset-error', '❌ Reset session expired. Please request a new reset link.');
+    goScreen('screen-forgot');
+    return;
+  }
+
+  // Update password using Supabase
+  const { error } = await sb.auth.updateUser({ password: pw });
+
+  if (error) {
+    setBtnLoading('reset-btn', false, 'Update Password →');
+    showAlert('reset-error', '❌ ' + error.message);
+    return;
+  }
+
+  // Clear reset session
+  sessionStorage.removeItem('reset_token');
+  sessionStorage.removeItem('reset_email');
+
+  setBtnLoading('reset-btn', false, 'Update Password →');
+  showToast('✅ Password updated! You can now sign in.');
+  setTimeout(() => goScreen('screen-login'), 1500);
 }
 
 // ── RESEND CONFIRMATION ───────────────────────────────────────
@@ -965,12 +1122,33 @@ async function resendConfirmation() {
     goScreen('screen-signup');
     return;
   }
-  const { error } = await sb.auth.resend({
-    type: 'signup',
-    email,
-    options: { emailRedirectTo: window.location.origin + '/auth-callback.html' },
+
+  // Generate new confirmation link
+  const linkRes = await fetch('/api/generate-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm' })
   });
-  if (error) { showToast('❌ ' + error.message); return; }
+
+  if (!linkRes.ok) {
+    showToast('❌ Failed to generate confirmation link.');
+    return;
+  }
+
+  const { link } = await linkRes.json();
+
+  // Send custom confirmation email
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm', link })
+  });
+
+  if (!emailRes.ok) {
+    showToast('❌ Failed to resend confirmation email.');
+    return;
+  }
+
   showToast('✅ Confirmation email resent! Check your inbox.');
 }
 
@@ -1058,8 +1236,25 @@ async function checkExistingSession() {
     } catch (e) { sessionStorage.removeItem('post_auth_action'); }
   }
 
+  // Handle email confirmation success
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('confirmed') === 'true') {
+    showToast('✅ Email confirmed! You can now sign in.');
+    // Clear the URL parameter
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // Handle password reset
+  if (urlParams.get('reset') === 'true') {
+    const resetToken = sessionStorage.getItem('reset_token');
+    const resetEmail = sessionStorage.getItem('reset_email');
+    if (resetToken && resetEmail) {
+      // Show password reset form
+      goScreen('screen-reset-password');
+    }
+  }
+
   // Auto-switch to contractor tab if URL param says so
-  const params = new URLSearchParams(window.location.search);
   if (params.get('type') === 'contractor') {
     setTimeout(() => goScreen('screen-contractor'), 100);
   }

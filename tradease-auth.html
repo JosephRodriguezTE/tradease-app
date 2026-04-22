@@ -21,7 +21,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:auto;}
-body{font-family:var(--body);background:var(--bg);color:var(--grey1);min-height:100vh;overflow-x:hidden;font-size:15px;opacity:0;transition:opacity .18s ease;line-height:1.6;}
+body{font-family:var(--body);background:var(--bg) url('wall-bg.jpg') center/cover no-repeat fixed;color:var(--grey1);min-height:100vh;overflow-x:hidden;font-size:15px;opacity:1;transition:opacity .18s ease;line-height:1.6;}
 a{text-decoration:none;color:inherit;}
 button{cursor:pointer;border:none;background:none;font-family:var(--body);}
 input,select,textarea{font-family:var(--body);}
@@ -29,6 +29,8 @@ ul{list-style:none;}
 
 .screen{display:none;min-height:100vh;}
 .screen.active{display:flex;animation:authFade .15s ease both;}
+/* Show login screen by default in case JS fails */
+#screen-login{display:flex;}
 @keyframes authFade{from{opacity:0;}to{opacity:1;}}
 
 .split{display:grid;grid-template-columns:420px 1fr;min-height:100vh;width:100%;}
@@ -595,27 +597,72 @@ ul{list-style:none;}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
 <script>
 const SUPABASE_URL      = 'https://linqsojbszglbgpoxgtv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let sb;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  console.log('Supabase client initialized successfully');
+} catch (e) {
+  console.error('Failed to initialize Supabase client:', e);
+  // Create a dummy client to prevent errors
+  sb = {
+    auth: {
+      signInWithPassword: () => ({ error: { message: 'Supabase not available' } }),
+      signUp: () => ({ error: { message: 'Supabase not available' } }),
+      resetPasswordForEmail: () => ({ error: { message: 'Supabase not available' } }),
+      signInWithOAuth: () => ({ error: { message: 'Supabase not available' } }),
+      getSession: () => ({ data: { session: null } }),
+      resend: () => ({ error: { message: 'Supabase not available' } })
+    },
+    from: () => ({
+      select: () => ({ eq: () => ({ single: () => ({ error: { message: 'Database not available' } }) }) }),
+      upsert: () => ({ error: { message: 'Database not available' } })
+    })
+  };
+}
 
 // ── SCREEN ROUTER ────────────────────────────────────────────
 const SCREENS = ['screen-login','screen-signup','screen-contractor','screen-forgot','screen-customer-success'];
 let _activeScreen = 'screen-login';
 
 function goScreen(id) {
-  if (!document.getElementById(id)) return;
+  if (!document.getElementById(id)) {
+    console.error('Screen not found:', id);
+    return;
+  }
   if (id === _activeScreen) return;
   const prev = document.getElementById(_activeScreen);
-  if (prev) { prev.classList.remove('active'); prev.style.display = 'none'; }
+  if (prev) {
+    prev.classList.remove('active');
+    prev.style.display = 'none';
+  }
   const next = document.getElementById(id);
   next.style.display = 'flex';
   next.offsetHeight; // force reflow
   next.classList.add('active');
   _activeScreen = id;
   window.scrollTo(0, 0);
+}
+
+// Initialize the default screen
+function initScreens() {
+  // Hide all screens except the active one
+  SCREENS.forEach(screenId => {
+    const screen = document.getElementById(screenId);
+    if (screen) {
+      if (screenId === _activeScreen) {
+        screen.style.display = 'flex';
+        screen.classList.add('active');
+      } else {
+        screen.style.display = 'none';
+        screen.classList.remove('active');
+      }
+    }
+  });
 }
 
 // ── HELPERS ──────────────────────────────────────────────────
@@ -757,35 +804,7 @@ async function handleCustomerSignup() {
   setBtnLoading('cu-signup-btn', true, 'Create My Account →');
   _lastResendEmail = email;
 
-  // Generate confirmation link
-  const linkRes = await fetch('/api/generate-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm' })
-  });
-
-  if (!linkRes.ok) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showAlert('signup-error', '❌ Failed to generate confirmation link. Please try again.');
-    return;
-  }
-
-  const { link } = await linkRes.json();
-
-  // Send custom confirmation email
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm', link, name })
-  });
-
-  if (!emailRes.ok) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showAlert('signup-error', '❌ Failed to send confirmation email. Please try again.');
-    return;
-  }
-
-  // Create Supabase account (without email confirmation)
+  // Create user account without email confirmation
   let authData, authErr;
   try {
     ({ data: authData, error: authErr } = await sb.auth.signUp({
@@ -793,8 +812,8 @@ async function handleCustomerSignup() {
       password: pw,
       options: {
         data: { display_name: name, role: 'customer' },
-        // Disable auto-confirmation since we're handling it manually
-        emailRedirectTo: window.location.origin + '/auth-callback.html',
+        // Disable automatic email sending
+        emailRedirectTo: undefined,
       },
     }));
   } catch (e) {
@@ -809,6 +828,24 @@ async function handleCustomerSignup() {
     return;
   }
 
+  // Generate confirmation link with user ID
+  const userId = authData.user.id;
+  const baseUrl = window.location.origin;
+  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
+
+  // Send confirmation email via Resend
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm', link, name })
+  });
+
+  if (!emailRes.ok) {
+    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
+    showAlert('signup-error', '❌ Failed to send confirmation email.');
+    return;
+  }
+
   // Upsert users row — safe if row already exists
   await sb.from('users').upsert({
     id:       authData.user.id,
@@ -820,7 +857,15 @@ async function handleCustomerSignup() {
 
   setBtnLoading('cu-signup-btn', false, 'Create My Account →');
 
-  // Show success screen for email confirmation
+  // If Supabase auto-confirms (e.g. no email confirmation required in project settings)
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showToast('🎉 Account created! Welcome to Tradease!');
+    setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 400);
+    return;
+  }
+
+  // Email confirmation required
   const displayEl = document.getElementById('confirm-email-display');
   if (displayEl) displayEl.textContent = email;
   goScreen('screen-customer-success');
@@ -936,35 +981,6 @@ async function handleContractorSignup() {
   const fullName    = `${fn} ${ln}`.trim();
 
   setBtnLoading('contractor-signup-btn', true, '🚀 Create My Account');
-  _lastResendEmail = email;
-
-  // Generate confirmation link
-  const linkRes = await fetch('/api/generate-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm' })
-  });
-
-  if (!linkRes.ok) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showAlert('contractor-error', '❌ Failed to generate confirmation link. Please try again.');
-    return;
-  }
-
-  const { link } = await linkRes.json();
-
-  // Send custom confirmation email
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm', link, name: companyName || fullName })
-  });
-
-  if (!emailRes.ok) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showAlert('contractor-error', '❌ Failed to send confirmation email. Please try again.');
-    return;
-  }
 
   let authData, authErr;
   try {
@@ -973,7 +989,8 @@ async function handleContractorSignup() {
       password: pw,
       options: {
         data: { display_name: companyName || fullName, role: 'contractor' },
-        emailRedirectTo: window.location.origin + '/auth-callback.html',
+        // Disable automatic email sending
+        emailRedirectTo: undefined,
       },
     }));
   } catch (e) {
@@ -1027,9 +1044,34 @@ async function handleContractorSignup() {
     approved:        false,
   }, { onConflict: 'id' });
 
+  // Generate confirmation link with user ID
+  const baseUrl = window.location.origin;
+  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
+
+  // Send confirmation email via Resend
+  const emailRes = await fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, type: 'confirm', link, name: companyName || fullName })
+  });
+
+  if (!emailRes.ok) {
+    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
+    showAlert('contractor-error', '❌ Failed to send confirmation email.');
+    return;
+  }
+
   setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
 
-  // Show success screen for email confirmation
+  // Check if auto-confirmed
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showToast('🎉 Welcome to Tradease, ' + fn + '!');
+    setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 400);
+    return;
+  }
+
+  _lastResendEmail = email;
   const displayEl = document.getElementById('confirm-email-display');
   if (displayEl) displayEl.textContent = email;
   goScreen('screen-customer-success');
@@ -1041,36 +1083,19 @@ async function handleForgot() {
   if (!isEmail(email)) { showToast('⚠️ Please enter a valid email address.'); return; }
   setBtnLoading('forgot-btn', true, 'Send Reset Link →');
 
-  // Generate reset link
-  const linkRes = await fetch('/api/generate-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'reset' })
+  // Use Supabase's password reset but redirect to our custom handler
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/auth-callback.html?type=reset&email=' + encodeURIComponent(email),
   });
 
-  if (!linkRes.ok) {
+  if (error) {
     setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-    showToast('❌ Failed to generate reset link. Please try again.');
+    showToast('❌ ' + error.message);
     return;
   }
-
-  const { link } = await linkRes.json();
-
-  // Send custom reset email
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'reset', link })
-  });
 
   setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-
-  if (!emailRes.ok) {
-    showToast('❌ Failed to send reset email. Please try again.');
-    return;
-  }
-
-  showToast('✉️ Password reset link sent! Check your inbox.');
+  showToast('✉️ Reset link sent to ' + email + '! Check your inbox.');
 }
 
 // ── PASSWORD RESET ─────────────────────────────────────────────
@@ -1123,19 +1148,18 @@ async function resendConfirmation() {
     return;
   }
 
-  // Generate new confirmation link
-  const linkRes = await fetch('/api/generate-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm' })
-  });
+  // Get user by email to get userId
+  const { data: users, error } = await sb.from('users').select('id').eq('email', email).single();
 
-  if (!linkRes.ok) {
-    showToast('❌ Failed to generate confirmation link.');
+  if (error || !users) {
+    showToast('❌ Could not find user account. Please sign up again.');
+    goScreen('screen-signup');
     return;
   }
 
-  const { link } = await linkRes.json();
+  const userId = users.id;
+  const baseUrl = window.location.origin;
+  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
 
   // Send custom confirmation email
   const emailRes = await fetch('/api/send-email', {
@@ -1186,38 +1210,62 @@ async function signInWithOAuthContractor(provider) {
 
 // ── SESSION CHECK ON LOAD ─────────────────────────────────────
 async function checkExistingSession() {
-  const intentional = sessionStorage.getItem('auth_intentional');
-  if (intentional) {
-    sessionStorage.removeItem('auth_intentional');
-    document.body.style.opacity = '1';
-    return;
-  }
-
-  let session = null;
   try {
-    const result = await sb.auth.getSession();
-    session = result.data?.session || null;
+    // Always show the page after a short delay to prevent blank screens
+    setTimeout(() => {
+      if (document.body.style.opacity !== '1') {
+        document.body.style.opacity = '1';
+      }
+    }, 1000);
+
+    const intentional = sessionStorage.getItem('auth_intentional');
+    if (intentional) {
+      sessionStorage.removeItem('auth_intentional');
+      document.body.style.opacity = '1';
+      return;
+    }
+
+    // Check if Supabase client exists
+    if (!sb || !sb.auth) {
+      console.error('Supabase client not initialized');
+      document.body.style.opacity = '1';
+      return;
+    }
+
+    let session = null;
+    try {
+      const result = await sb.auth.getSession();
+      session = result.data?.session || null;
+    } catch (e) {
+      console.error('Error getting session:', e);
+      document.body.style.opacity = '1';
+      return;
+    }
+
+    if (!session) {
+      document.body.style.opacity = '1';
+      return;
+    }
+
+    // Already logged in — get role and redirect
+    let role = session.user.user_metadata?.role || 'customer';
+    try {
+      const { data: profile } = await sb.from('users')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+      if (profile?.role) role = profile.role;
+    } catch (e) {
+      console.error('Error fetching user profile:', e);
+      // Continue with metadata fallback
+    }
+
+    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
   } catch (e) {
+    console.error('Error in checkExistingSession:', e);
+    // Always show the page if there's any error
     document.body.style.opacity = '1';
-    return;
   }
-
-  if (!session) {
-    document.body.style.opacity = '1';
-    return;
-  }
-
-  // Already logged in — get role and redirect
-  let role = session.user.user_metadata?.role || 'customer';
-  try {
-    const { data: profile } = await sb.from('users')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-    if (profile?.role) role = profile.role;
-  } catch (e) { /* use metadata fallback */ }
-
-  window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
 }
 
 // Handle post-auth chat intent
@@ -1255,11 +1303,13 @@ async function checkExistingSession() {
   }
 
   // Auto-switch to contractor tab if URL param says so
-  if (params.get('type') === 'contractor') {
+  if (urlParams.get('type') === 'contractor') {
     setTimeout(() => goScreen('screen-contractor'), 100);
   }
 })();
 
+// Initialize screens and check session
+initScreens();
 checkExistingSession();
 </script>
 </body>

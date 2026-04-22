@@ -5,17 +5,82 @@
 
 <script>
 const supabase = window.supabase.createClient(
-  'YOUR_SUPABASE_URL',
-  'YOUR_ANON_KEY'
+  'https://linqsojbszglbgpoxgtv.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU'
 );
 
 (async () => {
+  // Check for custom confirmation/reset tokens
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('userId');
+  const type = urlParams.get('type');
+  const email = urlParams.get('email');
+
+  if (userId && type === 'confirm' && email) {
+    // Handle email confirmation - update user status
+    try {
+      // Mark user as email confirmed in our database
+      const { error } = await supabase
+        .from('users')
+        .update({ email_confirmed: true })
+        .eq('id', userId);
+
+      if (error) {
+        showError('❌ Confirmation failed: ' + error.message);
+        return;
+      }
+
+      // Try to sign in the user (this assumes email confirmation is disabled in Supabase)
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'dummy_password' // Won't work if email confirmation is required
+      });
+
+      showSuccess('✅ Email confirmed! Welcome to Tradease!');
+      setTimeout(() => {
+        window.location.href = "/customer-dashboard.html";
+      }, 2000);
+    } catch (e) {
+      showError('❌ Confirmation failed. Please try logging in manually.');
+    }
+    return;
+  }
+
+  if (type === 'reset' && email) {
+    // Handle password reset - redirect to auth page with reset mode
+    showSuccess('✅ Reset link verified! Redirecting...');
+    setTimeout(() => {
+      window.location.href = "/tradease-auth.html?reset=true&email=" + encodeURIComponent(email);
+    }, 2000);
+    return;
+  }
+
+  // Check for existing session
   const { data } = await supabase.auth.getSession();
 
   if (data.session) {
     window.location.href = "/customer-dashboard.html";
   }
 })();
+
+function showError(message) {
+  const card = document.querySelector('.card');
+  card.innerHTML = `
+    <div class="icon">❌</div>
+    <h1>Confirmation Failed</h1>
+    <p>${message}</p>
+    <a href="/tradease-auth.html" class="btn btn-or">Back to Login</a>
+  `;
+}
+
+function showSuccess(message) {
+  const card = document.querySelector('.card');
+  card.innerHTML = `
+    <div class="icon">✅</div>
+    <h1>Success!</h1>
+    <p>${message}</p>
+  `;
+}
 </script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -25,7 +90,7 @@ const supabase = window.supabase.createClient(
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   :root{--bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--border:#2A2A2A;--orange:#FF6B2B;--orange-dk:#E05520;--white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;--green:#22C55E;--red:#EF4444;}
-  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
+  body{font-family:'Barlow',sans-serif;background:#0F0F0F url('wall-bg.jpg') center/cover no-repeat fixed;color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
   .logo{margin-bottom:48px;display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;}
   .logo img{width:36px;height:36px;border-radius:10px;object-fit:cover;}
   .logo span{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;}

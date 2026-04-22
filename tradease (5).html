@@ -80,16 +80,11 @@
 html { scroll-behavior: auto; }
 body {
   font-family: var(--font-body);
-  background: #2C2F33;
+  background: #2C2F33 url('wall-bg.jpg') center/cover no-repeat fixed;
   color: var(--text-hi);
   line-height: 1.6;
   font-size: 16px;
   overflow-x: hidden;
-  /* Fixed concrete wall background across the entire site */
-  background-image: radial-gradient(1200px 600px at 20% -10%, rgba(255,107,43,.18), transparent 60%), radial-gradient(1000px 500px at 80% 110%, rgba(255,107,43,.12), transparent 60%);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
 }
 /* Subtle dark overlay on the wall so text always readable */
 body::before {

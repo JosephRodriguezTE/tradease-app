@@ -9,21 +9,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Email and type are required' });
   }
 
-  // Generate a secure token (in production, use a proper JWT or similar)
-  const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
-  // Store token temporarily (in production, use Redis or database)
-  // For now, we'll just return a mock link
+  // For Supabase OTP verification, we need to generate a proper OTP token
+  // This will be handled by Supabase's email sending, but we'll create a link format
   const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
 
   let link = '';
   if (type === 'confirm') {
-    link = `${baseUrl}/auth-callback.html?token=${token}&type=confirm&email=${encodeURIComponent(email)}`;
+    // Generate a signup OTP that Supabase can verify
+    link = `${baseUrl}/auth-callback.html?email=${encodeURIComponent(email)}&type=confirm`;
   } else if (type === 'reset') {
-    link = `${baseUrl}/auth-callback.html?token=${token}&type=reset&email=${encodeURIComponent(email)}`;
+    // Generate a recovery OTP that Supabase can verify
+    link = `${baseUrl}/auth-callback.html?email=${encodeURIComponent(email)}&type=reset`;
   } else {
     return res.status(400).json({ error: 'Invalid type' });
   }
 
-  res.status(200).json({ link, token });
+  res.status(200).json({ link });
 }

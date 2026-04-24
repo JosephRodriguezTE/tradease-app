@@ -5,126 +5,289 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Tradease Pro – Contractor Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* ── CONTRACTOR DASHBOARD — Distinct industrial/pro theme ── */
-:root{
-  --bg:#080A0C;--bg2:#0E1012;--bg3:#141618;--bg4:#1C1F22;--bg5:#242729;
-  --border:rgba(255,255,255,.06);--border-hi:rgba(255,255,255,.12);
-  /* GREEN primary accent — distinct from customer orange */
-  --accent:#22C55E;--accent-dk:#16A34A;--accent-lt:rgba(34,197,94,.1);--accent-glow:rgba(34,197,94,.25);
-  /* Orange kept for bookings/money/alerts */
-  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.1);--orange-glow:rgba(255,107,43,.25);
-  --white:#fff;--g1:#E8EAE8;--g2:#7A8A7E;--g3:#3A4A3E;
-  --green:#22C55E;--green-lt:rgba(34,197,94,.1);
-  --yellow:#FBbf24;--yellow-lt:rgba(251,191,36,.1);
-  --red:#EF4444;--red-lt:rgba(239,68,68,.1);
-  --blue:#60A5FA;--blue-lt:rgba(96,165,250,.1);
-  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
-  --r:10px;--r-lg:16px;--r-xl:22px;--r-2xl:28px;
-  --sh:0 4px 24px rgba(0,0,0,.5);--sh-or:0 8px 32px rgba(255,107,43,.25);
+/* ═══════════════════════════════════════════════════
+   TRADEASE CONTRACTOR DASHBOARD
+   Concrete texture · Industrial/Pro · Green accent
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg:#080A0C; --bg2:#0E1012; --bg3:#141618; --bg4:#1C1F22; --bg5:#242729;
+  --border:rgba(255,255,255,.06); --border-hi:rgba(255,255,255,.12);
+  --accent:#22C55E; --accent-dk:#16A34A; --accent-lt:rgba(34,197,94,.1);
+  --orange:#FF6B2B; --orange-dk:#E05520; --orange-lt:rgba(255,107,43,.1);
+  --white:#fff; --g1:#E8EAE8; --g2:#7A8A7E; --g3:#3A4A3E;
+  --green:#22C55E; --yellow:#FBbf24; --red:#EF4444; --blue:#60A5FA;
+  --display:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif;
+  --r:10px; --r-lg:16px; --r-xl:22px; --r-2xl:28px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:auto;}
-body{font-family:var(--body);background-color:#4A4A52;background-image:radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;background-attachment:fixed;color:var(--g1);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;opacity:0;transition:opacity .15s ease;}
+
+/* ── CONCRETE BACKGROUND ── */
+body {
+  font-family:var(--body);
+  background-color:#4A4A52;
+  background-image:
+    radial-gradient(circle at 12% 45%,rgba(255,255,255,.035) .5px,transparent 1px),
+    radial-gradient(circle at 68% 72%,rgba(255,255,255,.025) .5px,transparent 1px),
+    radial-gradient(circle at 44% 31%,rgba(0,0,0,.06) .8px,transparent 1.5px),
+    radial-gradient(circle at 78% 18%,rgba(255,255,255,.04) 1px,transparent 2px),
+    radial-gradient(circle at 33% 85%,rgba(0,0,0,.05) .8px,transparent 1.5px),
+    radial-gradient(circle at 89% 54%,rgba(255,255,255,.03) 1px,transparent 2px),
+    radial-gradient(ellipse 180px 100px at 15% 25%,rgba(100,100,110,.15),transparent 60%),
+    radial-gradient(ellipse 220px 130px at 75% 65%,rgba(50,50,58,.12),transparent 60%),
+    radial-gradient(ellipse 250px 150px at 50% 50%,rgba(80,80,88,.08),transparent 70%),
+    radial-gradient(ellipse 400px 200px at 25% 80%,rgba(0,0,0,.1),transparent),
+    radial-gradient(ellipse 450px 250px at 85% 20%,rgba(255,255,255,.05),transparent);
+  background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;
+  background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;
+  background-attachment:fixed;
+  color:var(--g1); min-height:100vh; font-size:15px; line-height:1.6;
+  overflow-x:hidden; opacity:0; transition:opacity .15s ease;
+}
 button{cursor:pointer;border:none;font-family:var(--body);}
 input,select,textarea{font-family:var(--body);}
 
-#ls{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;}
+/* ── LOADER ── */
+#ls{position:fixed;inset:0;background:rgba(8,10,12,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px;}
 .spin{width:38px;height:38px;border-radius:50%;border:3px solid var(--bg3);border-top-color:var(--accent);animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 #ls p{font-family:var(--display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--g3);}
 
+/* ── APP ── */
 #app{display:none;min-height:100vh;flex-direction:column;}
 #app.ready{display:flex;animation:fi .2s ease both;}
-@keyframes fi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes fi{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 .view{display:none;}
 .view.active{display:block;animation:fi .15s ease both;}
 
-/* TOPBAR */
-.topbar{background:rgba(6,8,10,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(34,197,94,.12);height:62px;padding:0 28px;display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:200;flex-shrink:0;}
-.logo{display:flex;align-items:center;gap:9px;cursor:pointer;transition:opacity .12s;flex-shrink:0;}
-.logo:hover{opacity:.8;}
-.logo-img{width:30px;height:30px;border-radius:8px;object-fit:cover;}
-.logo-txt{font-family:var(--display);font-size:20px;font-weight:900;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;}
-.logo-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;margin-bottom:1px;}
-.nav{display:flex;align-items:center;gap:1px;margin-left:16px;flex:1;overflow-x:auto;}
+/* ── GREEN TOP STRIPE ── */
+.stripe{height:3px;background:linear-gradient(90deg,var(--accent),#4ADE80,#86EFAC,var(--accent));flex-shrink:0;}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:rgba(6,8,10,.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(34,197,94,.15);
+  height:62px;padding:0 24px;
+  display:flex;align-items:center;gap:4px;
+  position:sticky;top:0;z-index:200;flex-shrink:0;
+}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;margin-right:12px;}
+.logo-txt{font-family:var(--display);font-size:21px;font-weight:900;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;}
+.logo-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;}
+.nav{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;}
 .nav::-webkit-scrollbar{display:none;}
-.nv{font-size:13px;font-weight:600;color:var(--g2);padding:6px 11px;border-radius:8px;cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;flex-shrink:0;}
-.nv:hover,.nv.on{color:var(--white);background:rgba(34,197,94,.12);border-left:2px solid var(--accent);}
-.nbadge{display:inline-block;background:var(--accent);color:white;font-size:9px;font-weight:800;padding:1px 5px;border-radius:50px;margin-left:3px;vertical-align:middle;font-family:var(--display);}
+.nv{
+  font-size:13px;font-weight:600;color:var(--g2);
+  padding:6px 11px;border-radius:8px;cursor:pointer;
+  transition:all .1s;white-space:nowrap;flex-shrink:0;
+  border-left:2px solid transparent;
+}
+.nv:hover{color:var(--white);background:rgba(34,197,94,.08);}
+.nv.on{color:var(--accent);background:rgba(34,197,94,.1);border-left-color:var(--accent);}
+.nbadge{display:inline-block;background:var(--orange);color:white;font-size:9px;font-weight:800;padding:1px 5px;border-radius:50px;margin-left:3px;vertical-align:middle;}
 .tbr{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.pro-pill{background:var(--accent);color:white;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:6px 13px;border-radius:7px;cursor:pointer;transition:background .1s;border:none;}
-.pro-pill:hover{background:var(--accent-dk);}
-.pro-pill.active{background:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.3);}
-.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;cursor:pointer;border:2px solid transparent;transition:border-color .12s;overflow:hidden;flex-shrink:0;}
-.av:hover{border-color:var(--accent);}
-.av img{width:100%;height:100%;object-fit:cover;}
-.so{font-size:11px;font-weight:700;color:var(--g3);padding:5px 10px;border-radius:7px;background:none;transition:color .1s,background .1s;text-transform:uppercase;letter-spacing:.05em;}
+.plan-pill{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:6px;background:var(--accent-lt);color:var(--accent);border:1px solid rgba(34,197,94,.2);}
+.av-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;cursor:pointer;border:2px solid transparent;transition:border-color .12s;overflow:hidden;flex-shrink:0;}
+.av-btn:hover{border-color:var(--accent);}
+.av-btn img{width:100%;height:100%;object-fit:cover;}
+.so{font-size:11px;font-weight:700;color:var(--g3);padding:5px 10px;border-radius:7px;background:none;transition:all .1s;text-transform:uppercase;letter-spacing:.05em;}
 .so:hover{color:var(--white);background:var(--bg3);}
 
-/* PAGE */
-.pg{flex:1;padding:32px 28px;max-width:1120px;margin:0 auto;width:100%;}
-.pg-hdr{margin-bottom:24px;}
-.pg-hdr h1{font-family:var(--display);font-size:clamp(24px,4vw,36px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:3px;}
-.pg-hdr p{font-size:14px;color:var(--g2);}
+/* ── PAGE WRAPPER ── */
+.pg{flex:1;padding:28px 24px;max-width:1100px;margin:0 auto;width:100%;}
 
-/* PROFILE HEADER */
-.ph{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border:1px solid var(--border);border-radius:var(--r-2xl);padding:28px 32px;display:flex;align-items:center;gap:20px;margin-bottom:20px;position:relative;overflow:hidden;}
-.ph::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none;}
-.ph-av-wrap{position:relative;cursor:pointer;flex-shrink:0;}
-.ph-av{width:76px;height:76px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:white;box-shadow:0 8px 28px rgba(34,197,94,.2);overflow:hidden;border:3px solid rgba(255,255,255,.08);}
+/* ══════════════════════════════════════
+   ONBOARDING VIEW
+   ══════════════════════════════════════ */
+.onboard-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 65px);padding:40px 24px;}
+.onboard-card{
+  background:rgba(14,16,18,.9);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--r-2xl);
+  padding:56px 48px;max-width:600px;width:100%;text-align:center;
+  box-shadow:0 0 80px rgba(34,197,94,.06);position:relative;overflow:hidden;
+}
+.onboard-card::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.12),transparent 70%);pointer-events:none;}
+.onboard-icon{font-size:72px;margin-bottom:24px;display:block;filter:drop-shadow(0 0 20px rgba(34,197,94,.3));}
+.onboard-card h1{font-family:var(--display);font-size:clamp(32px,5vw,52px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:12px;}
+.onboard-card h1 em{color:var(--accent);font-style:normal;}
+.onboard-card p{font-size:16px;color:var(--g2);line-height:1.75;margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto;}
+.onboard-features{display:flex;flex-direction:column;gap:12px;margin-bottom:36px;text-align:left;}
+.onboard-feat{display:flex;align-items:center;gap:14px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.1);border-radius:12px;padding:12px 16px;}
+.onboard-feat-icon{font-size:20px;flex-shrink:0;}
+.onboard-feat span{font-size:14px;color:var(--g2);}
+.onboard-feat strong{color:var(--g1);}
+.btn-build{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;max-width:320px;padding:16px 28px;
+  background:var(--accent);color:white;border:none;border-radius:var(--r);
+  font-family:var(--display);font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;transition:all .14s;box-shadow:0 0 28px rgba(34,197,94,.3);margin-bottom:12px;
+}
+.btn-build:hover{background:var(--accent-dk);transform:translateY(-2px);box-shadow:0 0 40px rgba(34,197,94,.4);}
+.btn-skip{display:inline-flex;align-items:center;justify-content:center;width:100%;max-width:320px;padding:13px 28px;background:rgba(255,255,255,.05);color:var(--g2);border:1px solid var(--border);border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:700;text-transform:uppercase;cursor:pointer;transition:all .14s;}
+.btn-skip:hover{background:rgba(255,255,255,.08);color:var(--g1);}
+.onboard-tip{font-size:12px;color:var(--g3);margin-top:20px;}
+
+/* ══════════════════════════════════════
+   COMPANY PROFILE VIEW
+   ══════════════════════════════════════ */
+.profile-pg{max-width:860px;margin:0 auto;}
+.profile-pg .pg-hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.profile-pg .pg-hdr h1{font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;}
+.profile-pg .pg-hdr p{font-size:13px;color:var(--g2);margin-top:3px;}
+
+/* Profile header card */
+.prof-header-card{
+  background:rgba(14,16,18,.9);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:var(--r-2xl);
+  overflow:hidden;margin-bottom:16px;position:relative;
+}
+.prof-banner{
+  width:100%;height:140px;background:linear-gradient(135deg,rgba(34,197,94,.08),var(--bg4));
+  cursor:pointer;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.prof-banner img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.prof-banner-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;color:white;opacity:0;transition:all .15s;}
+.prof-banner:hover .prof-banner-overlay{background:rgba(0,0,0,.5);opacity:1;}
+.banner-placeholder{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--g3);font-size:13px;position:relative;z-index:1;}
+.prof-body{padding:0 24px 24px;}
+.prof-av-row{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:-44px;margin-bottom:16px;}
+.prof-av-wrap{position:relative;cursor:pointer;flex-shrink:0;}
+.prof-av{
+  width:88px;height:88px;border-radius:18px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:30px;font-weight:900;color:white;
+  border:3px solid rgba(14,16,18,.9);box-shadow:0 8px 28px rgba(34,197,94,.2);
+  overflow:hidden;
+}
+.prof-av img{width:100%;height:100%;object-fit:cover;}
+.prof-av-overlay{position:absolute;inset:0;border-radius:18px;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;opacity:0;transition:all .15s;}
+.prof-av-wrap:hover .prof-av-overlay{background:rgba(0,0,0,.6);opacity:1;}
+.prof-info{}
+.prof-name{font-family:var(--display);font-size:24px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:3px;}
+.prof-username{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:2px;}
+.prof-trade{font-size:14px;color:var(--g2);margin-bottom:8px;}
+.prof-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.badge{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:50px;}
+.badge-gn{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(34,197,94,.2);}
+.badge-gy{background:rgba(255,255,255,.06);color:var(--g2);}
+.badge-or{background:var(--orange-lt);color:var(--orange);border:1px solid rgba(255,107,43,.2);}
+.prof-rating{font-size:13px;color:var(--g2);display:flex;align-items:center;gap:6px;margin-top:8px;}
+.prof-rating .stars{color:var(--yellow);}
+.prof-actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* Panels */
+.panel{
+  background:rgba(14,16,18,.9);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:var(--r-xl);
+  padding:20px;margin-bottom:14px;
+}
+.panel:hover{border-color:var(--border-hi);}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.panel-title{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--white);}
+.panel-sub{font-size:12px;color:var(--g3);}
+
+/* About / Bio */
+.bio-text{font-size:14px;color:var(--g2);line-height:1.8;}
+.bio-empty{font-size:14px;color:var(--g3);font-style:italic;}
+
+/* Portfolio */
+.port-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
+.port-img{aspect-ratio:1;border-radius:var(--r);overflow:hidden;background:var(--bg3);position:relative;}
+.port-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.port-del{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.9);color:white;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;opacity:0;transition:opacity .15s;}
+.port-img:hover .port-del{opacity:1;}
+.port-add{aspect-ratio:1;border-radius:var(--r);background:var(--bg3);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .14s;}
+.port-add:hover{border-color:var(--accent);background:var(--accent-lt);}
+.port-add:hover .port-add-icon{color:var(--accent);}
+.port-add-icon{font-size:22px;color:var(--g3);}
+.port-add p{font-size:11px;color:var(--g3);font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+
+/* Services preview */
+.svc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.svc-row:last-child{border-bottom:none;padding-bottom:0;}
+.svc-name{font-size:14px;font-weight:600;color:var(--g1);}
+.svc-price{font-family:var(--display);font-size:15px;font-weight:800;color:var(--orange);}
+
+/* ══════════════════════════════════════
+   OVERVIEW (DASH) VIEW
+   ══════════════════════════════════════ */
+.pg-hdr{margin-bottom:22px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.pg-hdr h1{font-family:var(--display);font-size:26px;font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;}
+.pg-hdr p{font-size:13px;color:var(--g2);margin-top:3px;}
+
+/* Online toggle */
+.online-toggle{
+  background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:all .15s;margin-bottom:16px;
+}
+.online-toggle:hover{border-color:var(--border-hi);}
+.online-toggle.on{border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.04);}
+.ot-ind{font-size:18px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.ot-info{flex:1;}
+.ot-label{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--g2);letter-spacing:.04em;}
+.ot-sub{font-size:12px;color:var(--g3);margin-top:1px;}
+.ot-sw{width:42px;height:22px;border-radius:11px;background:var(--g3);position:relative;transition:background .2s;flex-shrink:0;}
+.ot-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;transition:left .2s;}
+.online-toggle.on .ot-sw{background:var(--accent);}
+.online-toggle.on .ot-knob{left:23px;}
+.online-toggle.on .ot-label{color:var(--accent);}
+
+/* Profile hero (dash) */
+.prof-hero{
+  background:linear-gradient(135deg,var(--bg2),var(--bg3));
+  border:1px solid var(--border);border-radius:var(--r-2xl);
+  padding:24px;display:flex;align-items:center;gap:18px;
+  margin-bottom:16px;position:relative;overflow:hidden;
+}
+.prof-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.15),transparent 70%);pointer-events:none;}
+.ph-av{width:68px;height:68px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:26px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 8px 24px rgba(34,197,94,.2);overflow:hidden;}
 .ph-av img{width:100%;height:100%;object-fit:cover;}
-.ph-av-overlay{position:absolute;inset:0;border-radius:18px;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;opacity:0;transition:all .15s;}
-.ph-av-wrap:hover .ph-av-overlay{background:rgba(0,0,0,.55);opacity:1;}
 .ph-info{flex:1;position:relative;}
 .ph-info h2{font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:2px;}
-.ph-username{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:2px;}
-.ph-trade{font-size:13px;color:var(--g2);margin-bottom:4px;}
-.ph-badges{display:flex;gap:6px;flex-wrap:wrap;}
-.bdg{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:50px;}
-.bdg-or{background:var(--accent);color:white;}
-.bdg-gn{background:var(--green-lt);color:var(--green);border:1px solid rgba(34,197,94,.2);}
-.bdg-gy{background:var(--bg4);color:var(--g3);}
+.ph-info .ph-trade{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px;}
 .ph-actions{display:flex;flex-direction:column;gap:8px;flex-shrink:0;}
 
-/* STATS */
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
-.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;transition:border-color .12s;}
-.sc:hover{border-color:var(--border-hi);}
-.sc-ic{font-size:18px;margin-bottom:8px;}
-.sc-val{font-family:var(--display);font-size:32px;font-weight:900;color:var(--white);line-height:1;margin-bottom:3px;}
-.sc-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);}
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.stat-card{background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;transition:border-color .12s;}
+.stat-card:hover{border-color:rgba(34,197,94,.2);border-top:2px solid var(--accent);}
+.stat-ic{font-size:18px;margin-bottom:8px;}
+.stat-val{font-family:var(--display);font-size:30px;font-weight:900;color:var(--white);line-height:1;margin-bottom:3px;}
+.stat-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);}
 
-/* COMPLETION */
-.cw{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;margin-bottom:20px;}
-.cw-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.cw-top h4{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
-.cw-pct{font-family:var(--display);font-size:24px;font-weight:900;color:var(--accent);}
-.cw-bar{height:4px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:12px;}
-.cw-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4ADE80);border-radius:4px;transition:width .6s ease;}
-.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.ct{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g2);padding:7px 10px;border-radius:8px;background:var(--bg3);cursor:pointer;transition:background .1s;}
-.ct:hover{background:var(--bg4);}
-.ct.done{color:var(--g3);text-decoration:line-through;cursor:default;}
-.ct.done:hover{background:var(--bg3);}
-.ct-bonus{margin-left:auto;color:var(--accent);font-weight:700;font-size:11px;}
+/* Completion */
+.comp-widget{background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:16px;}
+.comp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.comp-top h4{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--white);}
+.comp-pct{font-family:var(--display);font-size:22px;font-weight:900;color:var(--accent);}
+.comp-bar{height:4px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:12px;}
+.comp-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4ADE80);border-radius:4px;transition:width .6s ease;}
+.comp-items{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.comp-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g2);padding:7px 10px;border-radius:8px;background:var(--bg3);cursor:pointer;transition:background .1s;}
+.comp-item:hover{background:var(--bg4);}
+.comp-item.done{color:var(--g3);text-decoration:line-through;cursor:default;}
+.comp-bonus{margin-left:auto;color:var(--accent);font-weight:700;font-size:11px;}
 
-/* PANEL */
-.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px;}
-.panel-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.panel-title{font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
-
-/* TWO COLUMN */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:24px;}
-.st{font-family:var(--display);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
+/* Two col layout */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:22px;}
+.st{font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
 .sa{font-size:13px;color:var(--orange);cursor:pointer;font-weight:600;}
 .sa:hover{opacity:.75;}
 
-/* BOOKING ROWS */
-.bk-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;transition:border-color .12s;}
+/* ══════════════════════════════════════
+   BOOKING ROWS
+   ══════════════════════════════════════ */
+.bk-row{
+  background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px 18px;display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;
+  transition:border-color .12s;
+}
 .bk-row:hover{border-color:var(--border-hi);}
 .bk-ic{font-size:18px;flex-shrink:0;margin-top:2px;}
 .bk-info{flex:1;}
@@ -132,466 +295,266 @@ input,select,textarea{font-family:var(--body);}
 .bk-meta{font-size:12px;color:var(--g2);}
 .bk-desc{font-size:12px;color:var(--g3);font-style:italic;margin-top:3px;}
 .bk-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
-.bst{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:50px;}
-.bst-p{background:var(--yellow-lt);color:var(--yellow);}
-.bst-a{background:var(--green-lt);color:var(--green);}
-.bst-ip{background:var(--blue-lt);color:var(--blue);}
-.bst-d{background:var(--red-lt);color:var(--red);}
-.bst-c{background:rgba(96,96,96,.2);color:var(--g2);}
-.ab{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:7px;cursor:pointer;transition:all .12s;border:1px solid transparent;}
-.ab-gn{background:var(--green-lt);color:var(--green);border-color:rgba(34,197,94,.25);}
-.ab-gn:hover{background:rgba(34,197,94,.2);}
-.ab-bl{background:var(--blue-lt);color:var(--blue);border-color:rgba(96,165,250,.25);}
-.ab-bl:hover{background:rgba(96,165,250,.2);}
-.ab-or{background:var(--orange-lt);color:var(--orange);border-color:rgba(255,107,43,.25);}
-.ab-or:hover{background:rgba(255,107,43,.2);}
-.ab-rd{background:var(--red-lt);color:var(--red);border-color:rgba(239,68,68,.25);}
-.ab-rd:hover{background:rgba(239,68,68,.2);}
+.bst{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:50px;}
+.bst-p{background:rgba(251,191,36,.1);color:var(--yellow);}
+.bst-a{background:rgba(34,197,94,.1);color:var(--green);}
+.bst-ip{background:rgba(96,165,250,.1);color:var(--blue);}
+.bst-d{background:rgba(239,68,68,.1);color:var(--red);}
+.bst-c{background:rgba(96,96,96,.15);color:var(--g2);}
 
-/* REVIEW ROWS */
-.rv{padding:12px 0;border-bottom:1px solid var(--border);}
-.rv:last-child{border-bottom:none;padding-bottom:0;}
-.rv-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+/* ══════════════════════════════════════
+   REVIEW ROWS
+   ══════════════════════════════════════ */
+.rv-item{padding:12px 0;border-bottom:1px solid var(--border);}
+.rv-item:last-child{border-bottom:none;padding-bottom:0;}
+.rv-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .rv-name{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;color:var(--white);}
 .rv-stars{color:var(--yellow);font-size:12px;}
 .rv-txt{font-size:13px;color:var(--g2);line-height:1.6;}
 .rv-date{font-size:11px;color:var(--g3);margin-top:2px;}
 
-/* PROFILE EDITOR (company profile) */
-.profile-ed-banner{width:100%;height:140px;border-radius:var(--r-xl) var(--r-xl) 0 0;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--bg3),var(--bg4));cursor:pointer;}
-.profile-ed-banner img{width:100%;height:100%;object-fit:cover;}
-.profile-ed-banner-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;font-size:13px;color:white;font-weight:700;opacity:0;transition:all .15s;gap:7px;}
-.profile-ed-banner:hover .profile-ed-banner-overlay{background:rgba(0,0,0,.5);opacity:1;}
-.profile-ed-body{background:var(--bg2);border:1px solid var(--border);border-radius:0 0 var(--r-xl) var(--r-xl);padding:0 24px 24px;margin-bottom:20px;}
-.profile-ed-av-wrap{position:relative;display:inline-block;margin-top:-40px;cursor:pointer;}
-.profile-ed-av{width:80px;height:80px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:28px;font-weight:900;color:white;border:3px solid var(--bg2);box-shadow:var(--sh-or);overflow:hidden;}
-.profile-ed-av img{width:100%;height:100%;object-fit:cover;}
-.profile-ed-av-overlay{position:absolute;inset:0;border-radius:18px;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;opacity:0;transition:all .15s;}
-.profile-ed-av-wrap:hover .profile-ed-av-overlay{background:rgba(0,0,0,.55);opacity:1;}
+/* ══════════════════════════════════════
+   SERVICES / PRICING VIEW
+   ══════════════════════════════════════ */
+.svc-list-row{
+  background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:8px;
+}
+.svc-info{flex:1;}
+.svc-list-name{font-size:14px;font-weight:600;color:var(--g1);}
+.svc-type-label{font-size:11px;color:var(--g3);margin-top:1px;}
+.svc-price-tag{font-family:var(--display);font-size:16px;font-weight:800;color:var(--orange);text-align:right;flex-shrink:0;}
+.svc-actions{display:flex;gap:6px;flex-shrink:0;}
 
-/* PORTFOLIO GRID */
-.port-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
-.port-img{aspect-ratio:1;border-radius:var(--r);overflow:hidden;background:var(--bg3);position:relative;}
-.port-img img{width:100%;height:100%;object-fit:cover;display:block;}
-.port-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(239,68,68,.85);color:white;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;opacity:0;transition:opacity .15s;}
-.port-img:hover .port-del{opacity:1;}
-.port-add{aspect-ratio:1;border-radius:var(--r);background:var(--bg3);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:border-color .14s,background .14s;}
-.port-add:hover{border-color:var(--accent);background:var(--accent-lt);}
-.port-add:hover span{color:var(--accent);}
-.port-add span{font-size:22px;color:var(--g3);}
-.port-add p{font-size:11px;color:var(--g3);font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
-
-/* PRICING SERVICES */
-.svc-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
-.svc-name{font-size:14px;font-weight:600;color:var(--g1);flex:1;}
-.svc-price{font-family:var(--display);font-size:15px;font-weight:800;color:var(--orange);}
-.svc-type{font-size:11px;color:var(--g3);margin-top:1px;}
-.svc-actions{display:flex;gap:6px;}
-
-/* AVAILABILITY */
-.av-day-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:border-color .12s;}
-.av-day-pill{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--accent-lt);color:var(--accent);padding:4px 12px;border-radius:50px;min-width:84px;text-align:center;flex-shrink:0;}
+/* ══════════════════════════════════════
+   AVAILABILITY
+   ══════════════════════════════════════ */
+.av-day{
+  background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:8px;
+}
+.av-pill{font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--accent-lt);color:var(--accent);padding:4px 12px;border-radius:50px;min-width:80px;text-align:center;flex-shrink:0;}
 .av-time{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:4px 10px;font-size:13px;color:var(--g1);font-weight:600;}
+.av-arrow{color:var(--g3);font-size:12px;}
 .av-del{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);color:var(--g3);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;flex-shrink:0;margin-left:auto;}
-.av-del:hover{background:var(--red-lt);border-color:var(--red);color:var(--red);}
+.av-del:hover{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red);}
 
-/* MESSAGES */
-.msgs-layout{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 62px);max-width:100%;padding:0;}
-.conv-list-panel{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.conv-list-hdr{padding:18px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.conv-list-hdr h2{font-family:var(--display);font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
-.conv-list-hdr p{font-size:12px;color:var(--g3);margin-top:2px;}
+/* ══════════════════════════════════════
+   MESSAGES
+   ══════════════════════════════════════ */
+.msgs-layout{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 65px);}
+.conv-panel{background:rgba(14,16,18,.95);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.conv-hdr{padding:16px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.conv-hdr h2{font-family:var(--display);font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--white);}
+.conv-hdr p{font-size:12px;color:var(--g3);margin-top:2px;}
 .conv-list{flex:1;overflow-y:auto;}
 .conv-item{display:flex;align-items:center;gap:11px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
-.conv-item:hover,.conv-item.active{background:var(--bg3);}
+.conv-item:hover,.conv-item.active{background:rgba(255,255,255,.03);}
 .conv-av{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;flex-shrink:0;}
 .conv-info{flex:1;min-width:0;}
 .conv-name{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .conv-preview{font-size:12px;color:var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
 .conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
 .conv-time{font-size:11px;color:var(--g3);}
-.conv-unread{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0;}
-.chat-panel{display:flex;flex-direction:column;overflow:hidden;}
+.conv-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);}
+.chat-area{display:flex;flex-direction:column;overflow:hidden;}
 .chat-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--g3);}
-.chat-hdr{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--bg2);display:none;align-items:center;gap:11px;flex-shrink:0;}
-.chat-hdr-av{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:900;color:white;flex-shrink:0;}
+.chat-hdr{padding:12px 20px;border-bottom:1px solid var(--border);background:rgba(14,16,18,.9);display:none;align-items:center;gap:12px;flex-shrink:0;}
+.chat-hdr-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;font-weight:900;color:white;flex-shrink:0;}
 .chat-accept-row{display:none;gap:8px;margin-left:auto;}
-.chat-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:10px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:9px;}
 .msg-wrap{display:flex;flex-direction:column;}
 .msg-wrap.mine{align-items:flex-end;}
 .msg-wrap.theirs{align-items:flex-start;}
-.msg-bubble{max-width:70%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word;}
+.msg-bubble{max-width:72%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word;}
 .msg-mine{background:var(--orange);color:white;border-bottom-right-radius:4px;}
 .msg-theirs{background:var(--bg3);color:var(--g1);border-bottom-left-radius:4px;border:1px solid var(--border);}
 .msg-time{font-size:11px;color:var(--g3);margin-top:2px;}
-.chat-input-row{display:none;padding:12px 20px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.chat-input-row{display:none;padding:12px 18px;border-top:1px solid var(--border);background:rgba(14,16,18,.9);flex-shrink:0;}
 .chat-input-wrap{display:flex;gap:8px;align-items:flex-end;}
 .chat-input-row textarea{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--g1);font-size:14px;resize:none;outline:none;font-family:var(--body);max-height:100px;transition:border-color .12s;}
 .chat-input-row textarea:focus{border-color:var(--accent);}
 .chat-send{padding:10px 16px;background:var(--accent);color:white;border:none;border-radius:10px;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;cursor:pointer;transition:background .1s;flex-shrink:0;}
 .chat-send:hover{background:var(--accent-dk);}
-.chat-input-hint{font-size:11px;color:var(--g3);margin-top:5px;}
 
-/* BUTTONS */
-.btn-or{padding:9px 18px;border-radius:var(--r);background:var(--accent);color:white;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s;box-shadow:0 4px 16px rgba(34,197,94,.25);border:none;cursor:pointer;white-space:nowrap;}
+/* ══════════════════════════════════════
+   BUTTONS
+   ══════════════════════════════════════ */
+.btn-or{padding:9px 18px;border-radius:var(--r);background:var(--accent);color:white;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:all .1s;box-shadow:0 4px 14px rgba(34,197,94,.2);border:none;cursor:pointer;white-space:nowrap;}
 .btn-or:hover{background:var(--accent-dk);}
 .btn-or:disabled{opacity:.6;cursor:not-allowed;}
-.btn-gy{padding:9px 18px;border-radius:var(--r);background:var(--bg4);color:var(--g1);border:1px solid var(--border);font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:background .1s,border-color .1s;cursor:pointer;white-space:nowrap;}
+.btn-gy{padding:9px 18px;border-radius:var(--r);background:var(--bg4);color:var(--g1);border:1px solid var(--border);font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:all .1s;cursor:pointer;white-space:nowrap;}
 .btn-gy:hover{background:var(--bg3);border-color:var(--border-hi);}
-.btn-red{padding:9px 18px;border-radius:var(--r);background:var(--bg4);color:var(--red);border:1px solid var(--red-lt);font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;transition:all .1s;cursor:pointer;}
-.btn-red:hover{background:var(--red-lt);}
+.btn-orange{padding:9px 18px;border-radius:var(--r);background:var(--orange);color:white;border:none;font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,43,.2);}
+.btn-orange:hover{background:var(--orange-dk);}
 
-/* FORMS */
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+/* Action buttons in tables */
+.ab{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:7px;cursor:pointer;transition:all .12s;border:1px solid transparent;}
+.ab-gn{background:rgba(34,197,94,.1);color:var(--green);border-color:rgba(34,197,94,.25);}
+.ab-gn:hover{background:rgba(34,197,94,.2);}
+.ab-bl{background:rgba(96,165,250,.1);color:var(--blue);border-color:rgba(96,165,250,.25);}
+.ab-bl:hover{background:rgba(96,165,250,.2);}
+.ab-or{background:var(--orange-lt);color:var(--orange);border-color:rgba(255,107,43,.25);}
+.ab-or:hover{background:rgba(255,107,43,.2);}
+.ab-rd{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.25);}
+.ab-rd:hover{background:rgba(239,68,68,.2);}
+
+/* ══════════════════════════════════════
+   FORMS
+   ══════════════════════════════════════ */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
 .fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);}
 .fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;color:var(--g1);font-size:14px;outline:none;transition:border-color .15s;width:100%;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
 .fg input::placeholder,.fg textarea::placeholder{color:var(--g3);}
 .fg select option{background:var(--bg3);}
-.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .fg textarea{min-height:80px;resize:vertical;}
-.fg-hint{font-size:11px;color:var(--g3);margin-top:3px;}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
-/* MODAL */
+/* ══════════════════════════════════════
+   MODALS
+   ══════════════════════════════════════ */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
 .mbg.open{display:flex;}
-.mdl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-2xl);width:100%;max-width:520px;overflow:hidden;animation:fi .18s ease both;margin:auto;}
+.mdl{background:rgba(14,16,18,.98);border:1px solid var(--border);border-radius:var(--r-2xl);width:100%;max-width:520px;overflow:hidden;animation:fi .18s ease both;margin:auto;}
 .mh{background:var(--bg3);border-bottom:2px solid var(--accent);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}
-.mh h3{font-family:var(--display);font-size:19px;font-weight:900;text-transform:uppercase;color:var(--accent);letter-spacing:.02em;}
-.mc{width:28px;height:28px;border-radius:50%;background:var(--bg4);color:var(--g2);border:1px solid var(--border);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .1s;}
+.mh h3{font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;color:var(--accent);letter-spacing:.02em;}
+.mc{width:28px;height:28px;border-radius:50%;background:var(--bg4);color:var(--g2);border:1px solid var(--border);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .1s;}
 .mc:hover{background:var(--bg5);color:var(--g1);}
 .mb{padding:22px;}
 .mb-scroll{padding:22px;max-height:75vh;overflow-y:auto;}
-.ms{width:100%;padding:12px;background:var(--accent);color:white;border-radius:var(--r);font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s;margin-top:6px;border:none;cursor:pointer;}
+.ms{width:100%;padding:12px;background:var(--accent);color:white;border-radius:var(--r);font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;transition:background .1s;margin-top:6px;border:none;cursor:pointer;}
 .ms:hover{background:var(--accent-dk);}
 .ms:disabled{opacity:.6;cursor:not-allowed;}
-.mdl-section{font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g3);margin:18px 0 10px;padding-top:16px;border-top:1px solid var(--border);}
-.mdl-section:first-child{margin-top:0;border-top:none;padding-top:0;}
 
-/* UPLOAD AREA */
-.upload-area{border:2px dashed var(--border);border-radius:var(--r-lg);padding:24px;text-align:center;cursor:pointer;transition:all .15s;position:relative;}
+/* Upload areas */
+.upload-area{border:2px dashed var(--border);border-radius:var(--r-lg);padding:22px;text-align:center;cursor:pointer;transition:all .15s;position:relative;}
 .upload-area:hover{border-color:var(--accent);background:var(--accent-lt);}
 .upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .upload-area p{font-size:13px;color:var(--g2);}
 .upload-area small{font-size:11px;color:var(--g3);}
 
-/* EMPTY */
-.empty{text-align:center;padding:36px 20px;color:var(--g3);}
-.empty .ei{font-size:30px;margin-bottom:10px;}
-.empty p{font-size:13px;}
+/* Empty state */
+.empty-state{text-align:center;padding:36px 20px;color:var(--g3);}
+.empty-state .ei{font-size:30px;margin-bottom:10px;}
+.empty-state p{font-size:13px;}
 
-/* ONLINE TOGGLE */
-.online-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s;margin-bottom:14px;}
-.online-card:hover{border-color:var(--border-hi);}
-.online-indicator{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;flex-shrink:0;}
-.online-sw{margin-left:auto;width:42px;height:22px;border-radius:11px;background:var(--g3);position:relative;transition:background .2s;flex-shrink:0;}
-.online-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;transition:left .2s;}
-.online-card.active{border-color:var(--accent);background:rgba(34,197,94,.04);}
-
-/* HELP/LEARN */
-.content-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;margin-bottom:12px;}
-.content-section h3{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);margin-bottom:10px;}
+/* Content pages */
+.content-section{background:rgba(14,16,18,.9);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;margin-bottom:12px;}
+.content-section h3{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--white);margin-bottom:10px;}
 .content-section p,.content-section li{font-size:14px;color:var(--g2);line-height:1.8;}
-.content-section ul{display:flex;flex-direction:column;gap:7px;padding-left:18px;}
-.content-section li{list-style:disc;}
-.faq-item{cursor:pointer;}
-.faq-q{font-size:14px;font-weight:700;color:var(--white);display:flex;justify-content:space-between;align-items:center;}
+.faq-q{font-size:14px;font-weight:700;color:var(--white);display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
 .faq-a{font-size:13px;color:var(--g2);line-height:1.7;margin-top:10px;display:none;}
 .faq-a.open{display:block;}
 
-/* TOAST */
-.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--bg4);color:var(--g1);border:1px solid rgba(34,197,94,.2);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:var(--sh);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:300px;pointer-events:none;}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:rgba(14,16,18,.97);color:var(--g1);border:1px solid rgba(34,197,94,.2);padding:11px 16px;border-radius:var(--r);font-size:14px;box-shadow:0 6px 28px rgba(0,0,0,.5);transform:translateY(60px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:300px;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
 
-/* RESPONSIVE */
-@media(max-width:960px){.sg{grid-template-columns:repeat(2,1fr);}.two{grid-template-columns:1fr;}.fgr{grid-template-columns:1fr;}.ct-grid{grid-template-columns:1fr;}.port-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:680px){.sg{grid-template-columns:1fr 1fr;}.ph{flex-direction:column;align-items:flex-start;}.ph-actions{flex-direction:row;flex-wrap:wrap;}.pg{padding:20px 14px;}.msgs-layout{grid-template-columns:1fr;}.port-grid{grid-template-columns:repeat(2,1fr);}}
-
-/* ── CONTRACTOR-SPECIFIC ADDITIONS ── */
-/* Status bar at top — green accent stripe */
-#app::before{content:'';display:block;height:3px;background:linear-gradient(90deg,var(--accent),#4ADE80,var(--accent));flex-shrink:0;}
-
-/* Nav active item — green left border feel */
-.nv.on{color:var(--accent) !important;background:rgba(34,197,94,.08) !important;}
-
-/* Contractor "Pro" badge in header */
-.contractor-role-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.12);color:var(--accent);border:1px solid rgba(34,197,94,.2);border-radius:6px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;}
-
-/* Stat cards with green top accent */
-.sc:hover{border-color:rgba(34,197,94,.25) !important;border-top:2px solid var(--accent);}
-
-/* Online card active glow */
-.online-card.active .online-indicator{filter:drop-shadow(0 0 8px rgba(34,197,94,.6));}
-
-/* Booking action buttons — keep orange for $$$ */
-.ab-or{background:var(--orange-lt);color:var(--orange);border-color:rgba(255,107,43,.25);}
-.ab-or:hover{background:rgba(255,107,43,.2);}
-
-/* Active chat send — green */
-.chat-send{background:var(--accent) !important;}
-.chat-send:hover{background:var(--accent-dk) !important;}
-
-/* Svc price tag */
-.svc-price{color:var(--orange) !important;}
-
-/* Profile editor banner placeholder tint */
-.profile-ed-banner{background:linear-gradient(135deg,rgba(34,197,94,.08),var(--bg4)) !important;}
-
-/* Upload area hover */
-.upload-area:hover{border-color:var(--accent) !important;background:var(--accent-lt) !important;}
-
-/* Completion checklist done item */
-.ct.done{color:var(--g3);opacity:.6;}
-
-/* Badge done color */
-.bdg-gn{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(34,197,94,.2);}
+/* Responsive */
+@media(max-width:960px){.stat-grid{grid-template-columns:1fr 1fr;}.two{grid-template-columns:1fr;}.fgr{grid-template-columns:1fr;}.port-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:680px){.stat-grid{grid-template-columns:1fr 1fr;}.prof-hero{flex-direction:column;align-items:flex-start;}.pg{padding:16px 14px;}.msgs-layout{grid-template-columns:1fr;}.port-grid{grid-template-columns:repeat(2,1fr);}.onboard-card{padding:36px 24px;}}
 </style>
 </head>
 <body>
 
-<div id="ls">
-  <div style="font-family:var(--display);font-size:22px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;">Tradease<span style="color:var(--orange);">.</span></div>
-  <div class="spin"></div>
-  <p>Loading Dashboard…</p>
-</div>
+<div id="ls"><div style="font-family:var(--display);font-size:22px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Tradease<span style="color:var(--accent);">.</span></div><div class="spin"></div><p>Loading Dashboard…</p></div>
 
 <div id="app">
-  <!-- Green accent stripe — visually distinguishes contractor from customer -->
-  <div style="height:3px;background:linear-gradient(90deg,var(--accent),#4ADE80,#86EFAC,var(--accent));flex-shrink:0;"></div>
+  <div class="stripe"></div>
 
-  <!-- TOPBAR -->
+  <!-- ══ TOPBAR ══ -->
   <nav class="topbar">
     <div class="logo" onclick="goHome()">
-      <img class="logo-img" src="/tradease-logo.png" alt="" onerror="this.style.display='none'"/>
       <span class="logo-txt">Tradease</span><span class="logo-dot"></span>
     </div>
     <div class="nav">
-      <span class="nv" id="tab-dash"      onclick="showV('dash')">Overview</span>
-      <span class="nv" id="tab-bookings"  onclick="showV('bookings')">Bookings <span class="nbadge" id="bk-badge" style="display:none;">0</span></span>
-      <span class="nv" id="tab-msgs"      onclick="showV('msgs')">Messages <span class="nbadge" id="msg-badge" style="display:none;">0</span></span>
-      <span class="nv" id="tab-profile"   onclick="showV('profile')">Company Profile</span>
-      <span class="nv" id="tab-pricing"   onclick="showV('pricing')">Services & Pricing</span>
-      <span class="nv" id="tab-avail"     onclick="showV('avail')">Availability</span>
-      <span class="nv" id="tab-reviews"   onclick="showV('reviews')">Reviews</span>
-      <span class="nv" id="tab-learn"     onclick="showV('learn')">Learn More</span>
-      <span class="nv" id="tab-help"      onclick="showV('help')">Help</span>
+      <span class="nv" id="tab-dash"     onclick="showV('dash')">Overview</span>
+      <span class="nv" id="tab-bookings" onclick="showV('bookings')">Bookings <span class="nbadge" id="bk-badge" style="display:none;">0</span></span>
+      <span class="nv" id="tab-msgs"     onclick="showV('msgs')">Messages <span class="nbadge" id="msg-badge" style="display:none;">0</span></span>
+      <span class="nv" id="tab-profile"  onclick="showV('profile')"><strong>Company Profile</strong></span>
+      <span class="nv" id="tab-pricing"  onclick="showV('pricing')">Services & Pricing</span>
+      <span class="nv" id="tab-avail"    onclick="showV('avail')">Availability</span>
+      <span class="nv" id="tab-reviews"  onclick="showV('reviews')">Reviews</span>
+      <span class="nv" id="tab-learn"    onclick="showV('learn')">Learn More</span>
+      <span class="nv" id="tab-help"     onclick="showV('help')">Help</span>
     </div>
     <div class="tbr">
-      <span style="font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:var(--accent-lt);color:var(--accent);border:1px solid rgba(34,197,94,.2);padding:3px 9px;border-radius:50px;flex-shrink:0;">🔧 Pro</span>
-      <button class="pro-pill" id="pro-btn" onclick="showToast('💳 Pro plan coming soon!')">⚡ Upgrade to Pro</button>
-      <div class="av" id="nav-av" onclick="showV('profile')" title="Company Profile"></div>
+      <div class="plan-pill" id="plan-pill">🔧 Free</div>
+      <button class="btn-orange" id="upgrade-btn" onclick="showToast('💳 Pro plan coming soon!')">⚡ Upgrade</button>
+      <div class="av-btn" id="nav-av" onclick="showV('profile')" title="My Profile"></div>
       <button class="so" onclick="signOut()">Sign Out</button>
     </div>
   </nav>
 
-  <!-- ══ VIEW: ONBOARDING ══ -->
+  <!-- ══ ONBOARDING ══ -->
   <div class="view" id="view-onboarding">
-    <div class="pg" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 62px);flex-direction:column;">
-      <div style="max-width:580px;text-align:center;">
-        <!-- Hero illustration -->
-        <div style="font-size:72px;margin-bottom:24px;animation:fi .4s ease both;">🏗️</div>
-        
-        <!-- Heading -->
-        <h1 style="font-family:var(--display);font-size:clamp(32px,4vw,48px);font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:12px;">Build Your Profile</h1>
-        
-        <!-- Subheading -->
-        <p style="font-size:16px;color:var(--g2);line-height:1.8;margin-bottom:32px;">Set up your company profile so potential customers can find and hire you. The more complete your profile, the more bookings you'll receive.</p>
-        
-        <!-- Features list -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:36px;">
-          <div style="display:flex;align-items:center;gap:12px;text-align:left;">
-            <span style="flex-shrink:0;font-size:20px;">📸</span>
-            <span style="font-size:14px;color:var(--g2);flex:1;">Upload your business photo and banner</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;text-align:left;">
-            <span style="flex-shrink:0;font-size:20px;">📝</span>
-            <span style="font-size:14px;color:var(--g2);flex:1;">Tell customers about your services and experience</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;text-align:left;">
-            <span style="flex-shrink:0;font-size:20px;">💰</span>
-            <span style="font-size:14px;color:var(--g2);flex:1;">Set your pricing and service area</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;text-align:left;">
-            <span style="flex-shrink:0;font-size:20px;">📋</span>
-            <span style="font-size:14px;color:var(--g2);flex:1;">Add portfolio photos to showcase your work</span>
-          </div>
+    <div class="onboard-wrap">
+      <div class="onboard-card">
+        <span class="onboard-icon">🏗️</span>
+        <h1>Build Your<br><em>Company Profile</em></h1>
+        <p>Set up your profile so customers can find and hire you. Complete profiles receive up to 5× more booking requests.</p>
+        <div class="onboard-features">
+          <div class="onboard-feat"><span class="onboard-feat-icon">📸</span><span><strong>Upload your business photo</strong> and banner image</span></div>
+          <div class="onboard-feat"><span class="onboard-feat-icon">📝</span><span><strong>Tell customers</strong> about your services and experience</span></div>
+          <div class="onboard-feat"><span class="onboard-feat-icon">💰</span><span><strong>Set your pricing</strong> and service area</span></div>
+          <div class="onboard-feat"><span class="onboard-feat-icon">📋</span><span><strong>Add portfolio photos</strong> to showcase your work</span></div>
         </div>
-        
-        <!-- CTA Button -->
-        <button class="btn-or" onclick="showV('profile')" style="padding:15px 32px;font-size:14px;margin-bottom:16px;width:100%;max-width:300px;">
-          ✏️ Create Your Profile →
-        </button>
-        
-        <!-- Secondary action -->
-        <button class="btn-gy" onclick="showV('dash')" style="padding:12px 28px;font-size:13px;width:100%;max-width:300px;">
-          Skip for Now
-        </button>
-        
-        <!-- Encouragement text -->
-        <p style="font-size:12px;color:var(--g3);margin-top:24px;max-width:400px;margin-left:auto;margin-right:auto;">💡 Complete contractors get up to 5x more booking requests. Every section counts!</p>
+        <button class="btn-build" onclick="showV('profile')">✏️ Create Your Profile →</button><br/>
+        <button class="btn-skip" onclick="showV('dash')">Skip for Now</button>
+        <div class="onboard-tip">💡 Complete contractors get up to 5× more booking requests. Every section counts!</div>
       </div>
     </div>
   </div>
 
-  <!-- ══ VIEW: DASHBOARD ══ -->
-  <div class="view" id="view-dash">
-    <div class="pg">
-
-      <!-- Online toggle -->
-      <div class="online-card" id="online-card" onclick="toggleOnline()">
-        <div class="online-indicator" id="online-ind">⚫</div>
-        <div>
-          <div id="online-label" style="font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;color:var(--g2);letter-spacing:.04em;">Offline</div>
-          <div style="font-size:12px;color:var(--g3);margin-top:1px;">Toggle to receive job requests</div>
-        </div>
-        <div class="online-sw" id="online-sw"><div class="online-knob" id="online-knob"></div></div>
-      </div>
-
-      <!-- Profile header -->
-      <div class="ph">
-        <div class="ph-av-wrap" onclick="document.getElementById('pfp-dash-input').click()" title="Change photo">
-          <div class="ph-av" id="ph-av"></div>
-          <div class="ph-av-overlay">✏️ Change</div>
-          <input type="file" id="pfp-dash-input" accept="image/*" style="display:none;" onchange="handlePfpUpload(this)"/>
-        </div>
-        <div class="ph-info">
-          <h2 id="ph-name">Your Business</h2>
-          <div class="ph-username" id="ph-username"></div>
-          <div class="ph-trade" id="ph-trade">Contractor</div>
-          <div class="ph-badges">
-            <span class="bdg bdg-gy" id="plan-bdg">Free Plan</span>
-            <span class="bdg bdg-gn" id="ver-bdg" style="display:none;">✓ Verified</span>
-          </div>
-        </div>
-        <div class="ph-actions">
-          <button class="btn-or" onclick="showV('profile')">✏️ Edit Profile</button>
-          <button class="btn-gy" onclick="previewProfile()">👁️ Preview Listing</button>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="sg">
-        <div class="sc"><div class="sc-ic">👁️</div><div class="sc-val" id="s-views">0</div><div class="sc-lbl">Profile Views</div></div>
-        <div class="sc"><div class="sc-ic">📅</div><div class="sc-val" id="s-bk">0</div><div class="sc-lbl">Bookings</div></div>
-        <div class="sc"><div class="sc-ic">⭐</div><div class="sc-val" id="s-rating">—</div><div class="sc-lbl">Avg. Rating</div></div>
-        <div class="sc"><div class="sc-ic">🖼️</div><div class="sc-val" id="s-port">0</div><div class="sc-lbl">Portfolio Photos</div></div>
-      </div>
-
-      <!-- Profile completion -->
-      <div class="cw">
-        <div class="cw-top"><h4>Profile Completion</h4><div class="cw-pct" id="cw-pct">0%</div></div>
-        <div class="cw-bar"><div class="cw-fill" id="cw-fill" style="width:0%"></div></div>
-        <div class="ct-grid" id="ct-list"></div>
-      </div>
-
-      <!-- Two column: bookings + reviews -->
-      <div class="two">
-        <div>
-          <div class="sh"><div class="st">Recent Bookings</div><span class="sa" onclick="showV('bookings')">View all →</span></div>
-          <div id="dash-bk"></div>
-        </div>
-        <div>
-          <div class="sh"><div class="st">Recent Reviews</div><span class="sa" onclick="showV('reviews')">View all →</span></div>
-          <div id="dash-rv"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ VIEW: BOOKINGS ══ -->
-  <div class="view" id="view-bookings">
-    <div class="pg">
-      <div class="pg-hdr"><h1>Bookings</h1><p>All incoming customer booking requests.</p></div>
-      <div style="display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap;">
-        <button class="ab ab-or" onclick="filterBk('all',this)">All</button>
-        <button class="ab" style="background:var(--yellow-lt);color:var(--yellow);border-color:rgba(251,191,36,.25);" onclick="filterBk('pending',this)">Pending</button>
-        <button class="ab ab-gn" onclick="filterBk('accepted',this)">Accepted</button>
-        <button class="ab ab-bl" onclick="filterBk('in_progress',this)">In Progress</button>
-        <button class="ab" style="background:var(--bg4);color:var(--g2);border-color:var(--border);" onclick="filterBk('completed',this)">Completed</button>
-      </div>
-      <div id="all-bk"></div>
-    </div>
-  </div>
-
-  <!-- ══ VIEW: MESSAGES ══ -->
-  <div class="view" id="view-msgs">
-    <div class="msgs-layout pg" style="max-width:100%;padding:0;">
-      <div class="conv-list-panel">
-        <div class="conv-list-hdr">
-          <h2>Messages</h2>
-          <p>Accept requests to chat</p>
-        </div>
-        <div class="conv-list" id="conv-list">
-          <div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">No conversations yet.</div>
-        </div>
-      </div>
-      <div class="chat-panel" id="chat-panel">
-        <div class="chat-empty" id="chat-empty">
-          <div style="font-size:40px;">💬</div>
-          <div style="font-size:14px;font-weight:600;color:var(--g2);">No conversation selected</div>
-          <div style="font-size:13px;color:var(--g3);">Accept a request to start chatting</div>
-        </div>
-        <div class="chat-hdr" id="chat-hdr">
-          <div class="chat-hdr-av" id="chat-hdr-av"></div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--white);" id="chat-hdr-name"></div>
-            <div style="font-size:11px;color:var(--g3);" id="chat-hdr-status"></div>
-          </div>
-          <div class="chat-accept-row" id="chat-accept-row">
-            <button onclick="respondToRequest('accepted')" style="padding:7px 14px;background:var(--green);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;cursor:pointer;">✓ Accept</button>
-            <button onclick="respondToRequest('declined')" style="padding:7px 14px;background:var(--red-lt);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:7px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;cursor:pointer;">✕ Decline</button>
-          </div>
-        </div>
-        <div class="chat-msgs" id="chat-msgs"></div>
-        <div class="chat-input-row" id="chat-input-row">
-          <div class="chat-input-wrap">
-            <textarea id="chat-input" placeholder="Type a message…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cSendMessage();}"></textarea>
-            <button class="chat-send" onclick="cSendMessage()">Send</button>
-          </div>
-          <div class="chat-input-hint">Links not allowed · Enter to send</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ VIEW: COMPANY PROFILE ══ -->
+  <!-- ══ COMPANY PROFILE ══ -->
   <div class="view" id="view-profile">
-    <div class="pg">
-      <div class="pg-hdr"><h1>Company Profile</h1><p>This is how customers see your business. Keep it complete to rank higher.</p></div>
+    <div class="pg profile-pg">
+      <div class="pg-hdr">
+        <div><h1>Company Profile</h1><p>This is how customers see your business. Keep it complete to rank higher.</p></div>
+        <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile Info</button>
+      </div>
 
-      <!-- Banner + avatar -->
-      <div style="border-radius:var(--r-xl);overflow:hidden;border:1px solid var(--border);margin-bottom:20px;">
-        <div class="profile-ed-banner" id="banner-wrap" onclick="document.getElementById('banner-input').click()">
+      <!-- Profile header card -->
+      <div class="prof-header-card">
+        <div class="prof-banner" id="banner-wrap" onclick="document.getElementById('banner-input').click()">
           <img id="banner-img" src="" alt="" style="display:none;"/>
-          <div class="profile-ed-banner-overlay">📷 Change Banner</div>
-          <div id="banner-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--g3);font-size:13px;gap:6px;">📷 Add a banner photo <span style="font-size:11px;">(click to upload)</span></div>
+          <div class="banner-placeholder" id="banner-placeholder">📷 <span>Click to add a banner photo</span></div>
+          <div class="prof-banner-overlay">📷 Change Banner</div>
           <input type="file" id="banner-input" accept="image/*" style="display:none;" onchange="uploadBanner(this)"/>
         </div>
-        <div class="profile-ed-body">
-          <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:18px;">
-            <div class="profile-ed-av-wrap" onclick="document.getElementById('pfp-profile-input').click()" title="Change photo">
-              <div class="profile-ed-av" id="ped-av"></div>
-              <div class="profile-ed-av-overlay">✏️ Edit</div>
-              <input type="file" id="pfp-profile-input" accept="image/*" style="display:none;" onchange="handlePfpUpload(this)"/>
+        <div class="prof-body">
+          <div class="prof-av-row">
+            <div class="prof-av-wrap" onclick="document.getElementById('pfp-input').click()" title="Change photo">
+              <div class="prof-av" id="prof-av"></div>
+              <div class="prof-av-overlay">✏️ Edit</div>
+              <input type="file" id="pfp-input" accept="image/*" style="display:none;" onchange="handlePfpUpload(this)"/>
             </div>
-            <button class="btn-or" onclick="openEditModal()">✏️ Edit Profile Info</button>
+            <button class="btn-or" onclick="previewProfile()">👁️ Preview Listing</button>
           </div>
-          <div style="font-family:var(--display);font-size:24px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:2px;" id="ped-name">Your Business</div>
-          <div id="ped-username" style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:3px;"></div>
-          <div id="ped-trade" style="font-size:14px;color:var(--accent);font-weight:600;margin-bottom:4px;"></div>
-          <div id="ped-loc" style="font-size:13px;color:var(--g2);margin-bottom:10px;"></div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
-            <div id="ped-rating" style="font-size:13px;color:var(--g2);">⭐ No reviews yet</div>
-            <div id="ped-insured" style="display:none;font-size:13px;color:var(--green);">🛡️ Insured</div>
-            <div id="ped-exp" style="display:none;font-size:13px;color:var(--g2);"></div>
-          </div>
-          <div id="ped-desc" style="font-size:14px;color:var(--g2);line-height:1.75;max-width:680px;"></div>
+          <div class="prof-name" id="prof-name">Your Business</div>
+          <div class="prof-username" id="prof-username"></div>
+          <div class="prof-trade" id="prof-trade">Contractor</div>
+          <div id="prof-loc" style="font-size:13px;color:var(--g2);margin-bottom:8px;"></div>
+          <div class="prof-badges" id="prof-badges"></div>
+          <div class="prof-rating" id="prof-rating"></div>
         </div>
+      </div>
+
+      <!-- About -->
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">About Your Business</div><button class="ab ab-or" onclick="openEditModal()">Edit</button></div>
+        <div id="prof-desc" class="bio-empty">Click "Edit Profile Info" to add your business description…</div>
       </div>
 
       <!-- Portfolio -->
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;margin-bottom:16px;">
-        <div style="font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:14px;">Portfolio Photos <span style="color:var(--g3);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;" id="port-limit-label"></span></div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div>
+            <div class="panel-title">Portfolio Photos</div>
+            <div class="panel-sub" id="port-limit-label"></div>
+          </div>
+        </div>
         <div class="upload-area" style="margin-bottom:14px;" onclick="document.getElementById('port-input').click()">
           <input type="file" id="port-input" accept="image/*" multiple onchange="handlePortfolioUpload(this)" style="display:none;"/>
           <p>📸 Click to upload portfolio photos</p>
@@ -601,18 +564,120 @@ input,select,textarea{font-family:var(--body);}
         <div id="upload-status" style="font-size:12px;color:var(--g2);text-align:center;min-height:14px;"></div>
       </div>
 
-      <!-- Services preview (links to pricing tab) -->
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <div style="font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);">Services & Pricing</div>
+      <!-- Services preview -->
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title">Services & Pricing</div>
           <button class="btn-or" style="padding:7px 14px;font-size:11px;" onclick="showV('pricing')">Manage →</button>
         </div>
-        <div id="profile-svcs-preview"></div>
+        <div id="prof-svcs-preview"></div>
       </div>
     </div>
   </div>
 
-  <!-- ══ VIEW: SERVICES & PRICING ══ -->
+  <!-- ══ OVERVIEW / DASHBOARD ══ -->
+  <div class="view" id="view-dash">
+    <div class="pg">
+      <div class="pg-hdr"><div><h1>Overview</h1><p>Your business at a glance.</p></div><button class="btn-gy" onclick="previewProfile()">👁 Preview My Listing</button></div>
+
+      <!-- Online toggle -->
+      <div class="online-toggle" id="online-card" onclick="toggleOnline()">
+        <div class="ot-ind" id="ot-ind">⚫</div>
+        <div class="ot-info">
+          <div class="ot-label" id="ot-label">Offline</div>
+          <div class="ot-sub">Toggle to start receiving job requests</div>
+        </div>
+        <div class="ot-sw" id="ot-sw"><div class="ot-knob" id="ot-knob"></div></div>
+      </div>
+
+      <!-- Profile hero -->
+      <div class="prof-hero">
+        <div class="ph-av" id="dash-av"></div>
+        <div class="ph-info">
+          <h2 id="dash-name">Your Business</h2>
+          <div class="ph-trade" id="dash-trade">Contractor</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dash-badges"></div>
+        </div>
+        <div class="ph-actions">
+          <button class="btn-or" onclick="showV('profile')">✏️ Edit Profile</button>
+          <button class="btn-gy" onclick="previewProfile()">👁 Preview</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-ic">👁️</div><div class="stat-val" id="s-views">0</div><div class="stat-lbl">Profile Views</div></div>
+        <div class="stat-card"><div class="stat-ic">📅</div><div class="stat-val" id="s-bk">0</div><div class="stat-lbl">Bookings</div></div>
+        <div class="stat-card"><div class="stat-ic">⭐</div><div class="stat-val" id="s-rating">—</div><div class="stat-lbl">Avg. Rating</div></div>
+        <div class="stat-card"><div class="stat-ic">🖼️</div><div class="stat-val" id="s-port">0</div><div class="stat-lbl">Portfolio Photos</div></div>
+      </div>
+
+      <!-- Profile completion -->
+      <div class="comp-widget">
+        <div class="comp-top"><h4>Profile Completion</h4><div class="comp-pct" id="comp-pct">0%</div></div>
+        <div class="comp-bar"><div class="comp-fill" id="comp-fill" style="width:0%"></div></div>
+        <div class="comp-items" id="comp-items"></div>
+      </div>
+
+      <!-- Recent bookings + reviews -->
+      <div class="two">
+        <div>
+          <div class="sh"><div class="st">Recent Bookings</div><span class="sa" onclick="showV('bookings')">View all →</span></div>
+          <div id="dash-bk-list"></div>
+        </div>
+        <div>
+          <div class="sh"><div class="st">Recent Reviews</div><span class="sa" onclick="showV('reviews')">View all →</span></div>
+          <div id="dash-rv-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BOOKINGS ══ -->
+  <div class="view" id="view-bookings">
+    <div class="pg">
+      <div class="pg-hdr"><div><h1>Bookings</h1><p>All incoming customer booking requests.</p></div></div>
+      <div style="display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;">
+        <button class="ab ab-or" onclick="filterBk('all',this)">All</button>
+        <button class="ab" style="background:rgba(251,191,36,.1);color:var(--yellow);border-color:rgba(251,191,36,.25);" onclick="filterBk('pending',this)">Pending</button>
+        <button class="ab ab-gn" onclick="filterBk('accepted',this)">Accepted</button>
+        <button class="ab ab-bl" onclick="filterBk('in_progress',this)">In Progress</button>
+        <button class="ab" style="background:var(--bg4);color:var(--g2);border-color:var(--border);" onclick="filterBk('completed',this)">Completed</button>
+      </div>
+      <div id="all-bk-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ MESSAGES ══ -->
+  <div class="view" id="view-msgs">
+    <div class="msgs-layout">
+      <div class="conv-panel">
+        <div class="conv-hdr"><h2>Messages</h2><p>Accept requests to chat</p></div>
+        <div class="conv-list" id="conv-list"><div style="padding:32px 18px;text-align:center;color:var(--g3);font-size:13px;">No conversations yet.</div></div>
+      </div>
+      <div class="chat-area" id="chat-area">
+        <div class="chat-empty" id="chat-empty"><div style="font-size:40px;">💬</div><div style="font-size:14px;font-weight:600;color:var(--g2);">No conversation selected</div><div style="font-size:13px;color:var(--g3);">Accept a request to start chatting</div></div>
+        <div class="chat-hdr" id="chat-hdr">
+          <div class="chat-hdr-av" id="chat-hdr-av"></div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--white);" id="chat-hdr-name"></div><div style="font-size:11px;color:var(--g3);" id="chat-hdr-status"></div></div>
+          <div class="chat-accept-row" id="chat-accept-row">
+            <button onclick="respondToRequest('accepted')" style="padding:7px 14px;background:var(--green);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;cursor:pointer;">✓ Accept</button>
+            <button onclick="respondToRequest('declined')" style="padding:7px 14px;background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:7px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;cursor:pointer;">✕ Decline</button>
+          </div>
+        </div>
+        <div class="chat-msgs" id="chat-msgs"></div>
+        <div class="chat-input-row" id="chat-input-row">
+          <div class="chat-input-wrap">
+            <textarea id="chat-input" placeholder="Type a message…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+            <button class="chat-send" onclick="sendMsg()">Send</button>
+          </div>
+          <div style="font-size:11px;color:var(--g3);margin-top:5px;">Links not allowed · Enter to send</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SERVICES & PRICING ══ -->
   <div class="view" id="view-pricing">
     <div class="pg">
       <div class="pg-hdr" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
@@ -623,22 +688,15 @@ input,select,textarea{font-family:var(--body);}
     </div>
   </div>
 
-  <!-- ══ VIEW: AVAILABILITY ══ -->
+  <!-- ══ AVAILABILITY ══ -->
   <div class="view" id="view-avail">
     <div class="pg">
       <div class="pg-hdr"><h1>Availability</h1><p>Set the days and hours you're available for bookings.</p></div>
-      <div id="av-grid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;"></div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;">
-        <div style="font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:14px;">Add a Working Day</div>
+      <div id="av-grid" style="margin-bottom:22px;"></div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:14px;">Add a Working Day</div>
         <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
-          <div class="fg" style="margin:0;flex:1;min-width:130px;">
-            <label>Day</label>
-            <select id="av-day">
-              <option value="">Select day…</option>
-              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-              <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-            </select>
-          </div>
+          <div class="fg" style="margin:0;flex:1;min-width:130px;"><label>Day</label><select id="av-day"><option value="">Select day…</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
           <div class="fg" style="margin:0;flex:1;min-width:110px;"><label>Start Time</label><input type="time" id="av-start" value="08:00"/></div>
           <div class="fg" style="margin:0;flex:1;min-width:110px;"><label>End Time</label><input type="time" id="av-end" value="18:00"/></div>
           <button class="btn-or" onclick="saveAvailability()">Add Day</button>
@@ -646,98 +704,66 @@ input,select,textarea{font-family:var(--body);}
         <div id="av-status" style="font-size:13px;color:var(--g2);margin-top:10px;min-height:16px;"></div>
       </div>
       <div style="background:var(--orange-lt);border:1px solid rgba(255,107,43,.2);border-radius:var(--r-lg);padding:12px 16px;font-size:13px;color:var(--g2);margin-top:14px;display:flex;gap:8px;">
-        <span>💡</span><span>Customers see your available days when booking. Click a day to edit its hours, or ✕ to remove it.</span>
+        <span>💡</span><span>Customers see your available days when booking. Click ✕ to remove a day.</span>
       </div>
     </div>
   </div>
 
-  <!-- ══ VIEW: REVIEWS ══ -->
+  <!-- ══ REVIEWS ══ -->
   <div class="view" id="view-reviews">
     <div class="pg">
-      <div class="pg-hdr"><h1>Customer Reviews</h1><p>What your customers are saying.</p></div>
-      <div id="all-rv"></div>
+      <div class="pg-hdr"><h1>Customer Reviews</h1><p>What your customers are saying about you.</p></div>
+      <div id="all-rv-list"></div>
     </div>
   </div>
 
-  <!-- ══ VIEW: LEARN MORE ══ -->
+  <!-- ══ LEARN MORE ══ -->
   <div class="view" id="view-learn">
-    <div class="pg">
+    <div class="pg" style="max-width:760px;">
       <div class="pg-hdr"><h1>Learn More</h1><p>Tips to grow your business on Tradease.</p></div>
-      <div style="max-width:760px;">
-        <div class="content-section"><h3>Complete Your Profile</h3><p>Contractors with complete profiles — photos, bio, pricing, and availability — receive up to 5x more booking requests. Fill in every section to rank higher in search results.</p></div>
-        <div class="content-section"><h3>How Job Matching Works</h3><p>When a customer searches for your trade in your area, Tradease ranks contractors by rating, profile completeness, and response rate. The higher your score, the more visible you are.</p></div>
-        <div class="content-section"><h3>Response Rate Matters</h3><p>Accept or decline bookings within 24 hours. Contractors with fast response times rank significantly higher in search results. Repeated declines affect your reliability score.</p></div>
-        <div class="content-section"><h3>Building Reviews</h3><p>After each completed job, customers are prompted to leave a review. The more five-star reviews you earn, the more bookings you'll receive. Deliver quality work and follow up professionally.</p></div>
-        <div class="content-section"><h3>Upgrade to Pro</h3><p>Pro contractors receive top search placement, a verified badge, lower platform fees, and access to analytics. It's the fastest way to grow your business on Tradease.</p><div style="margin-top:12px;"><button class="btn-or" onclick="showToast('💳 Pro plan coming soon!')">⚡ Upgrade to Pro</button></div></div>
-      </div>
+      <div class="content-section"><h3>Complete Your Profile</h3><p>Contractors with complete profiles — photos, bio, pricing, and availability — receive up to 5× more booking requests. Fill in every section to rank higher in search results.</p></div>
+      <div class="content-section"><h3>How Job Matching Works</h3><p>When a customer searches for your trade in your area, Tradease ranks contractors by rating, profile completeness, and response rate. The higher your score, the more visible you are.</p></div>
+      <div class="content-section"><h3>Response Rate Matters</h3><p>Accept or decline bookings within 24 hours. Contractors with fast response times rank significantly higher in search results. Repeated declines affect your reliability score.</p></div>
+      <div class="content-section"><h3>Building Reviews</h3><p>After each completed job, customers are prompted to leave a review. The more five-star reviews you earn, the more bookings you'll receive. Deliver quality work and follow up professionally.</p></div>
+      <div class="content-section"><h3>Upgrade to Pro</h3><p>Pro contractors receive top search placement, a verified badge, lower platform fees, and access to analytics. It's the fastest way to grow your business on Tradease.</p><div style="margin-top:12px;"><button class="btn-or" onclick="showToast('💳 Pro plan coming soon!')">⚡ Upgrade to Pro</button></div></div>
     </div>
   </div>
 
-  <!-- ══ VIEW: HELP ══ -->
+  <!-- ══ HELP ══ -->
   <div class="view" id="view-help">
-    <div class="pg">
+    <div class="pg" style="max-width:760px;">
       <div class="pg-hdr"><h1>Help Center</h1><p>Answers for contractors.</p></div>
-      <div style="max-width:760px;">
-        <div class="content-section" style="margin-bottom:18px;"><h3>Contact Support</h3><p>Email <a href="mailto:support@tradease.tech" style="color:var(--orange);">support@tradease.tech</a> for account issues, billing questions, or disputes. We respond within a few hours on weekdays.</p></div>
-        <div style="display:flex;flex-direction:column;gap:10px;" id="faq-list"></div>
-      </div>
+      <div class="content-section" style="margin-bottom:18px;"><h3>Contact Support</h3><p>Email <a href="mailto:support@tradease.tech" style="color:var(--orange);">support@tradease.tech</a> for account issues, billing questions, or disputes. We respond within a few hours on weekdays.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px;" id="faq-list"></div>
     </div>
   </div>
-
-</div><!-- #app -->
+</div>
 
 <!-- ══ EDIT PROFILE MODAL ══ -->
 <div class="mbg" id="edit-modal" onclick="if(event.target===this)closeEdit()">
   <div class="mdl">
-    <div class="mh"><h3 id="modal-title">Edit Profile</h3><button class="mc" onclick="closeEdit()">✕</button></div>
+    <div class="mh"><h3>Edit Profile</h3><button class="mc" onclick="closeEdit()">✕</button></div>
     <div class="mb-scroll">
-      <div class="mdl-section">Account & Display</div>
-      <div class="fg">
-        <label>Username <span style="color:var(--orange);">*</span> <span style="font-size:11px;color:var(--g3);text-transform:none;letter-spacing:0;font-weight:400;">(unique · letters, numbers, underscore)</span></label>
-        <input type="text" id="e-username" placeholder="e.g. rodriguez_plumbing" oninput="checkUsername()"/>
-        <div id="username-status" style="font-size:12px;margin-top:4px;min-height:16px;"></div>
-      </div>
+      <div class="fg"><label>Username <span style="font-size:10px;color:var(--g3);text-transform:none;letter-spacing:0;font-weight:400;">(unique · letters, numbers, underscore)</span></label><input type="text" id="e-username" placeholder="e.g. rodriguez_plumbing" oninput="checkUsername()"/><div id="username-status" style="font-size:12px;margin-top:4px;min-height:16px;"></div></div>
       <div class="fgr">
         <div class="fg"><label>Business Name *</label><input type="text" id="e-company" placeholder="Rodriguez Plumbing LLC"/></div>
         <div class="fg"><label>Phone</label><input type="tel" id="e-phone" placeholder="(917) 555-0000"/></div>
       </div>
       <div class="fgr">
-        <div class="fg">
-          <label>Trade / Specialty *</label>
-          <select id="e-trade">
-            <option value="">Select trade…</option>
-            <option>Plumbing</option><option>Electrical</option><option>HVAC</option>
-            <option>Handyman</option><option>Roofing</option><option>Cleaning</option>
-            <option>Landscaping</option><option>Painting</option><option>Carpentry</option>
-            <option>Flooring</option><option>General Contracting</option><option>Other</option>
-          </select>
-        </div>
+        <div class="fg"><label>Trade / Specialty *</label><select id="e-trade"><option value="">Select trade…</option><option>Plumbing</option><option>Electrical</option><option>HVAC</option><option>Handyman</option><option>Roofing</option><option>Cleaning</option><option>Landscaping</option><option>Painting</option><option>Carpentry</option><option>Flooring</option><option>General Contracting</option><option>Other</option></select></div>
         <div class="fg"><label>Location</label><input type="text" id="e-loc" placeholder="Brooklyn, NY"/></div>
       </div>
-      <div class="fg"><label>Service Areas</label><input type="text" id="e-areas" placeholder="Brooklyn, Queens, Manhattan"/><div class="fg-hint">Separate with commas</div></div>
-      <div class="fg">
-        <label>Years of Experience</label>
-        <select id="e-exp">
-          <option value="">Select…</option>
-          <option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option>
-          <option>5–10 years</option><option>10–15 years</option><option>15+ years</option>
-        </select>
-      </div>
-      <div class="fg"><label>Bio / About Your Services</label><textarea id="e-desc" placeholder="Tell customers what you do, what makes you the best choice, and what areas you specialize in…"></textarea></div>
-      <div class="mdl-section">Trust & Credentials</div>
+      <div class="fg"><label>Service Areas</label><input type="text" id="e-areas" placeholder="Brooklyn, Queens, Manhattan"/><div style="font-size:11px;color:var(--g3);margin-top:3px;">Separate with commas</div></div>
+      <div class="fg"><label>Years of Experience</label><select id="e-exp"><option value="">Select…</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>5–10 years</option><option>10–15 years</option><option>15+ years</option></select></div>
+      <div class="fg"><label>Bio / About Your Services</label><textarea id="e-desc" placeholder="Tell customers what you do, what makes you the best choice…"></textarea></div>
+      <div style="font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g3);margin:18px 0 10px;padding-top:16px;border-top:1px solid var(--border);">Trust & Credentials</div>
       <div class="fgr">
         <div class="fg"><label>License Number</label><input type="text" id="e-license" placeholder="NYC-PLB-00012345"/></div>
-        <div class="fg"><label>Insured?</label>
-          <select id="e-insured">
-            <option value="">Select…</option>
-            <option value="true">Yes — I carry insurance</option>
-            <option value="false">Not yet</option>
-          </select>
-        </div>
+        <div class="fg"><label>Insured?</label><select id="e-insured"><option value="">Select…</option><option value="true">Yes — I carry insurance</option><option value="false">Not yet</option></select></div>
       </div>
       <div class="fgr">
         <div class="fg"><label>Hourly Rate ($)</label><input type="number" id="e-rate" placeholder="95" min="0"/></div>
-        <div class="fg"><label>Pricing Note</label><input type="text" id="e-rate-note" placeholder="e.g. Free estimates · Min. 1 hr"/></div>
+        <div class="fg"><label>Pricing Note</label><input type="text" id="e-rate-note" placeholder="Free estimates · Min. 1 hr"/></div>
       </div>
       <button class="ms" id="e-save" onclick="saveProfile()">Save All Changes</button>
     </div>
@@ -753,15 +779,9 @@ input,select,textarea{font-family:var(--body);}
       <div class="fg"><label>Service Name *</label><input type="text" id="svc-name" placeholder="e.g. Drain Cleaning"/></div>
       <div class="fgr">
         <div class="fg"><label>Base Price ($) *</label><input type="number" id="svc-base" placeholder="150" min="0"/></div>
-        <div class="fg"><label>Max Price ($)</label><input type="number" id="svc-max" placeholder="250" min="0"/><div class="fg-hint">Leave blank for fixed price</div></div>
+        <div class="fg"><label>Max Price ($)</label><input type="number" id="svc-max" placeholder="250" min="0"/><div style="font-size:11px;color:var(--g3);margin-top:3px;">Leave blank for fixed price</div></div>
       </div>
-      <div class="fg"><label>Pricing Type</label>
-        <select id="svc-type">
-          <option value="flat">Flat rate</option>
-          <option value="hourly">Hourly</option>
-          <option value="unit">Per unit</option>
-        </select>
-      </div>
+      <div class="fg"><label>Pricing Type</label><select id="svc-type"><option value="flat">Flat rate</option><option value="hourly">Hourly</option><option value="unit">Per unit</option></select></div>
       <div class="fg"><label>Description (optional)</label><textarea id="svc-desc" placeholder="What's included? Parts, labor, travel?"></textarea></div>
       <button class="ms" onclick="saveSvc()">Save Service</button>
     </div>
@@ -778,344 +798,216 @@ const SB_URL = 'https://linqsojbszglbgpoxgtv.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
-let user = null, cProf = null, bkData = [], rvData = [], avData = [], pricingServices = [], portfolio = [];
-let _redirecting = false, _isOnline = false, _activeConvId = null, _chatChannel = null, _usernameTimer = null, _usernameValid = true;
-let jobBackend = null;
+let user=null, cProf=null, bkData=[], rvData=[], avData=[], pricingServices=[], portfolio=[];
+let _redirecting=false, _isOnline=false, _activeConvId=null, _chatChannel=null;
+let _usernameValid=true, _usernameTimer=null;
 
-const VIEWS = ['onboarding','dash','bookings','msgs','profile','pricing','avail','reviews','learn','help'];
+const VIEWS=['onboarding','dash','bookings','msgs','profile','pricing','avail','reviews','learn','help'];
+const DAY_ORDER=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const TYPE_LABELS={flat:'Flat rate',hourly:'Hourly',unit:'Per unit'};
 
-// ── VIEW ROUTER ────────────────────────────────────────────
-function showV(v) {
-  VIEWS.forEach(x => {
+/* ── VIEW ROUTER ── */
+function showV(v){
+  VIEWS.forEach(x=>{
     document.getElementById('view-'+x)?.classList.remove('active');
     document.getElementById('tab-'+x)?.classList.remove('on');
   });
   document.getElementById('view-'+v)?.classList.add('active');
   document.getElementById('tab-'+v)?.classList.add('on');
   window.scrollTo(0,0);
-  if (v === 'msgs')     loadCConversations();
-  if (v === 'bookings') loadBookings();
-  if (v === 'reviews')  loadReviews();
-  if (v === 'avail')    loadAvailability();
+  if(v==='msgs')    loadConversations();
+  if(v==='bookings')loadBookings();
+  if(v==='reviews') loadReviews();
+  if(v==='avail')   loadAvailability();
 }
 
-// ── INIT ───────────────────────────────────────────────────
-async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { if(!_redirecting){_redirecting=true;window.location.replace('/tradease-auth.html');} return; }
-  user = session.user;
+/* ── INIT ── */
+async function init(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){if(!_redirecting){_redirecting=true;window.location.replace('/tradease-auth.html');}return;}
+  user=session.user;
 
-  const { data: ur } = await sb.from('users').select('role').eq('id',user.id).single();
-  if (ur?.role === 'customer') { if(!_redirecting){_redirecting=true;window.location.replace('/customer-dashboard.html');} return; }
-  if (!ur) {
-    await sb.from('users').upsert({id:user.id,email:user.email,role:'contractor',username:user.email.split('@')[0]},{onConflict:'id'});
-  }
+  const {data:ur}=await sb.from('users').select('role').eq('id',user.id).single();
+  if(ur?.role==='customer'){if(!_redirecting){_redirecting=true;window.location.replace('/customer-dashboard.html');}return;}
+  if(!ur){await sb.from('users').upsert({id:user.id,email:user.email,role:'contractor',username:user.email.split('@')[0]},{onConflict:'id'});}
 
-  const { data: p } = await sb.from('contractors').select('*').eq('id',user.id).single();
-  cProf = p || null;
-  portfolio = Array.isArray(p?.portfolio) ? p.portfolio : [];
-  pricingServices = Array.isArray(p?.pricing_services) ? p.pricing_services : [];
+  const {data:p}=await sb.from('contractors').select('*').eq('id',user.id).single();
+  cProf=p||null;
+  portfolio=Array.isArray(p?.portfolio)?p.portfolio:[];
+  pricingServices=Array.isArray(p?.pricing_services)?p.pricing_services:[];
 
-  document.body.style.opacity = '1';
+  document.body.style.opacity='1';
   fillUI();
-  document.getElementById('ls').style.display = 'none';
+  document.getElementById('ls').style.display='none';
   document.getElementById('app').classList.add('ready');
 
-  // Route based on profile status
-  if (!p || !p.company_name) { 
-    showV('onboarding'); 
-  } else { 
-    showV('profile'); 
+  /* ── ROUTING LOGIC: Company Profile if profile exists, onboarding if not ── */
+  if(!p || !p.company_name){
+    showV('onboarding');
+  } else {
+    showV('profile');
   }
 
-  await Promise.all([loadBookings(), loadReviews(), loadAvailability(), loadCConversations()]);
-  subscribeToBookings();
-  subscribeToOwnProfile();
-  subscribeToConversationUpdates();
+  await Promise.all([loadBookings(),loadReviews(),loadAvailability(),loadConversations()]);
+  subscribeBookings();
+  subscribeOwnProfile();
   buildFAQ();
 }
 
-// ── LIVE: Own contractor profile row (updates from any session/save) ───────
-function subscribeToOwnProfile() {
-  sb.channel('own-contractor-profile')
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'contractors',
-      filter: `id=eq.${user.id}`,
-    }, payload => {
-      // Merge in updates (e.g. rating recalculated by trigger, profile_views from customer clicks)
-      cProf = { ...cProf, ...payload.new };
-      pricingServices = Array.isArray(payload.new.pricing_services) ? payload.new.pricing_services : pricingServices;
-      portfolio       = Array.isArray(payload.new.portfolio)        ? payload.new.portfolio        : portfolio;
+/* ── LIVE PROFILE SUBSCRIPTION ── */
+function subscribeOwnProfile(){
+  sb.channel('own-profile')
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'contractors',filter:`id=eq.${user.id}`},payload=>{
+      cProf={...cProf,...payload.new};
+      pricingServices=Array.isArray(payload.new.pricing_services)?payload.new.pricing_services:pricingServices;
+      portfolio=Array.isArray(payload.new.portfolio)?payload.new.portfolio:portfolio;
       fillUI();
-    })
-    .subscribe();
+    }).subscribe();
 }
 
-// ── LIVE: New conversations (message requests badge) ───────────────────────
-function subscribeToConversationUpdates() {
-  // New conversation requests (message badge)
-  sb.channel('contractor-convs')
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'conversations',
-      filter: `contractor_id=eq.${user.id}`,
-    }, payload => {
-      const badge = document.getElementById('msg-badge');
-      if (badge) {
-        const current = parseInt(badge.textContent) || 0;
-        badge.textContent = current + 1;
-        badge.style.display = 'inline';
-      }
-      showToast('💬 New message request from ' + (payload.new.customer_name || 'a customer') + '!');
-      // Always refresh conversation list for live preview
-      loadCConversations();
-    })
-    .subscribe();
+/* ── FILL UI ── */
+function fillUI(){
+  const p=cProf;
+  const name=p?.company_name||'Your Business';
+  const username=p?.username||user.email.split('@')[0];
+  const ini=name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const isPro=p?.plan==='pro';
 
-  // Conversation updates (accepted/declined status changes)
-  sb.channel('contractor-conv-updates')
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'conversations',
-      filter: `contractor_id=eq.${user.id}`,
-    }, payload => {
-      // Refresh the conversation list preview
-      loadCConversations();
-    })
-    .subscribe();
-}
+  // Avatars
+  setAv('prof-av',ini,p?.avatar_url);
+  setAv('nav-av',ini,p?.avatar_url);
+  setAv('dash-av',ini,p?.avatar_url);
 
-// ── FILL UI ────────────────────────────────────────────────
-function fillUI() {
-  const p        = cProf;
-  const name     = p?.company_name || 'Your Business';
-  const username = (p?.username || user.email.split('@')[0]);
-  const ini      = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  const isPro    = p?.plan === 'pro';
-
-  // Avatar
-  setAvEl('ph-av',    ini, p?.avatar_url);
-  setAvEl('nav-av',   ini, p?.avatar_url);
-  setAvEl('ped-av',   ini, p?.avatar_url);
-
-  const isLeads = p?.plan === 'leads';
-  const isFree  = !isPro && !isLeads;
-
-  // Topbar upgrade/plan button
-  const proBtnEl = document.getElementById('pro-btn');
-  if (proBtnEl) {
-    if (isPro) {
-      proBtnEl.textContent = '✓ Pro Active';
-      proBtnEl.classList.add('active');
-      proBtnEl.style.background = 'var(--accent)';
-      proBtnEl.onclick = () => showToast('⚙️ Billing portal coming soon!');
-    } else if (isLeads) {
-      proBtnEl.textContent = '📋 Just Leads';
-      proBtnEl.style.background = 'rgba(96,165,250,.15)';
-      proBtnEl.style.color = '#60A5FA';
-      proBtnEl.style.border = '1px solid rgba(96,165,250,.3)';
-      proBtnEl.onclick = () => showToast('Upgrade to Pro for full booking features!');
-    } else {
-      proBtnEl.textContent = '⚡ Upgrade to Pro';
-      proBtnEl.style.background = 'var(--accent)';
-      proBtnEl.onclick = () => showToast('💳 Pro plan coming soon!');
-    }
+  // Plan pill
+  const planPill=document.getElementById('plan-pill');
+  const upgradeBtn=document.getElementById('upgrade-btn');
+  if(isPro){
+    planPill.textContent='⚡ Pro';planPill.style.background='rgba(34,197,94,.2)';
+    if(upgradeBtn)upgradeBtn.style.display='none';
+  } else {
+    planPill.textContent='🔧 Free';
+    if(upgradeBtn)upgradeBtn.style.display='';
   }
 
-  // Profile header
-  document.getElementById('ph-name').textContent     = name;
-  document.getElementById('ph-username').textContent  = '@' + username;
-  document.getElementById('ph-trade').textContent    = p?.trade_type || 'Contractor';
-
-  // Plan badge
-  const planBdg = document.getElementById('plan-bdg');
-  if (planBdg) {
-    if (isPro)    { planBdg.textContent = '⚡ Pro';        planBdg.className = 'bdg bdg-or'; }
-    else if (isLeads) { planBdg.textContent = '📋 Just Leads'; planBdg.className = 'bdg'; planBdg.style.cssText = 'background:rgba(96,165,250,.1);color:#60A5FA;border:1px solid rgba(96,165,250,.2);'; }
-    else          { planBdg.textContent = 'Free Plan';    planBdg.className = 'bdg bdg-gy'; planBdg.style.cssText = ''; }
+  // Profile page
+  document.getElementById('prof-name').textContent=name;
+  document.getElementById('prof-username').textContent='@'+username;
+  document.getElementById('prof-trade').textContent=p?.trade_type||'Contractor';
+  document.getElementById('prof-loc').textContent=p?.location?'📍 '+p.location:'';
+  const descEl=document.getElementById('prof-desc');
+  if(descEl){
+    if(p?.description){descEl.textContent=p.description;descEl.className='bio-text';}
+    else{descEl.textContent='Click "Edit Profile Info" to add your business description…';descEl.className='bio-empty';}
   }
-  if (p?.verified) document.getElementById('ver-bdg').style.display = 'inline-block';
 
-  // Plan-gated UI — hide/show bookings tab and stats for Just Leads
-  applyPlanGating(isPro, isLeads, isFree);
+  // Rating
+  const ratingEl=document.getElementById('prof-rating');
+  if(ratingEl){
+    if(p?.review_count>0){
+      ratingEl.innerHTML=`<span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</span><span>${Number(p.rating).toFixed(1)} (${p.review_count} reviews)</span>`;
+    } else {ratingEl.textContent='';}
+  }
 
-  // Stats
-  document.getElementById('s-views').textContent   = p?.profile_views || 0;
-  document.getElementById('s-bk').textContent      = p?.total_bookings || 0;
-  document.getElementById('s-rating').textContent  = p?.review_count > 0 ? Number(p.rating).toFixed(1)+'★' : '—';
-  document.getElementById('s-port').textContent    = portfolio.length;
-
-  // Profile editor view
-  document.getElementById('ped-name').textContent  = name;
-  document.getElementById('ped-username').textContent = '@' + username;
-  document.getElementById('ped-trade').textContent  = p?.trade_type || '';
-  document.getElementById('ped-loc').textContent    = p?.location ? '📍 ' + p.location : '';
-  document.getElementById('ped-rating').textContent = p?.review_count > 0 ? '★ ' + Number(p.rating).toFixed(1) + ' (' + p.review_count + ' reviews)' : '⭐ No reviews yet';
-  if (p?.insured) document.getElementById('ped-insured').style.display='block';
-  if (p?.experience) { document.getElementById('ped-exp').style.display='block'; document.getElementById('ped-exp').textContent='🏅 ' + p.experience; }
-  document.getElementById('ped-desc').textContent  = p?.description || 'Click "Edit Profile Info" to add a description.';
+  // Badges
+  const badgesEl=document.getElementById('prof-badges');
+  if(badgesEl){
+    let b='';
+    if(isPro)b+=`<span class="badge badge-or">⚡ Pro</span>`;
+    else b+=`<span class="badge badge-gy">Free Plan</span>`;
+    if(p?.verified)b+=`<span class="badge badge-gn">✓ Verified</span>`;
+    if(p?.insured)b+=`<span class="badge badge-gn">🛡 Insured</span>`;
+    badgesEl.innerHTML=b;
+  }
 
   // Banner
-  if (p?.banner_url) { const img=document.getElementById('banner-img'); img.src=p.banner_url; img.style.display='block'; document.getElementById('banner-empty').style.display='none'; }
+  if(p?.banner_url){
+    const img=document.getElementById('banner-img');
+    if(img){img.src=p.banner_url;img.style.display='block';}
+    const ph=document.getElementById('banner-placeholder');
+    if(ph)ph.style.display='none';
+  }
 
-  // Pricing services preview
+  // Port limit
+  const limit=isPro?25:5;
+  const portLabel=document.getElementById('port-limit-label');
+  if(portLabel)portLabel.textContent=`${portfolio.length}/${limit} photos`;
+
+  // Dash view
+  document.getElementById('dash-name').textContent=name;
+  document.getElementById('dash-trade').textContent=p?.trade_type||'Contractor';
+  const dashBadges=document.getElementById('dash-badges');
+  if(dashBadges){
+    let b='';
+    if(isPro)b+=`<span class="badge badge-or">⚡ Pro</span>`;
+    else b+=`<span class="badge badge-gy">Free Plan</span>`;
+    if(p?.verified)b+=`<span class="badge badge-gn">✓ Verified</span>`;
+    dashBadges.innerHTML=b;
+  }
+
+  // Stats
+  document.getElementById('s-views').textContent=p?.profile_views||0;
+  document.getElementById('s-bk').textContent=p?.total_bookings||0;
+  document.getElementById('s-rating').textContent=p?.review_count>0?Number(p.rating).toFixed(1)+'★':'—';
+  document.getElementById('s-port').textContent=portfolio.length;
+
+  renderPortGrid();
   renderSvcList();
   renderSvcPreview();
-  renderPortfolioGrid();
   buildCompletion(p);
-  prefillModal(p, username);
-
-  // Port limit label
-  const limit = isPro ? 25 : 5;
-  document.getElementById('port-limit-label').textContent = '(' + portfolio.length + '/' + limit + ' photos)';
+  prefillModal(p,username);
+  renderOnlineToggle();
 }
 
-function setAvEl(id, ini, url) {
-  const el = document.getElementById(id); if(!el) return;
-  if (url) el.innerHTML=`<img src="${url}" onerror="this.parentElement.textContent='${ini}'" style="width:100%;height:100%;object-fit:cover;"/>`;
-  else el.textContent = ini;
+function setAv(id,ini,url){
+  const el=document.getElementById(id);if(!el)return;
+  if(url)el.innerHTML=`<img src="${url}" onerror="this.parentElement.textContent='${ini}'" style="width:100%;height:100%;object-fit:cover;"/>`;
+  else el.textContent=ini;
 }
 
-// ── PLAN GATING ────────────────────────────────────────────
-// Adapts the entire contractor dashboard UI based on plan
-function applyPlanGating(isPro, isLeads, isFree) {
-
-  // ── BOOKINGS TAB ────────────────────────────────────────
-  // Just Leads = no platform booking system, so hide the tab entirely
-  const bkTab = document.getElementById('tab-bookings');
-  if (bkTab) {
-    if (isLeads) {
-      bkTab.style.display = 'none'; // no bookings for leads plan
-    } else {
-      bkTab.style.display = '';
-    }
-  }
-
-  // ── OVERVIEW STATS ──────────────────────────────────────
-  // Just Leads: replace bookings stat with "Leads" stat
-  const bkStatCard = document.querySelector('[id="s-bk"]')?.closest('.sc');
-  if (bkStatCard) {
-    if (isLeads) {
-      bkStatCard.querySelector('.sc-ic').textContent  = '📋';
-      bkStatCard.querySelector('.sc-lbl').textContent = 'Profile Leads';
-    } else {
-      bkStatCard.querySelector('.sc-ic').textContent  = '📅';
-      bkStatCard.querySelector('.sc-lbl').textContent = 'Bookings';
-    }
-  }
-
-  // ── COMPANY PROFILE TAB ─────────────────────────────────
-  // Just Leads: show a "Leads Plan" banner at top of profile tab
-  let leadsBanner = document.getElementById('leads-plan-banner');
-  if (isLeads) {
-    if (!leadsBanner) {
-      leadsBanner = document.createElement('div');
-      leadsBanner.id = 'leads-plan-banner';
-      leadsBanner.style.cssText = 'background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:18px;';
-      leadsBanner.innerHTML = `
-        <span style="font-size:22px;">📋</span>
-        <div style="flex:1;">
-          <div style="font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#60A5FA;margin-bottom:2px;">Just Leads Plan Active</div>
-          <div style="font-size:13px;color:var(--g2);">Customers see your profile and contact you directly. No platform booking or fees. Upgrade to Pro for full booking management.</div>
-        </div>
-        <button onclick="showToast('💳 Upgrade coming soon!')" style="padding:8px 14px;background:var(--accent);color:white;border:none;border-radius:8px;font-family:var(--display);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;flex-shrink:0;">Upgrade</button>
-      `;
-      // Insert at the top of the profile view's pg div
-      const profilePg = document.querySelector('#view-profile .pg');
-      if (profilePg) profilePg.prepend(leadsBanner);
-    }
-    leadsBanner.style.display = 'flex';
-  } else {
-    if (leadsBanner) leadsBanner.style.display = 'none';
-  }
-
-  // ── PORTFOLIO LIMIT ─────────────────────────────────────
-  // Pro: 25 photos, Free/Leads: 5 photos
-  const limit = isPro ? 25 : 5;
-  const portLabel = document.getElementById('port-limit-label');
-  if (portLabel) portLabel.textContent = '(' + portfolio.length + '/' + limit + ' photos)';
-
-  // ── UPGRADE PROMPT in Overview ─────────────────────────
-  let overviewBanner = document.getElementById('plan-overview-banner');
-  if (!overviewBanner) {
-    overviewBanner = document.createElement('div');
-    overviewBanner.id = 'plan-overview-banner';
-    const dashView = document.querySelector('#view-dash .pg');
-    if (dashView) {
-      // Insert before the profile header card
-      const ph = dashView.querySelector('.online-card');
-      if (ph) dashView.insertBefore(overviewBanner, ph);
-      else    dashView.prepend(overviewBanner);
-    }
-  }
-
-  if (isLeads) {
-    overviewBanner.style.cssText = 'background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.18);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:10px;margin-bottom:14px;';
-    overviewBanner.innerHTML = '<span style="font-size:18px;">📋</span><span style="font-size:13px;color:#60A5FA;flex:1;"><strong>Just Leads</strong> — Your profile is live. Customers view and contact you directly.</span><button onclick="showToast('Upgrade coming soon!')" style="padding:6px 12px;background:var(--accent);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;cursor:pointer;">Upgrade to Pro</button>';
-  } else if (isFree) {
-    overviewBanner.style.cssText = 'background:var(--orange-lt);border:1px solid rgba(255,107,43,.2);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:10px;margin-bottom:14px;';
-    overviewBanner.innerHTML = '<span style="font-size:18px;">⚡</span><span style="font-size:13px;color:var(--orange);flex:1;"><strong>Free Plan</strong> — Upgrade to Pro for top search placement, verified badge, and lower fees.</span><button onclick="showToast('💳 Pro plan coming soon!')" style="padding:6px 12px;background:var(--orange);color:white;border:none;border-radius:7px;font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;cursor:pointer;">Upgrade</button>';
-  } else {
-    overviewBanner.style.display = 'none';
-  }
-}
-
-// ── COMPLETION ─────────────────────────────────────────────
-function buildCompletion(p) {
-  const tasks = [
-    {done:true,              ic:'✅', label:'Account created'},
-    {done:!!p?.company_name, ic:'🏢', label:'Business name',    bonus:'+10%', action:"showV('profile')"},
-    {done:!!p?.trade_type,   ic:'🔧', label:'Trade selected',   bonus:'+10%', action:"showV('profile')"},
-    {done:!!p?.description,  ic:'📝', label:'Bio / description',bonus:'+15%', action:"openEditModal()"},
-    {done:portfolio.length>0,ic:'🖼️', label:'Portfolio photo',  bonus:'+20%', action:"showV('profile')"},
-    {done:!!p?.license_url || !!p?.license_number, ic:'📄', label:'License added', bonus:'+15%', action:"openEditModal()"},
-    {done:p?.insured===true, ic:'🛡️', label:'Insurance added',  bonus:'+10%', action:"openEditModal()"},
-    {done:p?.review_count>0, ic:'⭐', label:'First review earned',bonus:'+20%', action:null},
+/* ── COMPLETION ── */
+function buildCompletion(p){
+  const tasks=[
+    {done:true,              ic:'✅',label:'Account created'},
+    {done:!!p?.company_name, ic:'🏢',label:'Business name',    bonus:'+10%',action:"showV('profile')"},
+    {done:!!p?.trade_type,   ic:'🔧',label:'Trade selected',   bonus:'+10%',action:"showV('profile')"},
+    {done:!!p?.description,  ic:'📝',label:'Bio added',        bonus:'+15%',action:"openEditModal()"},
+    {done:portfolio.length>0,ic:'🖼️',label:'Portfolio photo',  bonus:'+20%',action:"showV('profile')"},
+    {done:!!p?.license_url||!!p?.license_number,ic:'📄',label:'License added',bonus:'+15%',action:"openEditModal()"},
+    {done:p?.insured===true, ic:'🛡️',label:'Insurance added',  bonus:'+10%',action:"openEditModal()"},
+    {done:p?.review_count>0, ic:'⭐',label:'First review',     bonus:'+20%',action:null},
   ];
-  const done = tasks.filter(t=>t.done).length;
-  const pct  = Math.round((done/tasks.length)*100);
-  document.getElementById('cw-pct').textContent  = pct+'%';
-  document.getElementById('cw-fill').style.width = pct+'%';
-  document.getElementById('ct-list').innerHTML   = tasks.map(t=>`
-    <div class="ct ${t.done?'done':''}" ${!t.done&&t.action?`onclick="${t.action}"`:''}>
-      <span>${t.ic}</span><span>${t.label}</span>${!t.done&&t.bonus?`<span class="ct-bonus">${t.bonus}</span>`:''}
+  const done=tasks.filter(t=>t.done).length;
+  const pct=Math.round((done/tasks.length)*100);
+  document.getElementById('comp-pct').textContent=pct+'%';
+  document.getElementById('comp-fill').style.width=pct+'%';
+  document.getElementById('comp-items').innerHTML=tasks.map(t=>`
+    <div class="comp-item ${t.done?'done':''}" ${!t.done&&t.action?`onclick="${t.action}"`:''}>
+      <span>${t.ic}</span><span>${t.label}</span>
+      ${!t.done&&t.bonus?`<span class="comp-bonus">${t.bonus}</span>`:''}
     </div>`).join('');
 }
 
-// ── BOOKINGS ───────────────────────────────────────────────
-async function loadBookings() {
-  const {data} = await sb.from('bookings').select('*').eq('contractor_id',user.id.toString()).order('created_at',{ascending:false});
-  bkData = data || [];
-  renderBkRows('dash-bk', bkData.slice(0,4));
-  renderBkRows('all-bk',  bkData);
-  const pending = bkData.filter(b=>b.status==='pending').length;
-  const badge = document.getElementById('bk-badge');
+/* ── BOOKINGS ── */
+async function loadBookings(){
+  const {data}=await sb.from('bookings').select('*').eq('contractor_id',user.id.toString()).order('created_at',{ascending:false});
+  bkData=data||[];
+  renderBkRows('dash-bk-list',bkData.slice(0,4));
+  renderBkRows('all-bk-list',bkData);
+  const pending=bkData.filter(b=>b.status==='pending').length;
+  const badge=document.getElementById('bk-badge');
   if(pending>0){badge.textContent=pending;badge.style.display='inline';}else{badge.style.display='none';}
-  document.getElementById('s-bk').textContent = bkData.length;
+  document.getElementById('s-bk').textContent=bkData.length;
 }
 
-function bkStyle(s) {
-  return {
-    pending:     {cls:'bst-p',label:'Pending',ic:'🕐'},
-    accepted:    {cls:'bst-a',label:'Accepted',ic:'✅'},
-    in_progress: {cls:'bst-ip',label:'In Progress',ic:'🔧'},
-    declined:    {cls:'bst-d',label:'Declined',ic:'❌'},
-    completed:   {cls:'bst-c',label:'Completed',ic:'🎉'},
-    cancelled:   {cls:'bst-d',label:'Cancelled',ic:'❌'},
-  }[s]||{cls:'bst-p',label:s,ic:'🕐'};
-}
+function bkStyle(s){return{pending:{cls:'bst-p',label:'Pending',ic:'🕐'},accepted:{cls:'bst-a',label:'Accepted',ic:'✅'},in_progress:{cls:'bst-ip',label:'In Progress',ic:'🔧'},declined:{cls:'bst-d',label:'Declined',ic:'❌'},completed:{cls:'bst-c',label:'Completed',ic:'🎉'},cancelled:{cls:'bst-d',label:'Cancelled',ic:'❌'}}[s]||{cls:'bst-p',label:s,ic:'🕐'};}
 
-function renderBkRows(elId, list) {
-  const el = document.getElementById(elId); if(!el) return;
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">📅</div><p>No bookings yet. Complete your profile to start getting jobs.</p></div>`;return;}
-  el.innerHTML = list.map(b=>{
+function renderBkRows(elId,list){
+  const el=document.getElementById(elId);if(!el)return;
+  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="ei">📅</div><p>No bookings yet. Complete your profile to start getting jobs.</p></div>`;return;}
+  el.innerHTML=list.map(b=>{
     const {cls,label,ic}=bkStyle(b.status);
     const dt=b.booking_date?new Date(b.booking_date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}):'—';
-    const isPending=b.status==='pending', isAccepted=b.status==='accepted', isIP=b.status==='in_progress';
+    const isPending=b.status==='pending',isAccepted=b.status==='accepted',isIP=b.status==='in_progress';
     return `<div class="bk-row" id="bk-${b.id}">
       <div class="bk-ic">${ic}</div>
       <div class="bk-info">
@@ -1133,78 +1025,70 @@ function renderBkRows(elId, list) {
   }).join('');
 }
 
-function filterBk(s, btn) {
+function filterBk(s,btn){
   document.querySelectorAll('#view-bookings .ab').forEach(b=>b.style.opacity='0.6');
   btn.style.opacity='1';
-  renderBkRows('all-bk', s==='all'?bkData:bkData.filter(b=>b.status===s));
+  renderBkRows('all-bk-list',s==='all'?bkData:bkData.filter(b=>b.status===s));
 }
 
-async function updateBk(id, status) {
-  const row = document.getElementById('bk-'+id);
-  if(row) row.style.opacity='0.5';
+async function updateBk(id,status){
+  const row=document.getElementById('bk-'+id);
+  if(row)row.style.opacity='0.5';
   const {error}=await sb.from('bookings').update({status}).eq('id',id).eq('contractor_id',user.id.toString());
   if(error){if(row)row.style.opacity='1';showToast('❌ Could not update.');return;}
-  bkData = bkData.map(b=>b.id===id?{...b,status}:b);
-  renderBkRows('dash-bk',bkData.slice(0,4));
-  renderBkRows('all-bk',bkData);
-  const msgs={accepted:'✅ Booking accepted! Customer notified.',in_progress:'🔧 Job started!',declined:'❌ Booking declined.',completed:'🎉 Job marked complete!'};
+  bkData=bkData.map(b=>b.id===id?{...b,status}:b);
+  renderBkRows('dash-bk-list',bkData.slice(0,4));renderBkRows('all-bk-list',bkData);
+  const msgs={accepted:'✅ Booking accepted!',in_progress:'🔧 Job started!',declined:'❌ Booking declined.',completed:'🎉 Job marked complete!'};
   showToast(msgs[status]||'✅ Updated.');
   loadBookings();
 }
 
-function subscribeToBookings() {
-  sb.channel('con-bookings').on('postgres_changes',{event:'INSERT',schema:'public',table:'bookings',filter:`contractor_id=eq.${user.id}`},payload=>{
+function subscribeBookings(){
+  sb.channel('con-bk').on('postgres_changes',{event:'INSERT',schema:'public',table:'bookings',filter:`contractor_id=eq.${user.id}`},payload=>{
     bkData=[payload.new,...bkData];
-    renderBkRows('dash-bk',bkData.slice(0,4));
-    renderBkRows('all-bk',bkData);
-    showToast('🔔 New booking request from '+(payload.new.customer_name||'a customer')+'!');
+    renderBkRows('dash-bk-list',bkData.slice(0,4));renderBkRows('all-bk-list',bkData);
+    showToast('🔔 New booking from '+(payload.new.customer_name||'a customer')+'!');
     loadBookings();
   }).subscribe();
 }
 
-// ── REVIEWS ────────────────────────────────────────────────
-async function loadReviews() {
+/* ── REVIEWS ── */
+async function loadReviews(){
   const {data}=await sb.from('reviews').select('*').eq('contractor_id',user.id).order('created_at',{ascending:false}).limit(20);
-  rvData = data||[];
-  renderRvRows('dash-rv', rvData.slice(0,3));
-  renderRvRows('all-rv',  rvData);
-  if (rvData.length > 0) {
-    const avg = rvData.reduce((s,r)=>s+(r.rating_overall||r.rating||5),0)/rvData.length;
-    document.getElementById('s-rating').textContent = avg.toFixed(1)+'★';
-    document.getElementById('ped-rating').textContent = '★ '+avg.toFixed(1)+' ('+rvData.length+' review'+(rvData.length!==1?'s':'')+')';
+  rvData=data||[];
+  renderRvRows('dash-rv-list',rvData.slice(0,3));
+  renderRvRows('all-rv-list',rvData);
+  if(rvData.length>0){
+    const avg=rvData.reduce((s,r)=>s+(r.rating_overall||r.rating||5),0)/rvData.length;
+    document.getElementById('s-rating').textContent=avg.toFixed(1)+'★';
   }
 }
 
-function renderRvRows(elId, list) {
+function renderRvRows(elId,list){
   const el=document.getElementById(elId);if(!el)return;
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="ei">⭐</div><p>No reviews yet. Complete your first job to earn one.</p></div>`;return;}
+  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="ei">⭐</div><p>No reviews yet. Complete your first job to earn one.</p></div>`;return;}
   el.innerHTML=list.map(r=>{
     const n=r.rating_overall||r.rating||5;
-    const stars='★'.repeat(n)+'☆'.repeat(5-n);
-    const dt=r.created_at?new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
-    return `<div class="rv"><div class="rv-hdr"><span class="rv-name">${r.reviewer_name||'Customer'}</span><span class="rv-stars">${stars}</span></div><div class="rv-txt">${r.review_text||''}</div><div class="rv-date">${dt}</div></div>`;
+    return `<div class="rv-item"><div class="rv-hdr"><span class="rv-name">${r.reviewer_name||'Customer'}</span><span class="rv-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</span></div><div class="rv-txt">${r.review_text||''}</div><div class="rv-date">${r.created_at?new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</div></div>`;
   }).join('');
 }
 
-// ── AVAILABILITY ───────────────────────────────────────────
-const DAY_ORDER=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-async function loadAvailability() {
+/* ── AVAILABILITY ── */
+async function loadAvailability(){
   const {data}=await sb.from('availability').select('*').eq('contractor_id',user.id).order('created_at',{ascending:true});
-  avData=data||[];
-  renderAvGrid();
+  avData=data||[];renderAvGrid();
 }
 
 function renderAvGrid(){
   const el=document.getElementById('av-grid');if(!el)return;
-  if(!avData.length){el.innerHTML=`<div class="empty"><div class="ei">📅</div><p>No availability set yet.</p></div>`;return;}
+  if(!avData.length){el.innerHTML=`<div class="empty-state"><div class="ei">📅</div><p>No availability set yet.</p></div>`;return;}
   const sorted=[...avData].sort((a,b)=>DAY_ORDER.indexOf(a.day_of_week)-DAY_ORDER.indexOf(b.day_of_week));
   el.innerHTML=sorted.map(av=>`
-    <div class="av-day-card">
-      <div class="av-day-pill">${av.day_of_week.substring(0,3)}</div>
+    <div class="av-day">
+      <div class="av-pill">${av.day_of_week.substring(0,3)}</div>
       <div style="display:flex;align-items:center;gap:8px;flex:1;">
         <span class="av-time">${fmt12(av.start_time)}</span>
-        <span style="color:var(--g3);font-size:12px;">→</span>
+        <span class="av-arrow">→</span>
         <span class="av-time">${fmt12(av.end_time)}</span>
       </div>
       <button class="av-del" onclick="deleteAvDay('${av.day_of_week}')" title="Remove">✕</button>
@@ -1225,38 +1109,32 @@ async function saveAvailability(){
   const {error}=await sb.from('availability').upsert({contractor_id:user.id,day_of_week:day,start_time:start,end_time:end},{onConflict:'contractor_id,day_of_week'});
   if(error){statusEl.style.color='var(--red)';statusEl.textContent='❌ Could not save.';return;}
   const idx=avData.findIndex(a=>a.day_of_week===day);
-  if(idx>=0) avData[idx]={...avData[idx],start_time:start,end_time:end};
+  if(idx>=0)avData[idx]={...avData[idx],start_time:start,end_time:end};
   else avData.push({contractor_id:user.id,day_of_week:day,start_time:start,end_time:end});
   renderAvGrid();
   document.getElementById('av-day').value='';
-  document.getElementById('av-start').value='08:00';
-  document.getElementById('av-end').value='18:00';
   statusEl.style.color='var(--green)';statusEl.textContent='✅ '+day+' saved!';
   setTimeout(()=>{statusEl.textContent='';},3000);
 }
 
 async function deleteAvDay(day){
   await sb.from('availability').delete().eq('contractor_id',user.id).eq('day_of_week',day);
-  avData=avData.filter(a=>a.day_of_week!==day);
-  renderAvGrid();
-  showToast('🗑️ '+day+' removed.');
+  avData=avData.filter(a=>a.day_of_week!==day);renderAvGrid();showToast('🗑️ '+day+' removed.');
 }
 
-// ── SERVICES / PRICING ─────────────────────────────────────
-const TYPE_LABELS={flat:'Flat rate',hourly:'Hourly',unit:'Per unit'};
-
+/* ── SERVICES ── */
 function renderSvcList(){
   const el=document.getElementById('svc-list');if(!el)return;
-  if(!pricingServices.length){el.innerHTML=`<div class="empty"><div class="ei">💰</div><p>No services added yet. Click "+ Add Service" to get started.</p></div>`;return;}
+  if(!pricingServices.length){el.innerHTML=`<div class="empty-state"><div class="ei">💰</div><p>No services added yet. Click "+ Add Service" to get started.</p></div>`;return;}
   el.innerHTML=pricingServices.map((s,i)=>`
-    <div class="svc-row">
-      <div style="flex:1;">
-        <div class="svc-name">${s.name}</div>
-        <div class="svc-type">${TYPE_LABELS[s.type]||s.type}${s.desc?' · '+s.desc.substring(0,50):''}</div>
+    <div class="svc-list-row">
+      <div class="svc-info">
+        <div class="svc-list-name">${s.name}</div>
+        <div class="svc-type-label">${TYPE_LABELS[s.type]||s.type}${s.desc?' · '+s.desc.substring(0,50):''}</div>
       </div>
-      <div style="text-align:right;flex-shrink:0;">
-        <div class="svc-price">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</div>
-        <div class="svc-type">${TYPE_LABELS[s.type]||s.type}</div>
+      <div>
+        <div class="svc-price-tag">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</div>
+        <div style="font-size:11px;color:var(--g3);text-align:right;">${TYPE_LABELS[s.type]||s.type}</div>
       </div>
       <div class="svc-actions">
         <button class="ab ab-or" onclick="openSvcModal(${i})">Edit</button>
@@ -1266,14 +1144,14 @@ function renderSvcList(){
 }
 
 function renderSvcPreview(){
-  const el=document.getElementById('profile-svcs-preview');if(!el)return;
+  const el=document.getElementById('prof-svcs-preview');if(!el)return;
   if(!pricingServices.length){el.innerHTML=`<div style="font-size:13px;color:var(--g3);">No services listed yet. <span onclick="showV('pricing')" style="color:var(--accent);cursor:pointer;font-weight:600;">Add services →</span></div>`;return;}
   el.innerHTML=pricingServices.slice(0,5).map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
-      <div style="font-size:13px;color:var(--g1);font-weight:600;">${s.name}</div>
-      <div style="font-family:var(--display);font-size:14px;font-weight:800;color:var(--orange);">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</div>
+    <div class="svc-row">
+      <span class="svc-name">${s.name}</span>
+      <span class="svc-price">${s.base===s.max||!s.max?'$'+s.base:'$'+s.base+'–$'+s.max}</span>
     </div>`).join('');
-  if(pricingServices.length>5) el.innerHTML+=`<div style="font-size:12px;color:var(--g3);text-align:center;margin-top:10px;">+${pricingServices.length-5} more services</div>`;
+  if(pricingServices.length>5)el.innerHTML+=`<div style="font-size:12px;color:var(--g3);text-align:center;margin-top:10px;">+${pricingServices.length-5} more services</div>`;
 }
 
 function openSvcModal(idx){
@@ -1282,8 +1160,7 @@ function openSvcModal(idx){
   document.getElementById('svc-idx').value=isEdit?idx:-1;
   if(isEdit){const s=pricingServices[idx];document.getElementById('svc-name').value=s.name;document.getElementById('svc-base').value=s.base;document.getElementById('svc-max').value=s.max||'';document.getElementById('svc-type').value=s.type||'flat';document.getElementById('svc-desc').value=s.desc||'';}
   else{document.getElementById('svc-name').value='';document.getElementById('svc-base').value='';document.getElementById('svc-max').value='';document.getElementById('svc-type').value='flat';document.getElementById('svc-desc').value='';}
-  document.getElementById('svc-modal').classList.add('open');
-  document.body.style.overflow='hidden';
+  document.getElementById('svc-modal').classList.add('open');document.body.style.overflow='hidden';
 }
 
 function closeSvcModal(){document.getElementById('svc-modal').classList.remove('open');document.body.style.overflow='';}
@@ -1298,46 +1175,39 @@ async function saveSvc(){
   if(!base){showToast('⚠️ Base price required.');return;}
   const entry={name,base,max:max||base,type,desc};
   const idx=parseInt(document.getElementById('svc-idx').value);
-  if(idx>=0) pricingServices[idx]=entry;
-  else pricingServices.push(entry);
+  if(idx>=0)pricingServices[idx]=entry;else pricingServices.push(entry);
   await sb.from('contractors').update({pricing_services:pricingServices}).eq('id',user.id);
-  if(cProf) cProf.pricing_services=pricingServices;
-  closeSvcModal();
-  renderSvcList();
-  renderSvcPreview();
-  showToast('✅ Service saved!');
+  if(cProf)cProf.pricing_services=pricingServices;
+  closeSvcModal();renderSvcList();renderSvcPreview();showToast('✅ Service saved!');
 }
 
 async function deleteSvc(idx){
   if(!confirm('Remove this service?'))return;
   pricingServices.splice(idx,1);
   await sb.from('contractors').update({pricing_services:pricingServices}).eq('id',user.id);
-  renderSvcList();
-  renderSvcPreview();
-  showToast('🗑️ Service removed.');
+  renderSvcList();renderSvcPreview();showToast('🗑️ Service removed.');
 }
 
-// ── PORTFOLIO ──────────────────────────────────────────────
-function renderPortfolioGrid(){
+/* ── PORTFOLIO ── */
+function renderPortGrid(){
   const el=document.getElementById('port-grid');if(!el)return;
-  const isPro=cProf?.plan==='pro';
-  const limit=isPro?25:5;
+  const isPro=cProf?.plan==='pro';const limit=isPro?25:5;
   let html=portfolio.map((url,i)=>`
     <div class="port-img">
       <img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"/>
       <button class="port-del" onclick="deletePortImg(${i})">✕</button>
     </div>`).join('');
-  if(portfolio.length<limit) html+=`<div class="port-add" onclick="document.getElementById('port-input').click()"><span>+</span><p>Add Photo</p></div>`;
+  if(portfolio.length<limit)html+=`<div class="port-add" onclick="document.getElementById('port-input').click()"><div class="port-add-icon">+</div><p>Add Photo</p></div>`;
   el.innerHTML=html;
   document.getElementById('s-port').textContent=portfolio.length;
-  document.getElementById('port-limit-label').textContent='('+portfolio.length+'/'+limit+' photos)';
+  const portLabel=document.getElementById('port-limit-label');
+  if(portLabel)portLabel.textContent=`${portfolio.length}/${limit} photos`;
 }
 
 async function handlePortfolioUpload(input){
-  const isPro=cProf?.plan==='pro';
-  const limit=isPro?25:5;
+  const isPro=cProf?.plan==='pro';const limit=isPro?25:5;
   const files=Array.from(input.files).slice(0,limit-portfolio.length);
-  if(!files.length){showToast('⚠️ Portfolio limit reached. Upgrade to Pro for more.');return;}
+  if(!files.length){showToast('⚠️ Portfolio limit reached.');return;}
   const statusEl=document.getElementById('upload-status');
   statusEl.textContent='⏳ Uploading '+files.length+' image'+(files.length>1?'s':'')+'…';
   const uploaded=[];
@@ -1351,22 +1221,20 @@ async function handlePortfolioUpload(input){
   }
   portfolio=[...portfolio,...uploaded];
   await sb.from('contractors').update({portfolio}).eq('id',user.id);
-  if(cProf) cProf.portfolio=portfolio;
-  renderPortfolioGrid();
+  if(cProf)cProf.portfolio=portfolio;
+  renderPortGrid();
   statusEl.textContent='✅ '+uploaded.length+' photo'+(uploaded.length!==1?'s':'')+' added.';
   input.value='';
   setTimeout(()=>{statusEl.textContent='';},3000);
 }
 
 async function deletePortImg(idx){
-  portfolio.splice(idx,1);
-  renderPortfolioGrid();
+  portfolio.splice(idx,1);renderPortGrid();
   await sb.from('contractors').update({portfolio}).eq('id',user.id);
-  if(cProf) cProf.portfolio=portfolio;
-  showToast('🗑️ Photo removed.');
+  if(cProf)cProf.portfolio=portfolio;showToast('🗑️ Photo removed.');
 }
 
-// ── BANNER UPLOAD ──────────────────────────────────────────
+/* ── BANNER UPLOAD ── */
 async function uploadBanner(input){
   const file=input.files[0];if(!file)return;
   if(file.size>5*1024*1024){showToast('⚠️ Banner must be under 5MB.');return;}
@@ -1374,17 +1242,17 @@ async function uploadBanner(input){
   const path=`${user.id}/banner-${Date.now()}.${file.name.split('.').pop()}`;
   let url='';
   const {error}=await sb.storage.from('portfolio').upload(path,file,{upsert:true});
-  if(!error) url=sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
+  if(!error)url=sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
   else{const r=new FileReader();url=await new Promise(res=>{r.onload=e=>res(e.target.result);r.readAsDataURL(file);});}
   await sb.from('contractors').update({banner_url:url}).eq('id',user.id);
-  if(cProf) cProf.banner_url=url;
+  if(cProf)cProf.banner_url=url;
   const img=document.getElementById('banner-img');
-  img.src=url; img.style.display='block';
-  document.getElementById('banner-empty').style.display='none';
-  input.value=''; showToast('✅ Banner updated!');
+  img.src=url;img.style.display='block';
+  const ph=document.getElementById('banner-placeholder');if(ph)ph.style.display='none';
+  input.value='';showToast('✅ Banner updated!');
 }
 
-// ── PFP UPLOAD ─────────────────────────────────────────────
+/* ── PFP UPLOAD ── */
 async function handlePfpUpload(input){
   const file=input.files[0];if(!file)return;
   if(file.size>5*1024*1024){showToast('⚠️ Photo must be under 5MB.');return;}
@@ -1392,29 +1260,45 @@ async function handlePfpUpload(input){
   const path=`${user.id}/pfp-${Date.now()}.${file.name.split('.').pop()}`;
   let url='';
   const {error}=await sb.storage.from('portfolio').upload(path,file,{upsert:true});
-  if(!error) url=sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
+  if(!error)url=sb.storage.from('portfolio').getPublicUrl(path).data.publicUrl;
   else{const r=new FileReader();url=await new Promise(res=>{r.onload=e=>res(e.target.result);r.readAsDataURL(file);});}
   await sb.from('contractors').update({avatar_url:url}).eq('id',user.id);
-  if(cProf) cProf.avatar_url=url;
+  if(cProf)cProf.avatar_url=url;
   const ini=(cProf?.company_name||'ME').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  ['ph-av','nav-av','ped-av'].forEach(id=>setAvEl(id,ini,url));
-  input.value=''; showToast('✅ Profile photo updated!');
+  ['prof-av','nav-av','dash-av'].forEach(id=>setAv(id,ini,url));
+  input.value='';showToast('✅ Profile photo updated!');
 }
 
-// ── PROFILE EDIT ───────────────────────────────────────────
-let _usernameValid2 = true, _usernameTimer2 = null;
+/* ── ONLINE TOGGLE ── */
+function renderOnlineToggle(){
+  const card=document.getElementById('online-card');
+  const ind=document.getElementById('ot-ind');
+  const label=document.getElementById('ot-label');
+  if(_isOnline){
+    card.classList.add('on');label.textContent='Online';ind.textContent='🟢';
+  } else {
+    card.classList.remove('on');label.textContent='Offline';ind.textContent='⚫';
+  }
+}
 
-function prefillModal(p, username){
-  if(!p) return;
-  document.getElementById('e-username').value   = username || '';
-  document.getElementById('e-company').value    = p.company_name || '';
-  document.getElementById('e-phone').value      = p.phone || '';
-  document.getElementById('e-loc').value        = p.location || '';
-  document.getElementById('e-areas').value      = p.service_areas || '';
-  document.getElementById('e-desc').value       = p.description || '';
-  document.getElementById('e-license').value    = p.license_url || '';
-  document.getElementById('e-rate').value       = p.hourly_rate || '';
-  document.getElementById('e-rate-note').value  = p.pricing_note || '';
+async function toggleOnline(){
+  _isOnline=!_isOnline;renderOnlineToggle();
+  await sb.from('contractors').update({is_online:_isOnline}).eq('id',user.id);
+  showToast(_isOnline?'🟢 You are now online!':'⚫ You are now offline.');
+}
+
+/* ── EDIT PROFILE MODAL ── */
+function prefillModal(p,username){
+  if(!p)return;
+  document.getElementById('e-username').value=username||'';
+  document.getElementById('e-company').value=p.company_name||'';
+  document.getElementById('e-phone').value=p.phone||'';
+  document.getElementById('e-loc').value=p.location||'';
+  document.getElementById('e-areas').value=p.service_areas||'';
+  document.getElementById('e-desc').value=p.description||'';
+  document.getElementById('e-license').value=p.license_url||'';
+  document.getElementById('e-rate').value=p.hourly_rate||'';
+  document.getElementById('e-rate-note').value=p.pricing_note||'';
   const trSel=document.getElementById('e-trade');
   [...trSel.options].forEach(o=>{o.selected=o.value===(p.trade_type||'');});
   const exSel=document.getElementById('e-exp');
@@ -1423,97 +1307,56 @@ function prefillModal(p, username){
   [...inSel.options].forEach(o=>{o.selected=o.value===String(p.insured??'');});
 }
 
-function openEditModal(){
-  document.getElementById('edit-modal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
+function openEditModal(){document.getElementById('edit-modal').classList.add('open');document.body.style.overflow='hidden';}
 function closeEdit(){document.getElementById('edit-modal').classList.remove('open');document.body.style.overflow='';}
 
 function checkUsername(){
-  clearTimeout(_usernameTimer2);
+  clearTimeout(_usernameTimer);
   const val=(document.getElementById('e-username').value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
   document.getElementById('e-username').value=val;
   const statusEl=document.getElementById('username-status');
-  if(!val){statusEl.textContent='';_usernameValid2=false;return;}
-  if(val.length<3){statusEl.style.color='var(--red)';statusEl.textContent='Username must be at least 3 characters.';_usernameValid2=false;return;}
+  if(!val){statusEl.textContent='';_usernameValid=false;return;}
+  if(val.length<3){statusEl.style.color='var(--red)';statusEl.textContent='Username must be at least 3 characters.';_usernameValid=false;return;}
   statusEl.style.color='var(--g3)';statusEl.textContent='Checking…';
-  _usernameTimer2=setTimeout(async()=>{
+  _usernameTimer=setTimeout(async()=>{
     const currentUsername=(cProf?.username||user.email.split('@')[0]).toLowerCase();
-    if(val===currentUsername){statusEl.style.color='var(--green)';statusEl.textContent='✓ Current username';_usernameValid2=true;return;}
+    if(val===currentUsername){statusEl.style.color='var(--green)';statusEl.textContent='✓ Current username';_usernameValid=true;return;}
     const {data}=await sb.from('users').select('id').eq('username',val).neq('id',user.id).maybeSingle();
-    if(data){statusEl.style.color='var(--red)';statusEl.textContent='✗ Username taken.';_usernameValid2=false;}
-    else{statusEl.style.color='var(--green)';statusEl.textContent='✓ Available!';_usernameValid2=true;}
+    if(data){statusEl.style.color='var(--red)';statusEl.textContent='✗ Username taken.';_usernameValid=false;}
+    else{statusEl.style.color='var(--green)';statusEl.textContent='✓ Available!';_usernameValid=true;}
   },600);
 }
 
 async function saveProfile(){
-  if(!_usernameValid2){showToast('⚠️ Please choose a valid unique username.');return;}
+  if(!_usernameValid){showToast('⚠️ Please choose a valid unique username.');return;}
   const username=(document.getElementById('e-username').value||'').trim();
   const company=(document.getElementById('e-company').value||'').trim();
   if(!company){showToast('⚠️ Business name is required.');return;}
   if(!username){showToast('⚠️ Username is required.');return;}
-  const btn=document.getElementById('e-save');
-  btn.disabled=true;btn.textContent='⏳ Saving…';
-
-  const currentPlan = cProf?.plan || 'free';
+  const btn=document.getElementById('e-save');btn.disabled=true;btn.textContent='⏳ Saving…';
   const updates={
-    company_name:     company,
-    trade_type:       document.getElementById('e-trade').value,
-    phone:            document.getElementById('e-phone').value,
-    location:         document.getElementById('e-loc').value,
-    service_areas:    document.getElementById('e-areas').value,
-    description:      document.getElementById('e-desc').value,
-    experience:       document.getElementById('e-exp').value,
-    license_url:      document.getElementById('e-license').value,
-    insured:          document.getElementById('e-insured').value==='true' ? true : document.getElementById('e-insured').value==='false' ? false : null,
-    hourly_rate:      parseInt(document.getElementById('e-rate').value)||null,
-    pricing_note:     document.getElementById('e-rate-note').value,
-    // Keep accepts_bookings consistent with plan
-    accepts_bookings: currentPlan !== 'leads',
+    company_name:company,trade_type:document.getElementById('e-trade').value,
+    phone:document.getElementById('e-phone').value,location:document.getElementById('e-loc').value,
+    service_areas:document.getElementById('e-areas').value,description:document.getElementById('e-desc').value,
+    experience:document.getElementById('e-exp').value,license_url:document.getElementById('e-license').value,
+    insured:document.getElementById('e-insured').value==='true'?true:document.getElementById('e-insured').value==='false'?false:null,
+    hourly_rate:parseInt(document.getElementById('e-rate').value)||null,
+    pricing_note:document.getElementById('e-rate-note').value,
   };
-
   const [r1,r2]=await Promise.all([
     sb.from('contractors').update(updates).eq('id',user.id),
     sb.from('users').update({username}).eq('id',user.id),
   ]);
   btn.disabled=false;btn.textContent='Save All Changes';
-
   if(r1.error){showToast('❌ '+r1.error.message);return;}
   cProf={...cProf,...updates,username};
-  fillUI();
-  closeEdit();
-  showToast('✅ Profile saved!');
+  fillUI();closeEdit();showToast('✅ Profile saved!');
 }
 
-// ── ONLINE TOGGLE ──────────────────────────────────────────
-function renderOnlineToggle(){
-  const card=document.getElementById('online-card');
-  const ind=document.getElementById('online-ind');
-  const label=document.getElementById('online-label');
-  const sw=document.getElementById('online-sw');
-  const knob=document.getElementById('online-knob');
-  if(_isOnline){
-    card.classList.add('active');sw.style.background='var(--accent)';knob.style.left='23px';
-    label.textContent='Online';label.style.color='var(--accent)';ind.textContent='🟢';
-    ind.style.background='rgba(34,197,94,.12)';
-  } else {
-    card.classList.remove('active');sw.style.background='var(--g3)';knob.style.left='3px';
-    label.textContent='Offline';label.style.color='var(--g2)';ind.textContent='⚫';
-    ind.style.background='rgba(96,96,96,.2)';
-  }
-}
+/* ── MESSAGES ── */
+function hasLink(txt){return/(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io)[^\s]*)/i.test(txt);}
 
-async function toggleOnline(){
-  _isOnline=!_isOnline;
-  renderOnlineToggle();
-  await sb.from('contractors').update({is_online:_isOnline}).eq('id',user.id);
-  showToast(_isOnline?'🟢 You are now online!':'⚫ You are now offline.');
-}
-
-// ── MESSAGES ───────────────────────────────────────────────
-function hasLink(txt){return /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9.-]+\.(com|net|org|io)[^\s]*)/i.test(txt);}
-
-async function loadCConversations(){
+async function loadConversations(){
   if(!user)return;
   const {data}=await sb.from('conversations').select('*').eq('contractor_id',user.id).order('last_message_at',{ascending:false,nullsFirst:false});
   const listEl=document.getElementById('conv-list');
@@ -1523,55 +1366,50 @@ async function loadCConversations(){
     const ini=(c.customer_name||'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
     const time=c.last_message_at?new Date(c.last_message_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
     const preview=(c.last_message||'No messages yet').substring(0,42);
-    const isActive=c.id===_activeConvId?'active':'';
     if(c.status==='pending')unread++;
-    return `<div class="conv-item ${isActive}" onclick="cOpenConversation('${c.id}')">
+    return `<div class="conv-item ${c.id===_activeConvId?'active':''}" onclick="openConv('${c.id}')">
       <div class="conv-av">${ini}</div>
       <div class="conv-info"><div class="conv-name">${c.customer_name||'Customer'}</div><div class="conv-preview">${preview}</div></div>
-      <div class="conv-meta"><span class="conv-time">${time}</span>${c.status==='pending'?'<div class="conv-unread"></div>':''}</div>
+      <div class="conv-meta"><span class="conv-time">${time}</span>${c.status==='pending'?'<div class="conv-dot"></div>':''}</div>
     </div>`;
   }).join('');
   const badge=document.getElementById('msg-badge');
   if(unread>0){badge.textContent=unread;badge.style.display='inline';}else{badge.style.display='none';}
 }
 
-async function cOpenConversation(convId){
+async function openConv(convId){
   _activeConvId=convId;
   const {data:conv}=await sb.from('conversations').select('*').eq('id',convId).single();
   if(!conv)return;
   const ini=(conv.customer_name||'C').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
   document.getElementById('chat-hdr-av').textContent=ini;
-  const nameEl=document.getElementById('chat-hdr-name');nameEl.textContent=conv.customer_name||'Customer';
-  const statEl=document.getElementById('chat-hdr-status');statEl.textContent=conv.status==='accepted'?'✅ Active':'⏳ Pending — accept to reply';
+  document.getElementById('chat-hdr-name').textContent=conv.customer_name||'Customer';
+  document.getElementById('chat-hdr-status').textContent=conv.status==='accepted'?'✅ Active':'⏳ Pending — accept to reply';
   document.getElementById('chat-hdr').style.display='flex';
   document.getElementById('chat-empty').style.display='none';
   document.getElementById('chat-accept-row').style.display=conv.status==='pending'?'flex':'none';
   document.getElementById('chat-input-row').style.display=conv.status==='accepted'?'flex':'none';
-  document.querySelectorAll('.conv-item').forEach(el=>el.classList.remove('active'));
-  await cLoadMessages(convId);
-  if(_chatChannel) sb.removeChannel(_chatChannel);
-  _chatChannel=sb.channel('c-msgs-'+convId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`conversation_id=eq.${convId}`},p=>cAppendMsg(p.new)).subscribe();
+  await loadMsgs(convId);
+  if(_chatChannel)sb.removeChannel(_chatChannel);
+  _chatChannel=sb.channel('c-msgs-'+convId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`conversation_id=eq.${convId}`},p=>appendMsg(p.new)).subscribe();
 }
 
-async function cLoadMessages(convId){
+async function loadMsgs(convId){
   const {data}=await sb.from('messages').select('*').eq('conversation_id',convId).order('created_at',{ascending:true});
   const el=document.getElementById('chat-msgs');
   if(!data||!data.length){el.innerHTML=`<div style="text-align:center;color:var(--g3);font-size:13px;padding:20px;">No messages yet.</div>`;return;}
-  el.innerHTML=data.map(m=>cRenderMsg(m)).join('');
-  el.scrollTop=el.scrollHeight;
+  el.innerHTML=data.map(m=>renderMsg(m)).join('');el.scrollTop=el.scrollHeight;
 }
 
-function cRenderMsg(m){
+function renderMsg(m){
   const mine=m.sender_id===user.id;
-  const cls=mine?'mine':'theirs';
-  const bCls=mine?'msg-mine':'msg-theirs';
   const t=new Date(m.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  return `<div class="msg-wrap ${cls}"><div class="msg-bubble ${bCls}">${escHtml(m.body)}</div><div class="msg-time">${t}</div></div>`;
+  return `<div class="msg-wrap ${mine?'mine':'theirs'}"><div class="msg-bubble ${mine?'msg-mine':'msg-theirs'}">${escHtml(m.body)}</div><div class="msg-time">${t}</div></div>`;
 }
 
-function cAppendMsg(m){const el=document.getElementById('chat-msgs');if(!el)return;const d=document.createElement('div');d.innerHTML=cRenderMsg(m);el.appendChild(d.firstChild);el.scrollTop=el.scrollHeight;}
+function appendMsg(m){const el=document.getElementById('chat-msgs');if(!el)return;const d=document.createElement('div');d.innerHTML=renderMsg(m);el.appendChild(d.firstChild);el.scrollTop=el.scrollHeight;}
 
-async function cSendMessage(){
+async function sendMsg(){
   if(!_activeConvId)return;
   const inp=document.getElementById('chat-input');
   const raw=(inp.value||'').trim();
@@ -1592,49 +1430,44 @@ async function respondToRequest(action){
     acceptRow.style.display='none';inputRow.style.display='flex';
     statEl.textContent='✅ Active conversation';
     await sb.from('messages').insert({conversation_id:_activeConvId,sender_id:user.id,sender_role:'contractor',body:'Hi! Thanks for reaching out. How can I help you?'});
-    await cLoadMessages(_activeConvId);
-    showToast('✅ Message request accepted!');
+    await loadMsgs(_activeConvId);showToast('✅ Message request accepted!');
   } else {
-    acceptRow.style.display='none';statEl.textContent='❌ Request declined';
-    showToast('Request declined.');
+    acceptRow.style.display='none';statEl.textContent='❌ Request declined';showToast('Request declined.');
   }
-  loadCConversations();
+  loadConversations();
 }
 
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
-// ── MISC ───────────────────────────────────────────────────
-function previewProfile(){showToast('👁️ Public profile preview — customers see your Profile tab.');}
+/* ── MISC ── */
+function previewProfile(){showToast('👁️ Public profile preview — customers see your Company Profile tab.');}
 async function signOut(){await sb.auth.signOut();sessionStorage.setItem('auth_intentional','1');window.location.replace('/tradease-auth.html');}
 function goHome(){window.location.href='/';}
 
 let _tt;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3800);}
 
-// ── FAQ ────────────────────────────────────────────────────
+/* ── FAQ ── */
 const FAQS=[
-  {q:'How do I get more bookings?',a:'Complete your profile fully — bio, photos, services, and availability. Contractors with complete profiles get up to 5x more bookings. Also, respond to requests quickly to improve your response rate ranking.'},
-  {q:'What happens when a customer books me?',a:'You\'ll see a new booking in your Bookings tab. You have 24 hours to accept or decline. The customer is notified of your decision immediately.'},
-  {q:'How do I get paid?',a:'Payments are processed through the platform after a job is marked complete. Funds are deposited to your account within 2–3 business days. Stripe integration is coming soon.'},
+  {q:'How do I get more bookings?',a:'Complete your profile fully — bio, photos, services, and availability. Contractors with complete profiles get up to 5x more bookings. Respond to requests quickly to improve your ranking.'},
+  {q:'What happens when a customer books me?',a:"You'll see a new booking in your Bookings tab. You have 24 hours to accept or decline. The customer is notified of your decision immediately."},
+  {q:'How do I get paid?',a:'Payments are processed through the platform after a job is marked complete. Stripe integration is coming soon.'},
   {q:'Can I set my own prices?',a:'Yes. Use the Services & Pricing tab to list your services with custom prices. You can set flat rates, hourly rates, or price ranges.'},
-  {q:'What is the platform fee?',a:'Free plan: 15% of each completed booking. Pro plan: 10%. Just Leads plan: no fees (no booking system).'},
+  {q:'What is the platform fee?',a:'Free plan: 15% of each completed booking. Pro plan: 10%.'},
   {q:'How do I get a Verified badge?',a:'Verified badges are awarded after we review your license and insurance documents. Upgrade to Pro to prioritize your verification review.'},
-  {q:'Can I decline a booking?',a:'Yes. Repeated declines affect your reliability score and search ranking. If you\'re unavailable, set your status to Offline to avoid receiving requests.'},
 ];
 
 function buildFAQ(){
   document.getElementById('faq-list').innerHTML=FAQS.map((f,i)=>`
-    <div class="content-section faq-item" onclick="toggleFaq(${i})">
-      <div class="faq-q">${f.q} <span id="faq-icon-${i}">+</span></div>
+    <div class="content-section" onclick="toggleFaq(${i})" style="cursor:pointer;">
+      <div class="faq-q">${f.q} <span id="faq-ic-${i}">+</span></div>
       <div class="faq-a" id="faq-a-${i}">${f.a}</div>
     </div>`).join('');
 }
 
 function toggleFaq(i){
-  const a=document.getElementById('faq-a-'+i);
-  const ic=document.getElementById('faq-icon-'+i);
-  const open=a.classList.toggle('open');
-  if(ic)ic.textContent=open?'−':'+';
+  const a=document.getElementById('faq-a-'+i);const ic=document.getElementById('faq-ic-'+i);
+  const open=a.classList.toggle('open');if(ic)ic.textContent=open?'−':'+';
 }
 
 init();

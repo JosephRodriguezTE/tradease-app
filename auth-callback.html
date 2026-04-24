@@ -19,7 +19,6 @@ const supabase = window.supabase.createClient(
   if (userId && type === 'confirm' && email) {
     // Handle email confirmation - update user status
     try {
-      // Mark user as email confirmed in our database
       const { error } = await supabase
         .from('users')
         .update({ email_confirmed: true })
@@ -30,15 +29,9 @@ const supabase = window.supabase.createClient(
         return;
       }
 
-      // Try to sign in the user (this assumes email confirmation is disabled in Supabase)
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'dummy_password' // Won't work if email confirmation is required
-      });
-
-      showSuccess('✅ Email confirmed! Welcome to Tradease!');
+      showSuccess('✅ Email confirmed! Redirecting to login...');
       setTimeout(() => {
-        window.location.href = "/customer-dashboard.html";
+        window.location.href = "/tradease-auth.html?confirmed=true";
       }, 2000);
     } catch (e) {
       showError('❌ Confirmation failed. Please try logging in manually.');
@@ -47,10 +40,10 @@ const supabase = window.supabase.createClient(
   }
 
   if (type === 'reset' && email) {
-    // Handle password reset - redirect to auth page with reset mode
-    showSuccess('✅ Reset link verified! Redirecting...');
+    sessionStorage.setItem('reset_email', email);
+    showSuccess('✅ Reset link verified! Redirecting to password reset page...');
     setTimeout(() => {
-      window.location.href = "/tradease-auth.html?reset=true&email=" + encodeURIComponent(email);
+      window.location.href = "/tradease-auth.html?reset=true";
     }, 2000);
     return;
   }
@@ -90,7 +83,7 @@ function showSuccess(message) {
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   :root{--bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--border:#2A2A2A;--orange:#FF6B2B;--orange-dk:#E05520;--white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;--green:#22C55E;--red:#EF4444;}
-  body{font-family:'Barlow',sans-serif;background:#0F0F0F url('wall-bg.jpg') center/cover no-repeat fixed;color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
+  body{font-family:'Barlow',sans-serif;background-color:#4A4A52;background-image:radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;background-attachment:fixed;color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
   .logo{margin-bottom:48px;display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;}
   .logo img{width:36px;height:36px;border-radius:10px;object-fit:cover;}
   .logo span{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;}

@@ -1,4 +1,5 @@
 {
+  "name": "tradease-app",
   "outputDirectory": ".",
   "rewrites": [
     {

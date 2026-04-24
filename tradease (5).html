@@ -80,7 +80,48 @@
 html { scroll-behavior: auto; }
 body {
   font-family: var(--font-body);
-  background: #2C2F33 url('wall-bg.jpg') center/cover no-repeat fixed;
+  background-color: #4A4A52;
+  background-image:
+    /* Micro noise layer 1 */
+    radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),
+    radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),
+    radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),
+    /* Micro noise layer 2 */
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),
+    radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),
+    radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),
+    /* Medium texture variation */
+    radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),
+    radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),
+    radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),
+    /* Larger variation layers */
+    radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),
+    radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);
+  background-size:
+    97px 113px,
+    131px 179px,
+    71px 73px,
+    163px 151px,
+    89px 97px,
+    211px 157px,
+    350px 250px,
+    380px 280px,
+    420px 300px,
+    600px 400px,
+    700px 500px;
+  background-position:
+    0 0,
+    40px 60px,
+    10px 30px,
+    20px 80px,
+    50px 20px,
+    100px 100px,
+    0 0,
+    50px 80px,
+    100px 50px,
+    0 0,
+    0 0;
+  background-attachment: fixed;
   color: var(--text-hi);
   line-height: 1.6;
   font-size: 16px;

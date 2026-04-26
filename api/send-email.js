@@ -1,13 +1,20 @@
 import { Resend } from 'resend';
+import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Initialize Supabase admin client for generating secure email links
+const sbAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, type, link, name } = req.body;
+  const { email, type, name } = req.body;
 
   if (!email || !type) {
     return res.status(400).json({ error: 'Email and type are required' });
@@ -15,9 +22,26 @@ export default async function handler(req, res) {
 
   let subject = '';
   let html = '';
+  let link = '';
 
   try {
+    // Generate secure email link using Supabase admin API
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tradease.tech';
+    
     if (type === 'confirm') {
+      const { data, error } = await sbAdmin.auth.admin.generateLink({
+        type: 'signup',
+        email,
+        options: {
+          redirectTo: `${baseUrl}/auth-callback.html`
+        }
+      });
+      
+      if (error || !data) {
+        return res.status(500).json({ error: 'Failed to generate confirmation link' });
+      }
+      
+      link = data.properties.action_link;
       subject = 'Welcome to Tradease - Confirm Your Account';
       html = `
         <!DOCTYPE html>
@@ -68,8 +92,20 @@ export default async function handler(req, res) {
         </html>
       `;
     } else if (type === 'reset') {
+      const { data, error } = await sbAdmin.auth.admin.generateLink({
+        type: 'recovery',
+        email,
+        options: {
+          redirectTo: `${baseUrl}/auth-callback.html`
+        }
+      });
+      
+      if (error || !data) {
+        return res.status(500).json({ error: 'Failed to generate password reset link' });
+      }
+      
+      link = data.properties.action_link;
       subject = 'Reset Your Tradease Password';
-      html = `
         <!DOCTYPE html>
         <html>
         <head>

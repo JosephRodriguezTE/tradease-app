@@ -5,40 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Booking Confirmed – Tradease</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="icon" href="/tradease-logo.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Barlow',sans-serif;background-color:#4A4A52;background-image:radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;background-attachment:fixed;color:#F0F0EE;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
-body::before{content:'';position:fixed;inset:0;background:rgba(10,10,14,0.78);z-index:0;}
-.logo{position:relative;z-index:1;margin-bottom:32px;display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
-.logo img{width:36px;height:36px;border-radius:9px;object-fit:cover;}
-.logo span{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#FF6B2B;letter-spacing:.04em;text-transform:uppercase;-webkit-text-stroke:0.5px #000;paint-order:stroke fill;}
-.card{position:relative;z-index:1;background:rgba(15,15,18,0.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:28px;padding:48px 40px;max-width:480px;width:100%;text-align:center;box-shadow:0 0 60px rgba(34,197,94,0.12);}
-.check-circle{width:80px;height:80px;background:linear-gradient(135deg,#22C55E,#16A34A);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;box-shadow:0 0 40px rgba(34,197,94,0.4);animation:pop .4s cubic-bezier(.175,.885,.32,1.275) both;}
+:root{--orange:#FF6B2B;--orange-dk:#E05520;--accent:#22C55E;--border:rgba(255,255,255,.06);--g1:#E8EAE8;--g2:#7A8A7E;--g3:#3A4A3E;--display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:var(--body);
+  background-color:#4A4A52;
+  background-image:radial-gradient(circle at 12% 45%,rgba(255,255,255,.035) .5px,transparent 1px),radial-gradient(circle at 68% 72%,rgba(255,255,255,.025) .5px,transparent 1px),radial-gradient(circle at 44% 31%,rgba(0,0,0,.06) .8px,transparent 1.5px),radial-gradient(circle at 78% 18%,rgba(255,255,255,.04) 1px,transparent 2px),radial-gradient(circle at 33% 85%,rgba(0,0,0,.05) .8px,transparent 1.5px),radial-gradient(circle at 89% 54%,rgba(255,255,255,.03) 1px,transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%,rgba(100,100,110,.15),transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%,rgba(50,50,58,.12),transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%,rgba(80,80,88,.08),transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%,rgba(0,0,0,.1),transparent),radial-gradient(ellipse 450px 250px at 85% 20%,rgba(255,255,255,.05),transparent);
+  background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;
+  background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;
+  background-attachment:fixed;
+  color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;
+}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:rgba(8,10,12,.70);pointer-events:none;}
+
+.logo{margin-bottom:40px;font-family:var(--display);font-size:26px;font-weight:900;color:var(--orange);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;}
+.logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;}
+
+.card{
+  background:rgba(14,16,18,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:22px;
+  padding:48px 40px;max-width:480px;width:100%;
+  box-shadow:0 0 60px rgba(34,197,94,.06);
+}
+
+.check-circle{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#16A34A);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 24px;
+  box-shadow:0 0 40px rgba(34,197,94,.35);
+  animation:pop .4s cubic-bezier(.175,.885,.32,1.275) both;
+}
 @keyframes pop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
 .check-circle svg{stroke:white;width:38px;height:38px;}
-h1{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;text-transform:uppercase;letter-spacing:.03em;color:white;margin-bottom:10px;}
-.subtitle{font-size:16px;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:32px;}
-.details-card{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:20px;margin-bottom:28px;text-align:left;}
-.detail-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;}
+
+h1{font-family:var(--display);font-size:36px;font-weight:900;text-transform:uppercase;color:white;margin-bottom:10px;}
+.subtitle{font-size:16px;color:var(--g2);line-height:1.65;margin-bottom:28px;}
+
+.details{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:20px;margin-bottom:24px;text-align:left;}
+.detail-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px;}
 .detail-row:last-child{border-bottom:none;padding-bottom:0;}
-.detail-label{color:rgba(255,255,255,0.4);font-size:12px;text-transform:uppercase;letter-spacing:.06em;}
-.detail-value{color:white;font-weight:600;}
-.note{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 16px;font-size:13px;color:rgba(255,255,255,0.45);line-height:1.65;margin-bottom:28px;display:flex;gap:10px;align-items:flex-start;text-align:left;}
+.detail-lbl{font-family:var(--display);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g3);}
+.detail-val{font-weight:600;color:white;}
+
+.note{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--g2);line-height:1.65;margin-bottom:24px;display:flex;gap:10px;align-items:flex-start;text-align:left;}
 .note span:first-child{font-size:18px;flex-shrink:0;margin-top:1px;}
-.btn-primary{display:flex;align-items:center;justify-content:center;width:100%;padding:15px 24px;background:linear-gradient(135deg,#FF6B2B,#E05520);color:white;border:none;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;text-decoration:none;transition:opacity .12s;margin-bottom:12px;box-shadow:0 0 24px rgba(255,107,43,0.3);}
-.btn-primary:hover{opacity:.88;}
-.btn-ghost{display:flex;align-items:center;justify-content:center;width:100%;padding:13px 24px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;text-decoration:none;transition:background .12s;}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);}
+
+.btn-primary{display:flex;align-items:center;justify-content:center;width:100%;padding:14px 24px;background:var(--orange);color:white;border:none;border-radius:10px;font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;text-decoration:none;transition:all .12s;margin-bottom:10px;box-shadow:0 4px 16px rgba(255,107,43,.3);}
+.btn-primary:hover{background:var(--orange-dk);}
+.btn-ghost{display:flex;align-items:center;justify-content:center;width:100%;padding:12px 24px;background:rgba(255,255,255,.05);color:var(--g1);border:1px solid var(--border);border-radius:10px;font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .12s;}
+.btn-ghost:hover{background:rgba(255,255,255,.08);}
 </style>
 </head>
 <body>
-
-<a class="logo" href="/">
-  <img src="/tradease-logo.svg" alt="Tradease"/>
-  <span>Tradease</span>
-</a>
+<a class="logo" href="/"><span>Tradease</span><span class="logo-dot"></span></a>
 
 <div class="card">
   <div class="check-circle">
@@ -46,47 +68,34 @@ h1{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;text
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   </div>
-
   <h1>Booking Confirmed</h1>
-  <p class="subtitle">Your booking request has been sent. The contractor will confirm your appointment shortly.</p>
+  <p class="subtitle">Your request has been sent. The contractor will confirm your appointment shortly.</p>
 
-  <div class="details-card" id="details-card">
-    <div class="detail-row">
-      <span class="detail-label">Contractor</span>
-      <span class="detail-value" id="s-contractor">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Service</span>
-      <span class="detail-value" id="s-service">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Date</span>
-      <span class="detail-value" id="s-date">—</span>
-    </div>
+  <div class="details">
+    <div class="detail-row"><span class="detail-lbl">Contractor</span><span class="detail-val" id="s-contractor">—</span></div>
+    <div class="detail-row"><span class="detail-lbl">Service</span><span class="detail-val" id="s-service">—</span></div>
+    <div class="detail-row"><span class="detail-lbl">Date</span><span class="detail-val" id="s-date">—</span></div>
   </div>
 
-  <div class="note">
-    <span>💡</span>
-    <span>Your contractor will receive your request and confirm the booking. You'll be notified once they accept. No payment is collected until the job is complete.</span>
-  </div>
+  <div class="note"><span>💡</span><span>No payment collected until the job is complete. You'll be notified once the contractor accepts.</span></div>
 
   <a class="btn-primary" href="/customer-dashboard.html">📅 View My Bookings</a>
   <a class="btn-ghost" href="/">Back to Home</a>
 </div>
 
 <script>
-(function() {
-  try {
-    const data = JSON.parse(sessionStorage.getItem('booking_confirmed') || '{}');
+(function(){
+  try{
+    const data=JSON.parse(sessionStorage.getItem('booking_confirmed')||'{}');
     sessionStorage.removeItem('booking_confirmed');
-    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
-    set('s-contractor', data.contractor);
-    set('s-service',    data.service);
-    if (data.date) {
-      const d = new Date(data.date);
-      set('s-date', isNaN(d.getTime()) ? data.date : d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}));
+    const set=(id,val)=>{const el=document.getElementById(id);if(el&&val)el.textContent=val;};
+    set('s-contractor',data.contractor);
+    set('s-service',data.service);
+    if(data.date){
+      const d=new Date(data.date);
+      set('s-date',isNaN(d.getTime())?data.date:d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}));
     }
-  } catch(e) {}
+  }catch(e){}
 })();
 </script>
 </body>

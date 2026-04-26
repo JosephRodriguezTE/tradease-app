@@ -3,194 +3,304 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tradease – Book Trusted Local Contractors</title>
+<title>Tradease – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--bg4:#252525;
-  --border:#2E2E2E;--border-hi:#3D3D3D;
-  --orange:#FF6B2B;--orange-dk:#E05520;--orange-lt:rgba(255,107,43,.12);
-  --white:#FFFFFF;--grey1:#F0F0EE;--grey2:#A8A8A8;--grey3:#606060;
-  --green:#22C55E;--red:#EF4444;
-  --display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
-  --r-sm:10px;--r-md:14px;--r-lg:20px;--r-xl:28px;
-  --sh:0 4px 24px rgba(0,0,0,.5);--sh-lg:0 16px 64px rgba(0,0,0,.6);
-  --sh-or:0 8px 32px rgba(255,107,43,.3);
+/* ══════════════════════════════════════════════════
+   TRADEASE AUTH — Unified Design System v2
+   ══════════════════════════════════════════════════ */
+:root{
+  --bg:#080A0C; --bg2:#0E1012; --bg3:#141618; --bg4:#1C1F22; --bg5:#242729;
+  --border:rgba(255,255,255,.06); --border-hi:rgba(255,255,255,.12);
+  --orange:#FF6B2B; --orange-dk:#E05520; --orange-lt:rgba(255,107,43,.10);
+  --accent:#22C55E; --accent-dk:#16A34A; --accent-lt:rgba(34,197,94,.10);
+  --white:#fff; --g1:#E8EAE8; --g2:#7A8A7E; --g3:#3A4A3E;
+  --yellow:#FBbf24; --red:#EF4444; --blue:#60A5FA;
+  --display:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:auto;}
-body{font-family:var(--body);background-color:#4A4A52;background-image:radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;background-attachment:fixed;color:var(--grey1);min-height:100vh;overflow-x:hidden;font-size:15px;opacity:1;transition:opacity .18s ease;line-height:1.6;}
+
+/* Concrete background on the right/form side */
+body{
+  font-family:var(--body);
+  background-color:#4A4A52;
+  background-image:
+    radial-gradient(circle at 12% 45%,rgba(255,255,255,.035) .5px,transparent 1px),
+    radial-gradient(circle at 68% 72%,rgba(255,255,255,.025) .5px,transparent 1px),
+    radial-gradient(circle at 44% 31%,rgba(0,0,0,.06) .8px,transparent 1.5px),
+    radial-gradient(circle at 78% 18%,rgba(255,255,255,.04) 1px,transparent 2px),
+    radial-gradient(circle at 33% 85%,rgba(0,0,0,.05) .8px,transparent 1.5px),
+    radial-gradient(circle at 89% 54%,rgba(255,255,255,.03) 1px,transparent 2px),
+    radial-gradient(ellipse 180px 100px at 15% 25%,rgba(100,100,110,.15),transparent 60%),
+    radial-gradient(ellipse 220px 130px at 75% 65%,rgba(50,50,58,.12),transparent 60%),
+    radial-gradient(ellipse 250px 150px at 50% 50%,rgba(80,80,88,.08),transparent 70%),
+    radial-gradient(ellipse 400px 200px at 25% 80%,rgba(0,0,0,.1),transparent),
+    radial-gradient(ellipse 450px 250px at 85% 20%,rgba(255,255,255,.05),transparent);
+  background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;
+  background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;
+  background-attachment:fixed;
+  color:var(--g1); min-height:100vh; overflow-x:hidden; font-size:15px;
+}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:rgba(8,10,12,.70);pointer-events:none;}
 a{text-decoration:none;color:inherit;}
-button{cursor:pointer;border:none;background:none;font-family:var(--body);}
+button{cursor:pointer;border:none;font-family:var(--body);}
 input,select,textarea{font-family:var(--body);}
-ul{list-style:none;}
 
+/* ── SCREEN SYSTEM ── */
 .screen{display:none;min-height:100vh;}
-.screen.active{display:flex;animation:authFade .15s ease both;}
-/* Show login screen by default in case JS fails */
-#screen-login{display:flex;}
-@keyframes authFade{from{opacity:0;}to{opacity:1;}}
+.screen.active{display:flex;animation:fadeIn .15s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-.split{display:grid;grid-template-columns:420px 1fr;min-height:100vh;width:100%;}
-.split-left{background:var(--bg2);border-right:1px solid var(--border);padding:52px 48px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:hidden;}
-.split-right{background:var(--bg);padding:52px 56px;display:flex;flex-direction:column;overflow-y:auto;min-height:100vh;}
+/* ── SPLIT LAYOUT ── */
+.split{display:grid;grid-template-columns:400px 1fr;min-height:100vh;width:100%;}
 
-.brand-logo{font-family:var(--display);font-size:28px;font-weight:900;color:var(--white);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;gap:8px;margin-bottom:auto;}
-.brand-dot{width:10px;height:10px;background:var(--orange);border-radius:50%;flex-shrink:0;}
+/* Left brand panel — solid dark, NO concrete */
+.split-left{
+  background:rgba(8,10,12,.99);
+  border-right:1px solid var(--border);
+  padding:48px 44px;
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow:hidden;
+}
+
+/* Right form panel — concrete shows through */
+.split-right{
+  padding:48px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+  overflow-y:auto;min-height:100vh;
+}
+
+/* Brand panel content */
+.brand-logo{
+  font-family:var(--display);font-size:26px;font-weight:900;
+  color:var(--orange);text-transform:uppercase;letter-spacing:.03em;
+  display:flex;align-items:center;gap:8px;margin-bottom:auto;
+  cursor:pointer;
+}
+.brand-logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;box-shadow:0 0 8px rgba(255,107,43,.6);}
 .brand-hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0;}
-.brand-hero h2{font-family:var(--display);font-size:clamp(32px,3.5vw,52px);font-weight:900;color:var(--white);text-transform:uppercase;line-height:1.05;letter-spacing:-.01em;margin-bottom:16px;}
-.brand-hero h2 em{color:var(--orange);font-style:normal;}
-.brand-hero p{font-size:15px;color:var(--grey2);line-height:1.7;max-width:300px;}
-.brand-features{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
-.brand-feat{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--grey2);}
-.brand-feat-icon{width:28px;height:28px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.brand-bottom{padding-top:32px;border-top:1px solid var(--border);font-size:12px;color:var(--grey3);}
-.brand-orb{position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(255,107,43,.18) 0%,transparent 70%);border-radius:50%;bottom:-80px;right:-80px;pointer-events:none;}
+.brand-hero h2{
+  font-family:var(--display);font-size:clamp(34px,3.5vw,52px);font-weight:900;
+  color:var(--white);text-transform:uppercase;line-height:1.04;
+  letter-spacing:-.01em;margin-bottom:16px;
+}
+.brand-hero h2 em{color:var(--orange);font-style:normal;text-shadow:0 0 24px rgba(255,107,43,.4);}
+.brand-hero p{font-size:14px;color:var(--g2);line-height:1.75;max-width:280px;}
+.brand-feats{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+.brand-feat{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--g2);}
+.brand-feat-ic{
+  width:28px;height:28px;border-radius:8px;
+  background:var(--orange-lt);color:var(--orange);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;
+  border:1px solid rgba(255,107,43,.15);
+}
+.brand-foot{padding-top:28px;border-top:1px solid var(--border);font-size:12px;color:var(--g3);}
+/* Ambient glow orb */
+.brand-orb{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,43,.12),transparent 70%);bottom:-100px;right:-100px;pointer-events:none;}
 
-.form-title{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;color:var(--white);margin-bottom:6px;}
-.form-sub{font-size:14px;color:var(--grey2);margin-bottom:32px;}
+/* ── FORM AREA ── */
+.form-inner{max-width:440px;width:100%;}
 
-.type-toggle{display:flex;background:var(--bg3);border-radius:var(--r-md);padding:4px;margin-bottom:32px;border:1px solid var(--border);}
-.type-btn{flex:1;padding:11px 16px;border-radius:10px;font-family:var(--display);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--grey2);transition:background .12s ease,color .12s ease,box-shadow .12s ease;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
-.type-btn.active{background:var(--orange);color:var(--white);box-shadow:var(--sh-or);}
+/* Type toggle (customer / contractor) */
+.type-toggle{
+  display:flex;background:rgba(14,16,18,.88);
+  border-radius:10px;padding:4px;margin-bottom:28px;
+  border:1px solid var(--border);
+}
+.type-btn{
+  flex:1;padding:11px 16px;border-radius:8px;
+  font-family:var(--display);font-size:13px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--g2);
+  transition:all .12s;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.type-btn.active{background:var(--orange);color:var(--white);box-shadow:0 4px 16px rgba(255,107,43,.3);}
 .type-btn:not(.active):hover{color:var(--white);}
 
-.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
-.fg label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey2);}
-.fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;color:var(--grey1);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.15);}
-.fg input::placeholder,.fg textarea::placeholder{color:var(--grey3);}
-.fg select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23606060' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.form-title{
+  font-family:var(--display);font-size:clamp(26px,3vw,38px);font-weight:900;
+  text-transform:uppercase;letter-spacing:-.01em;color:var(--white);margin-bottom:6px;
+}
+.form-sub{font-size:14px;color:var(--g2);margin-bottom:28px;}
+
+/* Alert */
+.alert{
+  background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);
+  border-radius:10px;padding:12px 16px;font-size:13px;color:#FCA5A5;
+  margin-bottom:16px;display:none;
+}
+.alert.show{display:block;}
+
+/* OAuth buttons */
+.oauth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.btn-oauth{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 16px;
+  background:rgba(14,16,18,.88);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:10px;
+  color:var(--g1);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .12s;
+}
+.btn-oauth:hover{border-color:var(--border-hi);background:rgba(28,31,34,.9);}
+
+/* Divider */
+.or-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--g3);font-size:13px;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Form groups */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.fg label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);}
+.fg input,.fg select,.fg textarea{
+  background:rgba(14,16,18,.88);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;color:var(--g1);font-size:14px;outline:none;
+  transition:border-color .15s,box-shadow .15s;width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{
+  border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.12);
+}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--g3);}
+.fg select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233A4A3E' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;background-color:rgba(14,16,18,.88);}
 .fg select option{background:var(--bg3);}
 .fg textarea{resize:vertical;min-height:90px;}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg-hint{font-size:11px;color:var(--g3);margin-top:3px;}
 
-.pw-wrap{position:relative;}
-.pw-wrap input{padding-right:46px;}
-.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--grey3);font-size:17px;cursor:pointer;background:none;border:none;transition:color .18s;}
-.pw-toggle:hover{color:var(--orange);}
-
-.hint{font-size:12px;color:var(--grey3);margin-top:4px;}
-.err{font-size:12px;color:var(--red);margin-top:4px;display:none;}
+/* Error text */
+.err{font-size:12px;color:var(--red);margin-top:3px;display:none;}
 .err.show{display:block;}
 
-.pw-strength{margin-top:8px;}
-.pw-bar{height:3px;border-radius:4px;background:var(--bg4);overflow:hidden;}
-.pw-fill{height:100%;border-radius:4px;width:0%;transition:width .3s,background .3s;}
-.pw-label{font-size:11px;color:var(--grey3);margin-top:4px;}
+/* Password toggle */
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:46px;}
+.pw-eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--g3);font-size:16px;cursor:pointer;background:none;border:none;transition:color .15s;}
+.pw-eye:hover{color:var(--orange);}
 
-.check-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
-.check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:var(--orange);cursor:pointer;margin-top:2px;}
-.check-row label{font-size:13px;color:var(--grey2);line-height:1.6;cursor:pointer;}
+/* Password strength */
+.pw-str{margin-top:8px;}
+.pw-bar{height:3px;border-radius:4px;background:var(--bg4);overflow:hidden;}
+.pw-fill{height:100%;border-radius:4px;width:0;transition:width .3s,background .3s;}
+.pw-lbl{font-size:11px;color:var(--g3);margin-top:3px;}
+
+/* Checkbox rows */
+.check-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.check-row input[type=checkbox]{width:16px;height:16px;flex-shrink:0;accent-color:var(--orange);cursor:pointer;margin-top:3px;}
+.check-row label{font-size:13px;color:var(--g2);line-height:1.6;cursor:pointer;}
 .check-row label a{color:var(--orange);}
 
-.radio-group{display:flex;gap:10px;flex-wrap:wrap;}
-.radio-opt{flex:1;min-width:120px;border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;cursor:pointer;transition:border-color .12s ease,background .12s ease;display:flex;flex-direction:column;gap:4px;}
+/* Plan radio options */
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.radio-opt{
+  flex:1;min-width:120px;border:1px solid var(--border);border-radius:10px;
+  padding:14px;cursor:pointer;transition:all .12s;display:flex;flex-direction:column;gap:4px;
+  background:rgba(14,16,18,.88);
+}
 .radio-opt:hover{border-color:var(--border-hi);}
 .radio-opt.selected{border-color:var(--orange);background:var(--orange-lt);}
 .radio-opt input{display:none;}
-.radio-opt-title{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;color:var(--white);}
-.radio-opt-desc{font-size:12px;color:var(--grey2);}
+.radio-opt-title{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;color:var(--white);}
+.radio-opt-desc{font-size:11px;color:var(--g2);}
 .radio-opt.selected .radio-opt-title{color:var(--orange);}
 
-.or-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--grey3);font-size:13px;}
-.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+/* Primary buttons */
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px 24px;
+  background:var(--orange);color:var(--white);border:none;border-radius:10px;
+  font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+  cursor:pointer;transition:all .14s;box-shadow:0 4px 16px rgba(255,107,43,.3);
+}
+.btn-primary:hover{background:var(--orange-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,107,43,.4);}
+.btn-primary:active{transform:translateY(0);}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.06em;padding:15px 28px;border-radius:var(--r-sm);transition:background .12s ease,box-shadow .12s ease,transform .12s ease,border-color .12s ease;cursor:pointer;width:100%;will-change:transform;}
-.btn-orange{background:var(--orange);color:var(--white);box-shadow:var(--sh-or);}
-.btn-orange:hover{background:var(--orange-dk);transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,107,43,.4);}
-.btn-orange:active{transform:translateY(0);}
-.btn-orange:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.btn-ghost{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);}
-.btn-ghost:hover{border-color:var(--border-hi);background:var(--bg4);}
-.btn-google{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);font-family:var(--body);font-weight:600;font-size:14px;text-transform:none;letter-spacing:0;}
-.btn-google:hover{border-color:var(--border-hi);}
-.btn-github{background:var(--bg3);color:var(--grey1);border:1px solid var(--border);font-family:var(--body);font-weight:600;font-size:14px;text-transform:none;letter-spacing:0;}
-.btn-github:hover{border-color:var(--border-hi);}
-.oauth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;}
-.btn-sm{padding:11px 20px;font-size:13px;}
+.btn-ghost{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:auto;padding:12px 20px;
+  background:rgba(255,255,255,.05);color:var(--g1);
+  border:1px solid var(--border);border-radius:10px;
+  font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  cursor:pointer;transition:all .12s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:var(--border-hi);}
 
-.link{color:var(--orange);cursor:pointer;transition:opacity .18s;}
+.switch-text{text-align:center;font-size:13px;color:var(--g2);margin-top:18px;}
+.link{color:var(--orange);cursor:pointer;transition:opacity .15s;}
 .link:hover{opacity:.75;}
-.switch-text{text-align:center;font-size:13px;color:var(--grey2);margin-top:20px;}
 
-/* Alert box for errors */
-.alert-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;color:#FCA5A5;margin-bottom:16px;display:none;}
-.alert-box.show{display:block;}
-
-.progress-wrap{margin-bottom:36px;}
-.progress-steps{display:flex;gap:0;margin-bottom:10px;}
+/* Progress stepper */
+.prog-wrap{margin-bottom:32px;}
+.prog-steps{display:flex;gap:0;margin-bottom:10px;}
 .prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;}
 .prog-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
-.prog-step.done::after,.prog-step.active::after{background:var(--orange);}
-.prog-dot{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--grey3);position:relative;z-index:1;transition:background .15s ease,border-color .15s ease,color .15s ease;flex-shrink:0;}
+.prog-step.done::after,.prog-step.curr::after{background:var(--orange);}
+.prog-dot{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--g3);position:relative;z-index:1;transition:all .15s;flex-shrink:0;}
 .prog-step.done .prog-dot{background:var(--orange);border-color:var(--orange);color:white;}
-.prog-step.active .prog-dot{background:var(--bg);border-color:var(--orange);color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.2);}
-.prog-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey3);}
-.prog-step.active .prog-label,.prog-step.done .prog-label{color:var(--orange);}
-.progress-bar-wrap{height:3px;background:var(--bg4);border-radius:4px;overflow:hidden;}
-.progress-bar-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s ease;}
+.prog-step.curr .prog-dot{background:var(--bg);border-color:var(--orange);color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,43,.2);}
+.prog-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g3);}
+.prog-step.curr .prog-lbl,.prog-step.done .prog-lbl{color:var(--orange);}
+.prog-bar-wrap{height:2px;background:var(--bg4);border-radius:4px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s ease;}
 
-.step-panel{display:none;}
-.step-panel.active{display:block;animation:fadeIn .3s ease both;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.step-nav{display:flex;gap:10px;margin-top:28px;}
-
-.step-section{margin-bottom:6px;margin-top:28px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+/* Step panels */
+.step{display:none;}
+.step.active{display:block;animation:fadeIn .2s ease both;}
+.step-nav{display:flex;gap:10px;margin-top:24px;}
+.step-section{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:16px;margin-top:24px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+}
 .step-section:first-of-type{margin-top:0;}
-.step-section-icon{width:32px;height:32px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:15px;}
-.step-section h4{font-family:var(--display);font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
+.step-section-ic{width:30px;height:30px;border-radius:8px;background:var(--orange-lt);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.step-section h4{font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--white);}
 
-.success-screen{min-height:100vh;display:none;align-items:center;justify-content:center;flex-direction:column;background:var(--bg);text-align:center;padding:40px;}
-.success-screen.active{display:flex;}
-.success-icon{width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:24px;border:2px solid rgba(34,197,94,.3);}
-.success-screen h2{font-family:var(--display);font-size:40px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:10px;}
-.success-screen p{font-size:16px;color:var(--grey2);max-width:420px;margin-bottom:32px;}
+/* Success / check email screen */
+.success-screen{
+  min-height:100vh;display:none;align-items:center;justify-content:center;
+  flex-direction:column;padding:40px;text-align:center;
+}
+.success-screen.active{display:flex;animation:fadeIn .2s ease both;}
+.success-icon{width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:24px;border:2px solid rgba(34,197,94,.25);}
+.success-screen h2{font-family:var(--display);font-size:38px;font-weight:900;text-transform:uppercase;color:var(--white);margin-bottom:10px;}
+.success-screen p{font-size:15px;color:var(--g2);max-width:420px;margin-bottom:28px;line-height:1.75;}
 
-.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--bg3);color:var(--grey1);border:1px solid var(--border);padding:14px 20px;border-radius:var(--r-sm);font-size:14px;font-weight:500;box-shadow:var(--sh-lg);transform:translateY(80px);opacity:0;transition:transform .25s ease,opacity .25s ease;max-width:320px;}
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:rgba(14,16,18,.97);color:var(--g1);border:1px solid var(--border);padding:12px 18px;border-radius:10px;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateY(80px);opacity:0;transition:transform .22s ease,opacity .22s ease;max-width:300px;backdrop-filter:blur(16px);}
 .toast.show{transform:translateY(0);opacity:1;}
 
-@media(max-width:900px){
-  .split{grid-template-columns:1fr;}
-  .split-left{display:none;}
-  .split-right{padding:36px 28px;}
-  .fg-row{grid-template-columns:1fr;}
-}
-@media(max-width:600px){
-  .split-right{padding:24px 16px;}
-}
+/* Responsive */
+@media(max-width:900px){.split{grid-template-columns:1fr;}.split-left{display:none;}.split-right{padding:36px 24px;justify-content:flex-start;padding-top:48px;}}
+@media(max-width:600px){.split-right{padding:24px 16px;}.fgr{grid-template-columns:1fr;}.oauth-row{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<!-- SCREEN: LOGIN -->
+<!-- ══ LOGIN ══ -->
 <div class="screen active" id="screen-login">
   <div class="split">
-    <div class="split-left">
+    <div class="split-left" style="position:relative;">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
-        Tradease<span class="brand-dot"></span>
+      <div class="brand-logo" onclick="window.location.href='/'">
+        Tradease<span class="brand-logo-dot"></span>
       </div>
       <div class="brand-hero">
         <h2>Welcome<br><em>Back.</em></h2>
-        <p>New York's fastest-growing service booking platform.</p>
-        <div class="brand-features">
-          <div class="brand-feat"><div class="brand-feat-icon">⚡</div>Book in under 60 seconds</div>
-          <div class="brand-feat"><div class="brand-feat-icon">✅</div>Verified local contractors</div>
-          <div class="brand-feat"><div class="brand-feat-icon">💳</div>Secure, fast payments</div>
-          <div class="brand-feat"><div class="brand-feat-icon">🛡️</div>Protected bookings guaranteed</div>
+        <p>New York's fastest-growing contractor marketplace. Get back to work.</p>
+        <div class="brand-feats">
+          <div class="brand-feat"><div class="brand-feat-ic">⚡</div>Book in under 60 seconds</div>
+          <div class="brand-feat"><div class="brand-feat-ic">✅</div>Verified local contractors</div>
+          <div class="brand-feat"><div class="brand-feat-ic">💳</div>Secure, fast payments</div>
+          <div class="brand-feat"><div class="brand-feat-ic">🛡️</div>Protected bookings guaranteed</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
+      <div class="brand-foot">© 2025 Tradease, Inc. · support@tradease.tech</div>
     </div>
 
-    <div class="split-right" style="justify-content:center;">
-      <div style="max-width:440px;width:100%;">
-
-        <div class="type-toggle" id="login-toggle">
+    <div class="split-right">
+      <div class="form-inner">
+        <div class="type-toggle">
           <button class="type-btn active" onclick="setLoginType('customer',this)">👤 Customer</button>
           <button class="type-btn" onclick="setLoginType('contractor',this)">👷 Contractor</button>
         </div>
@@ -198,400 +308,269 @@ ul{list-style:none;}
         <div class="form-title">Sign In</div>
         <div class="form-sub" id="login-sub">Welcome back, homeowner.</div>
 
-        <!-- Error box -->
-        <div class="alert-box" id="login-error"></div>
+        <div class="alert" id="login-err"></div>
 
         <div class="oauth-row">
-          <button class="btn btn-google" onclick="signInWithGoogle()">
+          <button class="btn-oauth" onclick="signInGoogle()">
             <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
             Google
           </button>
-          <button class="btn btn-github" onclick="signInWithGitHub()">
+          <button class="btn-oauth" onclick="signInGithub()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
             GitHub
           </button>
         </div>
-
         <div class="or-divider">or sign in with email</div>
 
         <div class="fg">
           <label>Email Address</label>
-          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('login-email-err');clearAlert('login-error')"/>
-          <span class="err" id="login-email-err">Please enter a valid email.</span>
+          <input type="email" id="l-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('l-email-err');clearAlert('login-err')"/>
+          <span class="err" id="l-email-err">Please enter a valid email.</span>
         </div>
-
         <div class="fg">
           <label>Password</label>
           <div class="pw-wrap">
-            <input type="password" id="login-pw" placeholder="Your password" autocomplete="current-password"
-              oninput="clearErr('login-pw-err');clearAlert('login-error')"
-              onkeydown="if(event.key==='Enter')handleLogin()"/>
-            <button class="pw-toggle" onclick="togglePw('login-pw',this)">👁</button>
+            <input type="password" id="l-pw" placeholder="Your password" autocomplete="current-password" oninput="clearErr('l-pw-err');clearAlert('login-err')" onkeydown="if(event.key==='Enter')handleLogin()"/>
+            <button class="pw-eye" onclick="togglePw('l-pw',this)" type="button">👁</button>
           </div>
-          <span class="err" id="login-pw-err">Password is required.</span>
+          <span class="err" id="l-pw-err">Password is required.</span>
         </div>
 
         <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
           <span class="link" style="font-size:13px;" onclick="goScreen('screen-forgot')">Forgot password?</span>
         </div>
 
-        <button id="login-btn" class="btn btn-orange" onclick="handleLogin()">Sign In →</button>
-
-        <div class="switch-text">
-          Don't have an account? <span class="link" onclick="goScreen('screen-signup')">Create one free</span>
-        </div>
+        <button class="btn-primary" id="login-btn" onclick="handleLogin()">Sign In →</button>
+        <div class="switch-text">No account? <span class="link" onclick="goScreen('screen-signup')">Create one free →</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: CUSTOMER SIGNUP -->
-<div class="screen" id="screen-signup" style="flex-direction:column;">
+<!-- ══ CUSTOMER SIGNUP ══ -->
+<div class="screen" id="screen-signup">
   <div class="split">
-    <div class="split-left">
+    <div class="split-left" style="position:relative;">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
-        Tradease<span class="brand-dot"></span>
-      </div>
+      <div class="brand-logo" onclick="window.location.href='/'">Tradease<span class="brand-logo-dot"></span></div>
       <div class="brand-hero">
         <h2>Find a Pro<br><em>Fast.</em></h2>
         <p>Create a free account and get matched with trusted, local contractors in seconds.</p>
-        <div class="brand-features">
-          <div class="brand-feat"><div class="brand-feat-icon">🆓</div>Free to sign up, always</div>
-          <div class="brand-feat"><div class="brand-feat-icon">📍</div>Local contractors near you</div>
-          <div class="brand-feat"><div class="brand-feat-icon">⭐</div>Real reviews from real customers</div>
-          <div class="brand-feat"><div class="brand-feat-icon">🔒</div>Your data is always secure</div>
+        <div class="brand-feats">
+          <div class="brand-feat"><div class="brand-feat-ic">🆓</div>Free to sign up, always</div>
+          <div class="brand-feat"><div class="brand-feat-ic">📍</div>Local contractors near you</div>
+          <div class="brand-feat"><div class="brand-feat-ic">⭐</div>Real reviews from real customers</div>
+          <div class="brand-feat"><div class="brand-feat-ic">🔒</div>Your data is always secure</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
+      <div class="brand-foot">© 2025 Tradease, Inc. · support@tradease.tech</div>
     </div>
-
-    <div class="split-right" style="justify-content:center;">
-      <div style="max-width:440px;width:100%;">
-
+    <div class="split-right">
+      <div class="form-inner">
         <div class="type-toggle">
-          <button class="type-btn active" onclick="goScreen('screen-signup')">👤 I'm a Customer</button>
-          <button class="type-btn" onclick="goScreen('screen-contractor')">👷 I'm a Contractor</button>
+          <button class="type-btn active" onclick="goScreen('screen-signup')">👤 Customer</button>
+          <button class="type-btn" onclick="goScreen('screen-contractor')">👷 Contractor</button>
         </div>
-
         <div class="form-title">Create Account</div>
-        <div class="form-sub">It takes less than 2 minutes.</div>
-
-        <div class="alert-box" id="signup-error"></div>
-
+        <div class="form-sub">Takes less than 2 minutes.</div>
+        <div class="alert" id="signup-err"></div>
         <div class="oauth-row">
-          <button class="btn btn-google" style="margin-bottom:0;" onclick="signInWithGoogle()">
-            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
-            Google
-          </button>
-          <button class="btn btn-github" style="margin-bottom:0;" onclick="signInWithGitHub()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            GitHub
-          </button>
+          <button class="btn-oauth" onclick="signInGoogle()"><svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>Google</button>
+          <button class="btn-oauth" onclick="signInGithub()"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>GitHub</button>
         </div>
-
         <div class="or-divider">or create with email</div>
-
-        <div class="fg">
-          <label>Full Name</label>
-          <input type="text" id="cu-name" placeholder="e.g. Maria Lopez" autocomplete="name" oninput="clearErr('cu-name-err')"/>
-          <span class="err" id="cu-name-err">Full name is required.</span>
-        </div>
-        <div class="fg">
-          <label>Email Address</label>
-          <input type="email" id="cu-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('cu-email-err')"/>
-          <span class="err" id="cu-email-err">Please enter a valid email.</span>
-        </div>
-        <div class="fg">
-          <label>Location (City or ZIP)</label>
-          <input type="text" id="cu-loc" placeholder="e.g. Brooklyn, NY or 11201" oninput="clearErr('cu-loc-err')"/>
-          <span class="err" id="cu-loc-err">Location is required.</span>
-        </div>
-        <div class="fg">
-          <label>Password</label>
-          <div class="pw-wrap">
-            <input type="password" id="cu-pw" placeholder="Min. 8 characters" autocomplete="new-password"
-              oninput="checkPwStrength('cu-pw','cu-pw-str','cu-pw-lbl');clearErr('cu-pw-err')"/>
-            <button class="pw-toggle" onclick="togglePw('cu-pw',this)">👁</button>
-          </div>
-          <div class="pw-strength">
-            <div class="pw-bar"><div class="pw-fill" id="cu-pw-str"></div></div>
-            <div class="pw-label" id="cu-pw-lbl"></div>
-          </div>
-          <span class="err" id="cu-pw-err">Password must be at least 8 characters.</span>
-        </div>
-        <div class="check-row">
-          <input type="checkbox" id="cu-terms"/>
-          <label for="cu-terms">I agree to the <a onclick="showToast('Terms of Service coming soon')">Terms of Service</a> and <a onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>.</label>
-        </div>
-        <button id="cu-signup-btn" class="btn btn-orange" onclick="handleCustomerSignup()">Create My Account →</button>
+        <div class="fg"><label>Full Name</label><input type="text" id="cu-name" placeholder="Maria Lopez" autocomplete="name" oninput="clearErr('cu-name-err')"/><span class="err" id="cu-name-err">Full name required.</span></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="cu-email" placeholder="you@example.com" autocomplete="email" oninput="clearErr('cu-email-err')"/><span class="err" id="cu-email-err">Valid email required.</span></div>
+        <div class="fg"><label>Location (City or ZIP)</label><input type="text" id="cu-loc" placeholder="Brooklyn, NY or 11201" oninput="clearErr('cu-loc-err')"/><span class="err" id="cu-loc-err">Location required.</span></div>
+        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="cu-pw" placeholder="Min. 8 characters" autocomplete="new-password" oninput="pwStrength('cu-pw','cu-str','cu-lbl');clearErr('cu-pw-err')"/><button class="pw-eye" onclick="togglePw('cu-pw',this)" type="button">👁</button></div><div class="pw-str"><div class="pw-bar"><div class="pw-fill" id="cu-str"></div></div><div class="pw-lbl" id="cu-lbl"></div></div><span class="err" id="cu-pw-err">Password must be at least 8 characters.</span></div>
+        <div class="check-row"><input type="checkbox" id="cu-terms"/><label for="cu-terms">I agree to the <a onclick="showToast('Terms coming soon')">Terms of Service</a> and <a onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>.</label></div>
+        <button class="btn-primary" id="cu-btn" onclick="handleCustomerSignup()">Create My Account →</button>
         <div class="switch-text">Already have an account? <span class="link" onclick="goScreen('screen-login')">Sign in</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: CONTRACTOR SIGNUP -->
-<div class="screen" id="screen-contractor" style="flex-direction:column;">
+<!-- ══ CONTRACTOR SIGNUP ══ -->
+<div class="screen" id="screen-contractor">
   <div class="split">
-    <div class="split-left">
+    <div class="split-left" style="position:relative;">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
-        Tradease<span class="brand-dot"></span>
-      </div>
+      <div class="brand-logo" onclick="window.location.href='/'">Tradease<span class="brand-logo-dot"></span></div>
       <div class="brand-hero">
         <h2>Grow Your<br><em>Business.</em></h2>
-        <p>Join New York's fastest-growing contractor marketplace.</p>
-        <div class="brand-features">
-          <div class="brand-feat"><div class="brand-feat-icon">📈</div>More job leads every week</div>
-          <div class="brand-feat"><div class="brand-feat-icon">🗓️</div>Set your own schedule</div>
-          <div class="brand-feat"><div class="brand-feat-icon">💸</div>Fast, secure payments</div>
-          <div class="brand-feat"><div class="brand-feat-icon">⭐</div>Build a verified reputation</div>
+        <p>Join New York's fastest-growing contractor marketplace. Jobs come to you.</p>
+        <div class="brand-feats">
+          <div class="brand-feat"><div class="brand-feat-ic">📈</div>More job leads every week</div>
+          <div class="brand-feat"><div class="brand-feat-ic">🗓️</div>Set your own schedule</div>
+          <div class="brand-feat"><div class="brand-feat-ic">💸</div>Fast, secure payments</div>
+          <div class="brand-feat"><div class="brand-feat-ic">⭐</div>Build a verified reputation</div>
         </div>
       </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc. · support@tradease.com</div>
+      <div class="brand-foot">© 2025 Tradease, Inc. · support@tradease.tech</div>
     </div>
-
     <div class="split-right">
-      <div style="max-width:540px;width:100%;margin:0 auto;">
-
+      <div class="form-inner" style="max-width:520px;">
         <div class="type-toggle">
-          <button class="type-btn" onclick="goScreen('screen-signup')">👤 I'm a Customer</button>
-          <button class="type-btn active" onclick="goScreen('screen-contractor')">👷 I'm a Contractor</button>
+          <button class="type-btn" onclick="goScreen('screen-signup')">👤 Customer</button>
+          <button class="type-btn active" onclick="goScreen('screen-contractor')">👷 Contractor</button>
         </div>
-
         <div class="form-title">Contractor Signup</div>
-        <div class="form-sub">4 quick steps — takes about 5 minutes.</div>
+        <div class="form-sub">4 quick steps — about 5 minutes.</div>
 
         <div class="oauth-row" style="margin-bottom:16px;">
-          <button class="btn btn-google" onclick="signInWithOAuthContractor('google')">
-            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
-            Sign up with Google
-          </button>
-          <button class="btn btn-github" onclick="signInWithOAuthContractor('github')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            Sign up with GitHub
-          </button>
+          <button class="btn-oauth" onclick="oauthContractor('google')"><svg width="16" height="16" viewBox="0 0 18 18"><path fill="#EA4335" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.875 2.684-6.615z"/><path fill="#4285F4" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#34A853" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>Sign up with Google</button>
+          <button class="btn-oauth" onclick="oauthContractor('github')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>Sign up with GitHub</button>
         </div>
         <div class="or-divider" style="margin-bottom:16px;">or continue with email</div>
 
-        <div class="alert-box" id="contractor-error"></div>
+        <div class="alert" id="cont-err"></div>
 
-        <div class="progress-wrap">
-          <div class="progress-steps" id="prog-steps">
-            <div class="prog-step active" id="ps-1"><div class="prog-dot">1</div><div class="prog-label">Account</div></div>
-            <div class="prog-step" id="ps-2"><div class="prog-dot">2</div><div class="prog-label">Business</div></div>
-            <div class="prog-step" id="ps-3"><div class="prog-dot">3</div><div class="prog-label">Services</div></div>
-            <div class="prog-step" id="ps-4"><div class="prog-dot">4</div><div class="prog-label">Legal</div></div>
+        <div class="prog-wrap">
+          <div class="prog-steps" id="prog-steps">
+            <div class="prog-step curr" id="ps-1"><div class="prog-dot">1</div><div class="prog-lbl">Account</div></div>
+            <div class="prog-step" id="ps-2"><div class="prog-dot">2</div><div class="prog-lbl">Business</div></div>
+            <div class="prog-step" id="ps-3"><div class="prog-dot">3</div><div class="prog-lbl">Services</div></div>
+            <div class="prog-step" id="ps-4"><div class="prog-dot">4</div><div class="prog-lbl">Legal</div></div>
           </div>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog-bar" style="width:25%"></div></div>
+          <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:25%"></div></div>
         </div>
 
-        <!-- STEP 1 -->
-        <div class="step-panel active" id="step-1">
-          <div class="step-section"><div class="step-section-icon">🔐</div><h4>Account Credentials</h4></div>
-          <div class="fg-row">
-            <div class="fg"><label>First Name</label><input type="text" id="c-fname" placeholder="Joseph" autocomplete="given-name" oninput="clearErr('c-fname-err')"/><span class="err" id="c-fname-err">Required.</span></div>
-            <div class="fg"><label>Last Name</label><input type="text" id="c-lname" placeholder="Rodriguez" autocomplete="family-name" oninput="clearErr('c-lname-err')"/><span class="err" id="c-lname-err">Required.</span></div>
+        <!-- Step 1 -->
+        <div class="step active" id="step-1">
+          <div class="step-section"><div class="step-section-ic">🔐</div><h4>Account Credentials</h4></div>
+          <div class="fgr">
+            <div class="fg"><label>First Name</label><input type="text" id="c-fn" placeholder="Joseph" oninput="clearErr('c-fn-err')"/><span class="err" id="c-fn-err">Required.</span></div>
+            <div class="fg"><label>Last Name</label><input type="text" id="c-ln" placeholder="Rodriguez" oninput="clearErr('c-ln-err')"/><span class="err" id="c-ln-err">Required.</span></div>
           </div>
-          <div class="fg"><label>Email Address</label><input type="email" id="c-email" placeholder="you@yourbusiness.com" autocomplete="email" oninput="clearErr('c-email-err')"/><span class="err" id="c-email-err">Valid email required.</span></div>
-          <div class="fg"><label>Phone Number</label><input type="tel" id="c-phone" placeholder="(917) 555-0000" autocomplete="tel" oninput="clearErr('c-phone-err')"/><span class="err" id="c-phone-err">Phone number required.</span></div>
-          <div class="fg">
-            <label>Password</label>
-            <div class="pw-wrap">
-              <input type="password" id="c-pw" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwStrength('c-pw','c-pw-str','c-pw-lbl');clearErr('c-pw-err')"/>
-              <button class="pw-toggle" onclick="togglePw('c-pw',this)">👁</button>
-            </div>
-            <div class="pw-strength"><div class="pw-bar"><div class="pw-fill" id="c-pw-str"></div></div><div class="pw-label" id="c-pw-lbl"></div></div>
-            <span class="err" id="c-pw-err">Password must be at least 8 characters.</span>
-          </div>
-          <div class="fg">
-            <label>Confirm Password</label>
-            <div class="pw-wrap">
-              <input type="password" id="c-pw2" placeholder="Repeat password" autocomplete="new-password" oninput="clearErr('c-pw2-err')"/>
-              <button class="pw-toggle" onclick="togglePw('c-pw2',this)">👁</button>
-            </div>
-            <span class="err" id="c-pw2-err">Passwords do not match.</span>
-          </div>
-          <div class="step-nav"><button class="btn btn-orange" onclick="validateStep1()">Continue → Business Info</button></div>
+          <div class="fg"><label>Email Address</label><input type="email" id="c-email" placeholder="you@yourbusiness.com" oninput="clearErr('c-email-err')"/><span class="err" id="c-email-err">Valid email required.</span></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" id="c-phone" placeholder="(917) 555-0000" oninput="clearErr('c-phone-err')"/><span class="err" id="c-phone-err">Phone required.</span></div>
+          <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="c-pw" placeholder="Min. 8 characters" oninput="pwStrength('c-pw','c-str','c-lbl');clearErr('c-pw-err')"/><button class="pw-eye" onclick="togglePw('c-pw',this)" type="button">👁</button></div><div class="pw-str"><div class="pw-bar"><div class="pw-fill" id="c-str"></div></div><div class="pw-lbl" id="c-lbl"></div></div><span class="err" id="c-pw-err">Min. 8 characters.</span></div>
+          <div class="fg"><label>Confirm Password</label><div class="pw-wrap"><input type="password" id="c-pw2" placeholder="Repeat password" oninput="clearErr('c-pw2-err')"/><button class="pw-eye" onclick="togglePw('c-pw2',this)" type="button">👁</button></div><span class="err" id="c-pw2-err">Passwords do not match.</span></div>
+          <div class="step-nav"><button class="btn-primary" onclick="valStep1()">Continue → Business Info</button></div>
           <div class="switch-text">Already have an account? <span class="link" onclick="goScreen('screen-login')">Sign in</span></div>
         </div>
 
-        <!-- STEP 2 -->
-        <div class="step-panel" id="step-2">
-          <div class="step-section"><div class="step-section-icon">🏢</div><h4>Business Information</h4></div>
-          <div class="fg"><label>Business Name</label><input type="text" id="b-name" placeholder="e.g. Rodriguez Plumbing LLC" oninput="clearErr('b-name-err')"/><span class="err" id="b-name-err">Business name required.</span></div>
+        <!-- Step 2 -->
+        <div class="step" id="step-2">
+          <div class="step-section"><div class="step-section-ic">🏢</div><h4>Business Information</h4></div>
+          <div class="fg"><label>Business Name *</label><input type="text" id="b-name" placeholder="Rodriguez Plumbing LLC" oninput="clearErr('b-name-err')"/><span class="err" id="b-name-err">Business name required.</span></div>
           <div class="fg"><label>Business Address</label><input type="text" id="b-addr" placeholder="123 Main St, Brooklyn, NY 11201" oninput="clearErr('b-addr-err')"/><span class="err" id="b-addr-err">Address required.</span></div>
-          <div class="fg-row">
+          <div class="fgr">
             <div class="fg"><label>City</label><input type="text" id="b-city" placeholder="Brooklyn" oninput="clearErr('b-city-err')"/><span class="err" id="b-city-err">Required.</span></div>
             <div class="fg"><label>ZIP Code</label><input type="text" id="b-zip" placeholder="11201" oninput="clearErr('b-zip-err')"/><span class="err" id="b-zip-err">Required.</span></div>
           </div>
           <div class="fg"><label>Website (Optional)</label><input type="url" id="b-web" placeholder="https://yoursite.com"/></div>
           <div class="step-nav">
-            <button class="btn btn-ghost btn-sm" style="width:auto;padding:13px 22px;" onclick="goStep(1)">← Back</button>
-            <button class="btn btn-orange" onclick="validateStep2()">Continue → Services</button>
+            <button class="btn-ghost" onclick="goStep(1)">← Back</button>
+            <button class="btn-primary" onclick="valStep2()">Continue → Services</button>
           </div>
         </div>
 
-        <!-- STEP 3 -->
-        <div class="step-panel" id="step-3">
-          <div class="step-section"><div class="step-section-icon">🔧</div><h4>Service Details</h4></div>
-          <div class="fg">
-            <label>Primary Trade</label>
-            <select id="s-trade" oninput="clearErr('s-trade-err')">
-              <option value="">Select your trade…</option>
-              <option>Plumbing</option><option>Electrical</option><option>HVAC</option>
-              <option>Handyman</option><option>Roofing</option><option>Cleaning</option>
-              <option>Landscaping</option><option>Painting</option><option>Carpentry</option>
-              <option>Flooring</option><option>General Contracting</option><option>Other</option>
-            </select>
-            <span class="err" id="s-trade-err">Please select a trade.</span>
-          </div>
-          <div class="fg"><label>Service Areas</label><input type="text" id="s-areas" placeholder="e.g. Brooklyn, Queens, Manhattan" oninput="clearErr('s-areas-err')"/><div class="hint">Separate multiple areas with commas.</div><span class="err" id="s-areas-err">At least one service area required.</span></div>
-          <div class="fg">
-            <label>Years of Experience</label>
-            <select id="s-exp" oninput="clearErr('s-exp-err')">
-              <option value="">Select range…</option>
-              <option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option>
-              <option>5–10 years</option><option>10–15 years</option><option>15+ years</option>
-            </select>
-            <span class="err" id="s-exp-err">Please select experience.</span>
-          </div>
-          <div class="fg"><label>Describe Your Services</label><textarea id="s-desc" placeholder="Tell customers what you do and what makes you the best choice…" oninput="clearErr('s-desc-err')"></textarea><span class="err" id="s-desc-err">Please add a short description.</span></div>
-
-          <div class="step-section" style="margin-top:28px;"><div class="step-section-icon">💳</div><h4>Choose Your Plan</h4></div>
-          <div class="radio-group" id="plan-select">
+        <!-- Step 3 -->
+        <div class="step" id="step-3">
+          <div class="step-section"><div class="step-section-ic">🔧</div><h4>Service Details</h4></div>
+          <div class="fg"><label>Primary Trade *</label><select id="s-trade" oninput="clearErr('s-trade-err')"><option value="">Select your trade…</option><option>Plumbing</option><option>Electrical</option><option>HVAC</option><option>Handyman</option><option>Roofing</option><option>Cleaning</option><option>Landscaping</option><option>Painting</option><option>Carpentry</option><option>Flooring</option><option>General Contracting</option><option>Other</option></select><span class="err" id="s-trade-err">Please select a trade.</span></div>
+          <div class="fg"><label>Service Areas *</label><input type="text" id="s-areas" placeholder="Brooklyn, Queens, Manhattan" oninput="clearErr('s-areas-err')"/><div class="fg-hint">Separate multiple areas with commas.</div><span class="err" id="s-areas-err">At least one area required.</span></div>
+          <div class="fg"><label>Years of Experience *</label><select id="s-exp" oninput="clearErr('s-exp-err')"><option value="">Select…</option><option>Less than 1 year</option><option>1–3 years</option><option>3–5 years</option><option>5–10 years</option><option>10–15 years</option><option>15+ years</option></select><span class="err" id="s-exp-err">Please select experience.</span></div>
+          <div class="fg"><label>Describe Your Services *</label><textarea id="s-desc" placeholder="Tell customers what you do and what makes you the best choice…" oninput="clearErr('s-desc-err')"></textarea><span class="err" id="s-desc-err">Please add a short description.</span></div>
+          <div class="step-section" style="margin-top:20px;"><div class="step-section-ic">💳</div><h4>Choose Your Plan</h4></div>
+          <div class="radio-group" id="plan-group">
             <div class="radio-opt selected" onclick="selectPlan(this,'free')"><input type="radio" name="plan" value="free" checked/><div class="radio-opt-title">Free</div><div class="radio-opt-desc">Basic listing · Receive bookings · 15% fee</div></div>
-            <div class="radio-opt" onclick="selectPlan(this,'leads')" style="border-color:rgba(96,165,250,.25);"><input type="radio" name="plan" value="leads"/><div class="radio-opt-title" style="color:#60A5FA;">📋 Just Leads $5/mo</div><div class="radio-opt-desc">Profile visibility · AI recommended · Zero fees</div></div>
-            <div class="radio-opt" onclick="selectPlan(this,'pro')"><input type="radio" name="plan" value="pro"/><div class="radio-opt-title">⚡ Pro $19/mo</div><div class="radio-opt-desc">Top ranking · Verified badge · 25 images</div></div>
+            <div class="radio-opt" onclick="selectPlan(this,'leads')" style="border-color:rgba(96,165,250,.2);"><input type="radio" name="plan" value="leads"/><div class="radio-opt-title" style="color:var(--blue);">📋 Leads $5/mo</div><div class="radio-opt-desc">Visibility · AI recommended · Zero fees</div></div>
+            <div class="radio-opt" onclick="selectPlan(this,'pro')"><input type="radio" name="plan" value="pro"/><div class="radio-opt-title">⚡ Pro $19/mo</div><div class="radio-opt-desc">Top ranking · Verified badge · 25 photos</div></div>
           </div>
-
           <div class="step-nav">
-            <button class="btn btn-ghost btn-sm" style="width:auto;padding:13px 22px;" onclick="goStep(2)">← Back</button>
-            <button class="btn btn-orange" onclick="validateStep3()">Continue → Legal</button>
+            <button class="btn-ghost" onclick="goStep(2)">← Back</button>
+            <button class="btn-primary" onclick="valStep3()">Continue → Legal</button>
           </div>
         </div>
 
-        <!-- STEP 4 -->
-        <div class="step-panel" id="step-4">
-          <div class="step-section"><div class="step-section-icon">📄</div><h4>Legal & Trust</h4></div>
-          <div class="fg"><label>Business License Number <span style="color:var(--grey3);font-weight:400;text-transform:none;">(Recommended)</span></label><input type="text" id="l-license" placeholder="e.g. NYC-PLB-00012345"/><div class="hint">Adds trust and increases bookings.</div></div>
+        <!-- Step 4 -->
+        <div class="step" id="step-4">
+          <div class="step-section"><div class="step-section-ic">📄</div><h4>Legal & Trust</h4></div>
+          <div class="fg"><label>Business License Number <span style="color:var(--g3);text-transform:none;font-weight:400;">(Recommended)</span></label><input type="text" id="l-license" placeholder="e.g. NYC-PLB-00012345"/><div class="fg-hint">Adds trust and increases bookings.</div></div>
           <div class="fg">
-            <label>Insurance Status</label>
-            <div class="radio-group" id="ins-select" style="margin-top:6px;">
-              <div class="radio-opt" onclick="selectRadio(this,'ins-select')"><input type="radio" name="insurance" value="yes"/><div class="radio-opt-title">✅ Insured</div><div class="radio-opt-desc">I carry active liability insurance.</div></div>
-              <div class="radio-opt" onclick="selectRadio(this,'ins-select')"><input type="radio" name="insurance" value="no"/><div class="radio-opt-title">Not Yet</div><div class="radio-opt-desc">I'm working on getting insured.</div></div>
+            <label>Insurance Status *</label>
+            <div class="radio-group" id="ins-group">
+              <div class="radio-opt" onclick="selectRadio(this,'ins-group')"><input type="radio" name="ins" value="yes"/><div class="radio-opt-title">✅ Insured</div><div class="radio-opt-desc">I carry active liability insurance.</div></div>
+              <div class="radio-opt" onclick="selectRadio(this,'ins-group')"><input type="radio" name="ins" value="no"/><div class="radio-opt-title">Not Yet</div><div class="radio-opt-desc">Working on getting insured.</div></div>
             </div>
             <span class="err" id="ins-err">Please select your insurance status.</span>
           </div>
-          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;margin-bottom:16px;">
-            <div style="font-family:var(--display);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--grey2);margin-bottom:10px;">Agreement</div>
-            <p style="font-size:13px;color:var(--grey2);line-height:1.7;">By creating a contractor account, you confirm your business information is accurate and you have the right to perform the services listed.</p>
+          <div style="background:rgba(14,16,18,.88);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;">
+            <div style="font-family:var(--display);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g2);margin-bottom:8px;">Agreement</div>
+            <p style="font-size:13px;color:var(--g2);line-height:1.7;">By creating a contractor account, you confirm your business information is accurate and you have the right to perform the services listed.</p>
           </div>
           <div class="check-row"><input type="checkbox" id="l-legal"/><label for="l-legal">I confirm my business is legally registered and I agree to the <a onclick="showToast('Terms coming soon')">Terms of Service</a> and <a onclick="showToast('Privacy Policy coming soon')">Privacy Policy</a>.</label></div>
           <span class="err" id="l-legal-err">You must agree to continue.</span>
           <div class="check-row"><input type="checkbox" id="l-email"/><label for="l-email">Send me tips on getting more customers and growing my business.</label></div>
           <div class="step-nav">
-            <button class="btn btn-ghost btn-sm" style="width:auto;padding:13px 22px;" onclick="goStep(3)">← Back</button>
-            <button id="contractor-signup-btn" class="btn btn-orange" onclick="handleContractorSignup()">🚀 Create My Account</button>
+            <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+            <button class="btn-primary" id="cont-btn" onclick="handleContractorSignup()">🚀 Create My Account</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: FORGOT PASSWORD -->
+<!-- ══ FORGOT PASSWORD ══ -->
 <div class="screen" id="screen-forgot">
   <div class="split">
-    <div class="split-left">
+    <div class="split-left" style="position:relative;">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
-        Tradease<span class="brand-dot"></span>
-      </div>
-      <div class="brand-hero">
-        <h2>Reset Your<br><em>Password.</em></h2>
-        <p>Enter the email you signed up with and we'll send you a reset link right away.</p>
-      </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc.</div>
+      <div class="brand-logo" onclick="window.location.href='/'">Tradease<span class="brand-logo-dot"></span></div>
+      <div class="brand-hero"><h2>Reset Your<br><em>Password.</em></h2><p>Enter the email you signed up with and we'll send a reset link right away.</p></div>
+      <div class="brand-foot">© 2025 Tradease, Inc.</div>
     </div>
-    <div class="split-right" style="justify-content:center;">
-      <div style="max-width:420px;width:100%;">
+    <div class="split-right">
+      <div class="form-inner">
         <div class="form-title">Forgot Password</div>
         <div class="form-sub">We'll email you a secure reset link.</div>
-        <div class="fg"><label>Email Address</label><input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')handleForgot()"/></div>
-        <button id="forgot-btn" class="btn btn-orange" onclick="handleForgot()">Send Reset Link →</button>
+        <div class="fg"><label>Email Address</label><input type="email" id="f-email" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')handleForgot()"/></div>
+        <button class="btn-primary" id="forgot-btn" onclick="handleForgot()">Send Reset Link →</button>
         <div class="switch-text"><span class="link" onclick="goScreen('screen-login')">← Back to Sign In</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: RESET PASSWORD -->
-<div class="screen" id="screen-reset-password">
+<!-- ══ RESET PASSWORD ══ -->
+<div class="screen" id="screen-reset">
   <div class="split">
-    <div class="split-left">
+    <div class="split-left" style="position:relative;">
       <div class="brand-orb"></div>
-      <div class="brand-logo" onclick="window.location.href='/'" style="cursor:pointer;">
-        <img src="/tradease-logo.svg" alt="Tradease" style="width:28px;height:28px;border-radius:7px;object-fit:cover;"/>
-        Tradease<span class="brand-dot"></span>
-      </div>
-      <div class="brand-hero">
-        <h2>Choose a New<br><em>Password.</em></h2>
-        <p>Enter a strong password for your account.</p>
-      </div>
-      <div class="brand-bottom">© 2025 Tradease, Inc.</div>
+      <div class="brand-logo" onclick="window.location.href='/'">Tradease<span class="brand-logo-dot"></span></div>
+      <div class="brand-hero"><h2>New<br><em>Password.</em></h2><p>Choose a strong password to protect your account.</p></div>
+      <div class="brand-foot">© 2025 Tradease, Inc.</div>
     </div>
-    <div class="split-right" style="justify-content:center;">
-      <div style="max-width:420px;width:100%;">
+    <div class="split-right">
+      <div class="form-inner">
         <div class="form-title">Reset Password</div>
         <div class="form-sub">Create a new password for your account.</div>
-        <div class="alert-box" id="reset-error"></div>
-        <div class="fg">
-          <label>New Password</label>
-          <div class="pw-wrap">
-            <input type="password" id="reset-pw" placeholder="Min. 8 characters" autocomplete="new-password"
-              oninput="checkPwStrength('reset-pw','reset-pw-str','reset-pw-lbl');clearErr('reset-pw-err')"/>
-            <button class="pw-toggle" onclick="togglePw('reset-pw',this)">👁</button>
-          </div>
-          <div class="pw-strength">
-            <div class="pw-bar"><div class="pw-fill" id="reset-pw-str"></div></div>
-            <div class="pw-label" id="reset-pw-lbl"></div>
-          </div>
-          <span class="err" id="reset-pw-err">Password must be at least 8 characters.</span>
-        </div>
-        <div class="fg">
-          <label>Confirm New Password</label>
-          <div class="pw-wrap">
-            <input type="password" id="reset-pw2" placeholder="Repeat password" autocomplete="new-password"
-              oninput="clearErr('reset-pw2-err')"/>
-            <button class="pw-toggle" onclick="togglePw('reset-pw2',this)">👁</button>
-          </div>
-          <span class="err" id="reset-pw2-err">Passwords do not match.</span>
-        </div>
-        <button id="reset-btn" class="btn btn-orange" onclick="handlePasswordReset()">Update Password →</button>
+        <div class="alert" id="reset-err"></div>
+        <div class="fg"><label>New Password</label><div class="pw-wrap"><input type="password" id="r-pw" placeholder="Min. 8 characters" autocomplete="new-password" oninput="pwStrength('r-pw','r-str','r-lbl');clearErr('r-pw-err')"/><button class="pw-eye" onclick="togglePw('r-pw',this)" type="button">👁</button></div><div class="pw-str"><div class="pw-bar"><div class="pw-fill" id="r-str"></div></div><div class="pw-lbl" id="r-lbl"></div></div><span class="err" id="r-pw-err">Min. 8 characters.</span></div>
+        <div class="fg"><label>Confirm Password</label><div class="pw-wrap"><input type="password" id="r-pw2" placeholder="Repeat password" autocomplete="new-password" oninput="clearErr('r-pw2-err')"/><button class="pw-eye" onclick="togglePw('r-pw2',this)" type="button">👁</button></div><span class="err" id="r-pw2-err">Passwords do not match.</span></div>
+        <button class="btn-primary" id="reset-btn" onclick="handleReset()">Update Password →</button>
         <div class="switch-text"><span class="link" onclick="goScreen('screen-login')">← Back to Sign In</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCREEN: CUSTOMER SUCCESS (email verification) -->
-<div class="success-screen" id="screen-customer-success">
-  <div style="width:100%;height:4px;background:var(--bg3);position:fixed;top:0;left:0;"><div style="height:100%;width:100%;background:var(--orange);"></div></div>
+<!-- ══ SUCCESS / CHECK EMAIL ══ -->
+<div class="success-screen" id="screen-success">
+  <div style="width:100%;height:3px;background:var(--orange);position:fixed;top:0;left:0;"></div>
   <div class="success-icon">✉️</div>
   <h2>Check Your Email</h2>
-  <p>We sent a confirmation link to <strong id="confirm-email-display" style="color:var(--orange);"></strong>. Click it to verify your account.</p>
-  <div style="background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);border-radius:12px;padding:16px 20px;margin:8px 0;font-size:13px;color:var(--orange);max-width:380px;text-align:center;">
+  <p>We sent a confirmation link to <strong id="confirm-email" style="color:var(--orange);"></strong>. Click it to verify your account and get started.</p>
+  <div style="background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.18);border-radius:10px;padding:14px 20px;margin:8px 0 24px;font-size:13px;color:var(--orange);max-width:380px;text-align:center;">
     📬 Didn't get it? Check your spam folder or wait a minute.
   </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-    <button class="btn btn-orange" style="width:auto;" onclick="resendConfirmation()">Resend Email</button>
-    <button class="btn btn-ghost" style="width:auto;" onclick="window.location.href='/'">Back to Homepage</button>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn-primary" style="width:auto;" onclick="resendConfirmation()">Resend Email</button>
+    <button class="btn-ghost" onclick="window.location.href='/'">Back to Homepage</button>
   </div>
 </div>
 
@@ -599,733 +578,263 @@ ul{list-style:none;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
 <script>
-const SUPABASE_URL      = 'https://linqsojbszglbgpoxgtv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const SB_URL='https://linqsojbszglbgpoxgtv.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+let _lastEmail='', _curStep=1, _usernameValid=true;
 
-let sb;
-try {
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  console.log('Supabase client initialized successfully');
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e);
-  // Create a dummy client to prevent errors
-  sb = {
-    auth: {
-      signInWithPassword: () => ({ error: { message: 'Supabase not available' } }),
-      signUp: () => ({ error: { message: 'Supabase not available' } }),
-      resetPasswordForEmail: () => ({ error: { message: 'Supabase not available' } }),
-      signInWithOAuth: () => ({ error: { message: 'Supabase not available' } }),
-      getSession: () => ({ data: { session: null } }),
-      resend: () => ({ error: { message: 'Supabase not available' } })
-    },
-    from: () => ({
-      select: () => ({ eq: () => ({ single: () => ({ error: { message: 'Database not available' } }) }) }),
-      upsert: () => ({ error: { message: 'Database not available' } })
-    })
-  };
+/* ── SCREEN ROUTER ── */
+const ALL_SCREENS=['screen-login','screen-signup','screen-contractor','screen-forgot','screen-reset','screen-success'];
+function goScreen(id){
+  ALL_SCREENS.forEach(s=>{const el=document.getElementById(s);if(el){el.classList.remove('active');el.style.display='none';}});
+  const next=document.getElementById(id);
+  if(next){next.style.display='flex';next.offsetHeight;next.classList.add('active');}
+  window.scrollTo(0,0);
 }
+function initScreens(){ALL_SCREENS.forEach(s=>{const el=document.getElementById(s);if(el){el.style.display='none';el.classList.remove('active');}});}
 
-// ── SCREEN ROUTER ────────────────────────────────────────────
-const SCREENS = ['screen-login','screen-signup','screen-contractor','screen-forgot','screen-reset-password','screen-customer-success'];
-let _activeScreen = 'screen-login';
-
-function goScreen(id) {
-  if (!document.getElementById(id)) {
-    console.error('Screen not found:', id);
-    return;
-  }
-  if (id === _activeScreen) return;
-  const prev = document.getElementById(_activeScreen);
-  if (prev) {
-    prev.classList.remove('active');
-    prev.style.display = 'none';
-  }
-  const next = document.getElementById(id);
-  next.style.display = 'flex';
-  next.offsetHeight; // force reflow
-  next.classList.add('active');
-  _activeScreen = id;
-  window.scrollTo(0, 0);
-}
-
-// Initialize the default screen
-function initScreens() {
-  // Hide all screens except the active one
-  SCREENS.forEach(screenId => {
-    const screen = document.getElementById(screenId);
-    if (screen) {
-      if (screenId === _activeScreen) {
-        screen.style.display = 'flex';
-        screen.classList.add('active');
-      } else {
-        screen.style.display = 'none';
-        screen.classList.remove('active');
-      }
-    }
-  });
-}
-
-// ── HELPERS ──────────────────────────────────────────────────
-function setLoginType(type, btn) {
-  document.querySelectorAll('#login-toggle .type-btn').forEach(b => b.classList.remove('active'));
+/* ── HELPERS ── */
+function setLoginType(type,btn){
+  document.querySelectorAll('.type-toggle .type-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('login-sub').textContent = type === 'customer'
-    ? 'Welcome back, homeowner.'
-    : 'Welcome back, professional.';
+  document.getElementById('login-sub').textContent=type==='customer'?'Welcome back, homeowner.':'Welcome back, professional.';
+}
+function togglePw(id,btn){const inp=document.getElementById(id);if(!inp)return;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';}
+function pwStrength(inputId,barId,lblId){
+  const pw=document.getElementById(inputId)?.value||'';let score=0;
+  if(pw.length>=8)score++;if(/[A-Z]/.test(pw))score++;if(/[0-9]/.test(pw))score++;if(/[^A-Za-z0-9]/.test(pw))score++;
+  const lvls=[{w:'0%',c:'transparent',t:''},{w:'25%',c:'#EF4444',t:'Weak'},{w:'50%',c:'#F97316',t:'Fair'},{w:'75%',c:'#EAB308',t:'Good'},{w:'100%',c:'#22C55E',t:'Strong'}];
+  const l=lvls[score];
+  const bar=document.getElementById(barId);const lbl=document.getElementById(lblId);
+  if(bar){bar.style.width=l.w;bar.style.background=l.c;}if(lbl){lbl.textContent=l.t;lbl.style.color=l.c;}
+}
+function clearErr(id){document.getElementById(id)?.classList.remove('show');}
+function showErr(id){document.getElementById(id)?.classList.add('show');return false;}
+function clearAlert(id){const el=document.getElementById(id);if(el){el.textContent='';el.classList.remove('show');}}
+function showAlert(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.add('show');}}
+function isEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+function setBtnLoading(id,loading,label){const btn=document.getElementById(id);if(!btn)return;btn.disabled=loading;btn.textContent=loading?'⏳ Please wait…':label;}
+let _toastTimer;
+function showToast(msg){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');clearTimeout(_toastTimer);_toastTimer=setTimeout(()=>t.classList.remove('show'),4000);}
+
+/* ── STEP NAVIGATION ── */
+function goStep(n){
+  document.getElementById('step-'+_curStep)?.classList.remove('active');
+  document.getElementById('step-'+n)?.classList.add('active');
+  _curStep=n;updateProg(n);window.scrollTo(0,0);
+}
+function updateProg(n){
+  const pcts={1:'25%',2:'50%',3:'75%',4:'100%'};
+  const fill=document.getElementById('prog-bar');if(fill)fill.style.width=pcts[n]||'25%';
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('ps-'+i);if(!el)continue;
+    el.className='prog-step';
+    if(i<n)el.classList.add('done');if(i===n)el.classList.add('curr');
+    const dot=el.querySelector('.prog-dot');if(dot)dot.textContent=i<n?'✓':i;
+  }
+}
+function selectPlan(el,val){document.querySelectorAll('#plan-group .radio-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+function selectRadio(el,groupId){document.querySelectorAll('#'+groupId+' .radio-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');if(groupId==='ins-group')clearErr('ins-err');}
+
+/* ── STEP VALIDATION ── */
+function valStep1(){
+  const fn=(document.getElementById('c-fn')?.value||'').trim();
+  const ln=(document.getElementById('c-ln')?.value||'').trim();
+  const em=(document.getElementById('c-email')?.value||'').trim();
+  const ph=(document.getElementById('c-phone')?.value||'').trim();
+  const pw=document.getElementById('c-pw')?.value||'';
+  const pw2=document.getElementById('c-pw2')?.value||'';
+  let ok=true;
+  if(!fn)showErr('c-fn-err'),ok=false;
+  if(!ln)showErr('c-ln-err'),ok=false;
+  if(!isEmail(em))showErr('c-email-err'),ok=false;
+  if(!ph)showErr('c-phone-err'),ok=false;
+  if(pw.length<8)showErr('c-pw-err'),ok=false;
+  if(pw!==pw2)showErr('c-pw2-err'),ok=false;
+  if(ok)goStep(2);
+}
+function valStep2(){
+  const nm=(document.getElementById('b-name')?.value||'').trim();
+  const addr=(document.getElementById('b-addr')?.value||'').trim();
+  const city=(document.getElementById('b-city')?.value||'').trim();
+  const zip=(document.getElementById('b-zip')?.value||'').trim();
+  let ok=true;
+  if(!nm)showErr('b-name-err'),ok=false;
+  if(!addr)showErr('b-addr-err'),ok=false;
+  if(!city)showErr('b-city-err'),ok=false;
+  if(!zip)showErr('b-zip-err'),ok=false;
+  if(ok)goStep(3);
+}
+function valStep3(){
+  const trade=document.getElementById('s-trade')?.value||'';
+  const areas=(document.getElementById('s-areas')?.value||'').trim();
+  const exp=document.getElementById('s-exp')?.value||'';
+  const desc=(document.getElementById('s-desc')?.value||'').trim();
+  let ok=true;
+  if(!trade)showErr('s-trade-err'),ok=false;
+  if(!areas)showErr('s-areas-err'),ok=false;
+  if(!exp)showErr('s-exp-err'),ok=false;
+  if(!desc)showErr('s-desc-err'),ok=false;
+  if(ok)goStep(4);
 }
 
-function togglePw(id, btn) {
-  const inp = document.getElementById(id);
-  if (!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
-}
-
-function checkPwStrength(inputId, barId, labelId) {
-  const pw = document.getElementById(inputId)?.value || '';
-  let score = 0;
-  if (pw.length >= 8) score++;
-  if (/[A-Z]/.test(pw)) score++;
-  if (/[0-9]/.test(pw)) score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-  const levels = [
-    { w: '0%',   c: 'transparent', t: '' },
-    { w: '25%',  c: '#EF4444',     t: 'Weak' },
-    { w: '50%',  c: '#F97316',     t: 'Fair' },
-    { w: '75%',  c: '#EAB308',     t: 'Good' },
-    { w: '100%', c: '#22C55E',     t: 'Strong' },
-  ];
-  const lvl = levels[score];
-  const bar = document.getElementById(barId);
-  const lbl = document.getElementById(labelId);
-  if (bar) { bar.style.width = lvl.w; bar.style.background = lvl.c; }
-  if (lbl) { lbl.textContent = lvl.t; lbl.style.color = lvl.c; }
-}
-
-function clearErr(id)   { document.getElementById(id)?.classList.remove('show'); }
-function showErr(id)    { document.getElementById(id)?.classList.add('show'); return false; }
-function clearAlert(id) { const el = document.getElementById(id); if (el) { el.textContent = ''; el.classList.remove('show'); } }
-function showAlert(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = msg; el.classList.add('show'); } }
-function isEmail(v)     { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-
-function setBtnLoading(btnId, loading, label) {
-  const btn = document.getElementById(btnId);
-  if (!btn) return;
-  btn.disabled = loading;
-  btn.textContent = loading ? '⏳ Please wait…' : label;
-}
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.innerHTML = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
-}
-
-// ── EMAIL LOGIN ───────────────────────────────────────────────
-// FIX: removed last_login update that crashed if column missing
-// FIX: proper error display in UI instead of just toast
-async function handleLogin() {
-  const email = (document.getElementById('login-email')?.value || '').trim();
-  const pw    =  document.getElementById('login-pw')?.value    || '';
-  clearAlert('login-error');
-  let ok = true;
-  if (!isEmail(email)) { showErr('login-email-err'); ok = false; }
-  if (!pw)             { showErr('login-pw-err');    ok = false; }
-  if (!ok) return;
-
-  setBtnLoading('login-btn', true, 'Sign In →');
-
-  let data, error;
-  try {
-    ({ data, error } = await sb.auth.signInWithPassword({ email, password: pw }));
-  } catch (e) {
-    setBtnLoading('login-btn', false, 'Sign In →');
-    showAlert('login-error', '❌ Network error. Please check your connection and try again.');
+/* ── LOGIN ── */
+async function handleLogin(){
+  const email=(document.getElementById('l-email')?.value||'').trim();
+  const pw=document.getElementById('l-pw')?.value||'';
+  clearAlert('login-err');
+  if(!isEmail(email)){showErr('l-email-err');return;}
+  if(!pw){showErr('l-pw-err');return;}
+  setBtnLoading('login-btn',true,'Sign In →');
+  let data,error;
+  try{({data,error}=await sb.auth.signInWithPassword({email,password:pw}));}
+  catch(e){setBtnLoading('login-btn',false,'Sign In →');showAlert('login-err','❌ Network error. Please try again.');return;}
+  if(error){
+    setBtnLoading('login-btn',false,'Sign In →');
+    const msg=error.message?.toLowerCase()||'';
+    if(msg.includes('invalid')||msg.includes('credentials'))showAlert('login-err','❌ Incorrect email or password.');
+    else if(msg.includes('confirm')||msg.includes('verified'))showAlert('login-err','❌ Please verify your email first. Check your inbox.');
+    else showAlert('login-err','❌ '+error.message);
     return;
   }
-
-  if (error) {
-    setBtnLoading('login-btn', false, 'Sign In →');
-    const msg = error.message?.toLowerCase() || '';
-    if (msg.includes('invalid') || msg.includes('credentials')) {
-      showAlert('login-error', '❌ Incorrect email or password. Please try again.');
-    } else if (msg.includes('confirm') || msg.includes('verified')) {
-      showAlert('login-error', '❌ Please verify your email before signing in. Check your inbox for the confirmation link.');
-    } else {
-      showAlert('login-error', '❌ ' + error.message);
-    }
-    return;
-  }
-
-  // Fetch role — use DB as source of truth, metadata as fallback only
-  let role = 'customer';
-  try {
-    const { data: profile } = await sb.from('users')
-      .select('role, username')
-      .eq('id', data.user.id)
-      .single();
-    if (profile?.role) role = profile.role;
-    else role = data.user.user_metadata?.role || 'customer';
-  } catch (e) {
-    role = data.user.user_metadata?.role || 'customer';
-  }
-
-  setBtnLoading('login-btn', false, 'Sign In →');
+  let role='customer';
+  try{const{data:p}=await sb.from('users').select('role').eq('id',data.user.id).single();if(p?.role)role=p.role;}
+  catch(e){role=data.user.user_metadata?.role||'customer';}
+  setBtnLoading('login-btn',false,'Sign In →');
   showToast('✅ Signing you in…');
-
-  // FIX: removed last_login update — was crashing silently if column missing
-  // Redirect based on role
-  setTimeout(() => {
-    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
-  }, 400);
+  setTimeout(()=>{window.location.replace(role==='contractor'?'/contractor-dashboard.html':'/customer-dashboard.html');},400);
 }
 
-// ── CUSTOMER SIGNUP ───────────────────────────────────────────
-let _lastResendEmail = '';
-
-async function handleCustomerSignup() {
-  const name  = (document.getElementById('cu-name')?.value  || '').trim();
-  const email = (document.getElementById('cu-email')?.value || '').trim();
-  const loc   = (document.getElementById('cu-loc')?.value   || '').trim();
-  const pw    =  document.getElementById('cu-pw')?.value    || '';
-  const terms =  document.getElementById('cu-terms')?.checked;
-  clearAlert('signup-error');
-  let ok = true;
-  if (!name)           { showErr('cu-name-err');  ok = false; }
-  if (!isEmail(email)) { showErr('cu-email-err'); ok = false; }
-  if (!loc)            { showErr('cu-loc-err');   ok = false; }
-  if (pw.length < 8)   { showErr('cu-pw-err');    ok = false; }
-  if (!ok) return;
-  if (!terms) { showAlert('signup-error', '⚠️ Please agree to the Terms of Service to continue.'); return; }
-
-  setBtnLoading('cu-signup-btn', true, 'Create My Account →');
-  _lastResendEmail = email;
-
-  // Create user account without email confirmation
-  let authData, authErr;
-  try {
-    ({ data: authData, error: authErr } = await sb.auth.signUp({
-      email,
-      password: pw,
-      options: {
-        data: { display_name: name, role: 'customer' },
-        // Disable automatic email sending
-        emailRedirectTo: undefined,
-      },
+/* ── CUSTOMER SIGNUP ── */
+async function handleCustomerSignup(){
+  const name=(document.getElementById('cu-name')?.value||'').trim();
+  const email=(document.getElementById('cu-email')?.value||'').trim();
+  const loc=(document.getElementById('cu-loc')?.value||'').trim();
+  const pw=document.getElementById('cu-pw')?.value||'';
+  const terms=document.getElementById('cu-terms')?.checked;
+  clearAlert('signup-err');
+  if(!name){showErr('cu-name-err');return;}
+  if(!isEmail(email)){showErr('cu-email-err');return;}
+  if(!loc){showErr('cu-loc-err');return;}
+  if(pw.length<8){showErr('cu-pw-err');return;}
+  if(!terms){showAlert('signup-err','⚠️ Please agree to the Terms of Service to continue.');return;}
+  setBtnLoading('cu-btn',true,'Create My Account →');
+  _lastEmail=email;
+  let authData,authErr;
+  try{
+    ({data:authData,error:authErr}=await sb.auth.signUp({
+      email,password:pw,
+      options:{data:{display_name:name,role:'customer'},emailRedirectTo:window.location.origin+'/auth-callback.html'},
     }));
-  } catch (e) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showAlert('signup-error', '❌ Network error. Please try again.');
-    return;
-  }
-
-  if (authErr) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showAlert('signup-error', '❌ ' + authErr.message);
-    return;
-  }
-
-  // Generate confirmation link with user ID
-  const userId = authData.user.id;
-  const baseUrl = window.location.origin;
-  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
-
-  // Send confirmation email via Resend
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm', link, name })
-  });
-
-  if (!emailRes.ok) {
-    setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-    showAlert('signup-error', '❌ Failed to send confirmation email.');
-    return;
-  }
-
-  // Upsert users row — safe if row already exists
-  await sb.from('users').upsert({
-    id:       authData.user.id,
-    username: name,
-    email,
-    location: loc,
-    role:     'customer',
-  }, { onConflict: 'id' });
-
-  setBtnLoading('cu-signup-btn', false, 'Create My Account →');
-
-  // If Supabase auto-confirms (e.g. no email confirmation required in project settings)
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showToast('🎉 Account created! Welcome to Tradease!');
-    setTimeout(() => { window.location.replace('/customer-dashboard.html'); }, 400);
-    return;
-  }
-
-  // Email confirmation required
-  const displayEl = document.getElementById('confirm-email-display');
-  if (displayEl) displayEl.textContent = email;
-  goScreen('screen-customer-success');
+  }catch(e){setBtnLoading('cu-btn',false,'Create My Account →');showAlert('signup-err','❌ Network error. Please try again.');return;}
+  if(authErr){setBtnLoading('cu-btn',false,'Create My Account →');showAlert('signup-err','❌ '+authErr.message);return;}
+  await sb.from('users').upsert({id:authData.user.id,username:name,email,location:loc,role:'customer'},{onConflict:'id'});
+  setBtnLoading('cu-btn',false,'Create My Account →');
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){showToast('🎉 Welcome to Tradease!');setTimeout(()=>{window.location.replace('/customer-dashboard.html');},400);return;}
+  document.getElementById('confirm-email').textContent=email;
+  initScreens();
+  const s=document.getElementById('screen-success');s.style.display='flex';s.offsetHeight;s.classList.add('active');
 }
 
-// ── CONTRACTOR MULTI-STEP ─────────────────────────────────────
-let currentStep = 1;
-
-function goStep(n) {
-  document.getElementById('step-' + currentStep)?.classList.remove('active');
-  document.getElementById('step-' + n)?.classList.add('active');
-  currentStep = n;
-  updateProgress(n);
-  window.scrollTo(0, 0);
-}
-
-function updateProgress(step) {
-  const pct = { 1: 25, 2: 50, 3: 75, 4: 100 };
-  const fill = document.getElementById('prog-bar');
-  if (fill) fill.style.width = pct[step] + '%';
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('ps-' + i);
-    if (!el) continue;
-    el.className = 'prog-step';
-    if (i < step)   el.classList.add('done');
-    if (i === step) el.classList.add('active');
-    const dot = el.querySelector('.prog-dot');
-    if (dot) dot.textContent = i < step ? '✓' : i;
-  }
-}
-
-function validateStep1() {
-  const fn  = (document.getElementById('c-fname')?.value || '').trim();
-  const ln  = (document.getElementById('c-lname')?.value || '').trim();
-  const em  = (document.getElementById('c-email')?.value || '').trim();
-  const ph  = (document.getElementById('c-phone')?.value || '').trim();
-  const pw  =  document.getElementById('c-pw')?.value    || '';
-  const pw2 =  document.getElementById('c-pw2')?.value   || '';
-  let ok = true;
-  if (!fn)          { showErr('c-fname-err'); ok = false; }
-  if (!ln)          { showErr('c-lname-err'); ok = false; }
-  if (!isEmail(em)) { showErr('c-email-err'); ok = false; }
-  if (!ph)          { showErr('c-phone-err'); ok = false; }
-  if (pw.length < 8){ showErr('c-pw-err');    ok = false; }
-  if (pw !== pw2)   { showErr('c-pw2-err');   ok = false; }
-  if (ok) goStep(2);
-}
-
-function validateStep2() {
-  const nm   = (document.getElementById('b-name')?.value || '').trim();
-  const addr = (document.getElementById('b-addr')?.value || '').trim();
-  const city = (document.getElementById('b-city')?.value || '').trim();
-  const zip  = (document.getElementById('b-zip')?.value  || '').trim();
-  let ok = true;
-  if (!nm)   { showErr('b-name-err'); ok = false; }
-  if (!addr) { showErr('b-addr-err'); ok = false; }
-  if (!city) { showErr('b-city-err'); ok = false; }
-  if (!zip)  { showErr('b-zip-err');  ok = false; }
-  if (ok) goStep(3);
-}
-
-function validateStep3() {
-  const trade = document.getElementById('s-trade')?.value || '';
-  const areas = (document.getElementById('s-areas')?.value || '').trim();
-  const exp   = document.getElementById('s-exp')?.value   || '';
-  const desc  = (document.getElementById('s-desc')?.value || '').trim();
-  let ok = true;
-  if (!trade) { showErr('s-trade-err'); ok = false; }
-  if (!areas) { showErr('s-areas-err'); ok = false; }
-  if (!exp)   { showErr('s-exp-err');   ok = false; }
-  if (!desc)  { showErr('s-desc-err');  ok = false; }
-  if (ok) goStep(4);
-}
-
-function selectPlan(el, val) {
-  document.querySelectorAll('#plan-select .radio-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function selectRadio(el, groupId) {
-  document.querySelectorAll('#' + groupId + ' .radio-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  if (groupId === 'ins-select') clearErr('ins-err');
-}
-
-async function handleContractorSignup() {
-  const legal  = document.getElementById('l-legal')?.checked;
-  const hasIns = document.querySelector('#ins-select .radio-opt.selected');
-  clearAlert('contractor-error');
-  let ok = true;
-  if (!hasIns) { showErr('ins-err');     ok = false; }
-  if (!legal)  { showErr('l-legal-err'); ok = false; }
-  if (!ok) return;
-
-  const fn          = (document.getElementById('c-fname')?.value || '').trim();
-  const ln          = (document.getElementById('c-lname')?.value || '').trim();
-  const email       = (document.getElementById('c-email')?.value || '').trim();
-  const phone       = (document.getElementById('c-phone')?.value || '').trim();
-  const pw          =  document.getElementById('c-pw')?.value    || '';
-  const companyName = (document.getElementById('b-name')?.value  || '').trim();
-  const address     = (document.getElementById('b-addr')?.value  || '').trim();
-  const city        = (document.getElementById('b-city')?.value  || '').trim();
-  const zip         = (document.getElementById('b-zip')?.value   || '').trim();
-  const website     = (document.getElementById('b-web')?.value   || '').trim();
-  const tradeType   =  document.getElementById('s-trade')?.value || '';
-  const serviceAreas= (document.getElementById('s-areas')?.value || '').trim();
-  const experience  =  document.getElementById('s-exp')?.value   || '';
-  const description = (document.getElementById('s-desc')?.value  || '').trim();
-  const license     = (document.getElementById('l-license')?.value || '').trim();
-  const insured     = hasIns.querySelector('.radio-opt-title')?.textContent.includes('Insured') || false;
-  const plan        = document.querySelector('#plan-select .radio-opt.selected input')?.value || 'free';
-  const location    = city ? `${city}, NY ${zip}`.trim() : zip;
-  const fullName    = `${fn} ${ln}`.trim();
-
-  setBtnLoading('contractor-signup-btn', true, '🚀 Create My Account');
-
-  let authData, authErr;
-  try {
-    ({ data: authData, error: authErr } = await sb.auth.signUp({
-      email,
-      password: pw,
-      options: {
-        data: { display_name: companyName || fullName, role: 'contractor' },
-        // Disable automatic email sending
-        emailRedirectTo: undefined,
-      },
+/* ── CONTRACTOR SIGNUP ── */
+async function handleContractorSignup(){
+  const legal=document.getElementById('l-legal')?.checked;
+  const hasIns=document.querySelector('#ins-group .radio-opt.selected');
+  clearAlert('cont-err');
+  if(!hasIns){showErr('ins-err');return;}
+  if(!legal){showErr('l-legal-err');return;}
+  const fn=(document.getElementById('c-fn')?.value||'').trim();
+  const ln=(document.getElementById('c-ln')?.value||'').trim();
+  const email=(document.getElementById('c-email')?.value||'').trim();
+  const phone=(document.getElementById('c-phone')?.value||'').trim();
+  const pw=document.getElementById('c-pw')?.value||'';
+  const company=(document.getElementById('b-name')?.value||'').trim();
+  const city=(document.getElementById('b-city')?.value||'').trim();
+  const zip=(document.getElementById('b-zip')?.value||'').trim();
+  const tradeType=document.getElementById('s-trade')?.value||'';
+  const serviceAreas=(document.getElementById('s-areas')?.value||'').trim();
+  const experience=document.getElementById('s-exp')?.value||'';
+  const description=(document.getElementById('s-desc')?.value||'').trim();
+  const license=(document.getElementById('l-license')?.value||'').trim();
+  const insured=hasIns.querySelector('.radio-opt-title')?.textContent.includes('Insured')||false;
+  const plan=document.querySelector('#plan-group .radio-opt.selected input')?.value||'free';
+  const location=city?`${city}, NY ${zip}`.trim():zip;
+  setBtnLoading('cont-btn',true,'🚀 Create My Account');
+  _lastEmail=email;
+  let authData,authErr;
+  try{
+    ({data:authData,error:authErr}=await sb.auth.signUp({
+      email,password:pw,
+      options:{data:{display_name:company||`${fn} ${ln}`,role:'contractor'},emailRedirectTo:window.location.origin+'/auth-callback.html'},
     }));
-  } catch (e) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showAlert('contractor-error', '❌ Network error. Please try again.');
-    return;
-  }
-
-  if (authErr) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showAlert('contractor-error', '❌ ' + authErr.message);
-    return;
-  }
-
-  const userId = authData.user.id;
-
-  // Upsert both rows — safe on retry
-  await sb.from('users').upsert({
-    id:       userId,
-    username: fullName,
-    email,
-    phone,
-    role:     'contractor',
-    location,
-  }, { onConflict: 'id' });
-
-  await sb.from('contractors').upsert({
-    id:              userId,
-    company_name:    companyName,
-    trade_type:      tradeType,
-    phone,
-    email,
-    location,
-    address:         `${address}, ${city}, NY ${zip}`.trim(),
-    website:         website || '',
-    service_areas:   serviceAreas,
-    experience,
-    description,
-    license_url:     license || '',
-    insured,
-    verified:        false,
-    rating:          0,
-    review_count:    0,
-    plan,
-    total_bookings:  0,
-    profile_views:   0,
-    portfolio:       [],
-    // FIX: was 'avatar', dashboard reads 'avatar_url'
-    avatar_url:      '',
-    approval_status: 'pending',
-    approved:        false,
-  }, { onConflict: 'id' });
-
-  // Generate confirmation link with user ID
-  const baseUrl = window.location.origin;
-  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
-
-  // Send confirmation email via Resend
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm', link, name: companyName || fullName })
-  });
-
-  if (!emailRes.ok) {
-    setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-    showAlert('contractor-error', '❌ Failed to send confirmation email.');
-    return;
-  }
-
-  setBtnLoading('contractor-signup-btn', false, '🚀 Create My Account');
-
-  // Check if auto-confirmed
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showToast('🎉 Welcome to Tradease, ' + fn + '!');
-    setTimeout(() => { window.location.replace('/contractor-dashboard.html'); }, 400);
-    return;
-  }
-
-  _lastResendEmail = email;
-  const displayEl = document.getElementById('confirm-email-display');
-  if (displayEl) displayEl.textContent = email;
-  goScreen('screen-customer-success');
+  }catch(e){setBtnLoading('cont-btn',false,'🚀 Create My Account');showAlert('cont-err','❌ Network error.');return;}
+  if(authErr){setBtnLoading('cont-btn',false,'🚀 Create My Account');showAlert('cont-err','❌ '+authErr.message);return;}
+  const uid=authData.user.id;
+  await sb.from('users').upsert({id:uid,username:`${fn} ${ln}`.trim(),email,phone,role:'contractor',location},{onConflict:'id'});
+  await sb.from('contractors').upsert({id:uid,company_name:company,trade_type:tradeType,phone,email,location,service_areas:serviceAreas,experience,description,license_url:license||'',insured,verified:false,rating:0,review_count:0,plan,total_bookings:0,profile_views:0,portfolio:[],avatar_url:'',approval_status:'pending',approved:false},{onConflict:'id'});
+  setBtnLoading('cont-btn',false,'🚀 Create My Account');
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){showToast('🎉 Welcome to Tradease, '+fn+'!');setTimeout(()=>{window.location.replace('/contractor-dashboard.html');},400);return;}
+  document.getElementById('confirm-email').textContent=email;
+  initScreens();
+  const s=document.getElementById('screen-success');s.style.display='flex';s.offsetHeight;s.classList.add('active');
 }
 
-// ── FORGOT PASSWORD ───────────────────────────────────────────
-async function handleForgot() {
-  const email = (document.getElementById('forgot-email')?.value || '').trim();
-  if (!isEmail(email)) { showToast('⚠️ Please enter a valid email address.'); return; }
-  setBtnLoading('forgot-btn', true, 'Send Reset Link →');
-
-  // Use Supabase's password reset but redirect to our custom handler
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/auth-callback.html?type=reset&email=' + encodeURIComponent(email),
-  });
-
-  if (error) {
-    setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-    showToast('❌ ' + error.message);
-    return;
-  }
-
-  setBtnLoading('forgot-btn', false, 'Send Reset Link →');
-  showToast('✉️ Reset link sent to ' + email + '! Check your inbox.');
+/* ── FORGOT / RESET ── */
+async function handleForgot(){
+  const email=(document.getElementById('f-email')?.value||'').trim();
+  if(!isEmail(email)){showToast('⚠️ Please enter a valid email address.');return;}
+  setBtnLoading('forgot-btn',true,'Send Reset Link →');
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/auth-callback.html'});
+  setBtnLoading('forgot-btn',false,'Send Reset Link →');
+  if(error){showToast('❌ '+error.message);return;}
+  showToast('✉️ Reset link sent to '+email+'! Check your inbox.');
+}
+async function handleReset(){
+  const pw=document.getElementById('r-pw')?.value||'';
+  const pw2=document.getElementById('r-pw2')?.value||'';
+  clearAlert('reset-err');
+  if(pw.length<8){showErr('r-pw-err');return;}
+  if(pw!==pw2){showErr('r-pw2-err');return;}
+  setBtnLoading('reset-btn',true,'Update Password →');
+  const{error}=await sb.auth.updateUser({password:pw});
+  setBtnLoading('reset-btn',false,'Update Password →');
+  if(error){showAlert('reset-err','❌ '+error.message);return;}
+  showToast('✅ Password updated! Signing you in…');
+  setTimeout(()=>goScreen('screen-login'),1500);
+}
+async function resendConfirmation(){
+  if(!_lastEmail){showToast('⚠️ Please sign up again.');return;}
+  const{error}=await sb.auth.resend({type:'signup',email:_lastEmail,options:{emailRedirectTo:window.location.origin+'/auth-callback.html'}});
+  if(error){showToast('❌ '+error.message);return;}
+  showToast('✅ Confirmation email resent!');
 }
 
-// ── PASSWORD RESET ─────────────────────────────────────────────
-async function handlePasswordReset() {
-  const pw  = document.getElementById('reset-pw')?.value  || '';
-  const pw2 = document.getElementById('reset-pw2')?.value || '';
-  clearAlert('reset-error');
-  let ok = true;
-  if (pw.length < 8)  { showErr('reset-pw-err');  ok = false; }
-  if (pw !== pw2)     { showErr('reset-pw2-err'); ok = false; }
-  if (!ok) return;
+/* ── OAUTH ── */
+async function signInGoogle(){const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/auth-callback.html',queryParams:{access_type:'offline',prompt:'consent'}}});if(error)showToast('❌ '+error.message);}
+async function signInGithub(){const{error}=await sb.auth.signInWithOAuth({provider:'github',options:{redirectTo:window.location.origin+'/auth-callback.html'}});if(error)showToast('❌ '+error.message);}
+async function oauthContractor(provider){sessionStorage.setItem('oauth_role','contractor');const{error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin+'/auth-callback.html',...(provider==='google'?{queryParams:{access_type:'offline',prompt:'consent'}}:{})}});if(error)showToast('❌ '+error.message);}
 
-  setBtnLoading('reset-btn', true, 'Update Password →');
-
-  const resetEmail = sessionStorage.getItem('reset_email');
-  const { data } = await sb.auth.getSession();
-  const validSession = data?.session;
-
-  if (!resetEmail || !validSession) {
-    setBtnLoading('reset-btn', false, 'Update Password →');
-    showAlert('reset-error', '❌ Reset session expired or is invalid. Please request a new reset link.');
-    goScreen('screen-forgot');
-    return;
-  }
-
-  // Update password using Supabase
-  const { error } = await sb.auth.updateUser({ password: pw });
-
-  if (error) {
-    setBtnLoading('reset-btn', false, 'Update Password →');
-    showAlert('reset-error', '❌ ' + error.message);
-    return;
-  }
-
-  // Clear reset session
-  sessionStorage.removeItem('reset_email');
-
-  setBtnLoading('reset-btn', false, 'Update Password →');
-  showToast('✅ Password updated! You can now sign in.');
-  setTimeout(() => goScreen('screen-login'), 1500);
+/* ── SESSION CHECK ── */
+async function init(){
+  initScreens();
+  const intentional=sessionStorage.getItem('auth_intentional');
+  if(intentional){sessionStorage.removeItem('auth_intentional');goScreen('screen-login');return;}
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('reset')==='true'){goScreen('screen-reset');return;}
+  if(params.get('type')==='contractor'){goScreen('screen-contractor');return;}
+  if(params.get('confirmed')==='true'){showToast('✅ Email confirmed! You can now sign in.');goScreen('screen-login');return;}
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(!session){goScreen('screen-login');return;}
+    let role='customer';
+    try{const{data:p}=await sb.from('users').select('role').eq('id',session.user.id).single();if(p?.role)role=p.role;}
+    catch(e){role=session.user.user_metadata?.role||'customer';}
+    window.location.replace(role==='contractor'?'/contractor-dashboard.html':'/customer-dashboard.html');
+  }catch(e){goScreen('screen-login');}
 }
-
-// ── RESEND CONFIRMATION ───────────────────────────────────────
-// FIX: was looking for 'co-email' which doesn't exist, now uses _lastResendEmail
-async function resendConfirmation() {
-  const email = _lastResendEmail;
-  if (!email) {
-    showToast('⚠️ Please sign up again to get a new link.');
-    goScreen('screen-signup');
-    return;
-  }
-
-  // Get user by email to get userId
-  const { data: users, error } = await sb.from('users').select('id').eq('email', email).single();
-
-  if (error || !users) {
-    showToast('❌ Could not find user account. Please sign up again.');
-    goScreen('screen-signup');
-    return;
-  }
-
-  const userId = users.id;
-  const baseUrl = window.location.origin;
-  const link = `${baseUrl}/auth-callback.html?userId=${userId}&type=confirm&email=${encodeURIComponent(email)}`;
-
-  // Send custom confirmation email
-  const emailRes = await fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, type: 'confirm', link })
-  });
-
-  if (!emailRes.ok) {
-    showToast('❌ Failed to resend confirmation email.');
-    return;
-  }
-
-  showToast('✅ Confirmation email resent! Check your inbox.');
-}
-
-// ── GOOGLE OAUTH ──────────────────────────────────────────────
-async function signInWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin + '/auth-callback.html',
-      queryParams: { access_type: 'offline', prompt: 'consent' },
-    },
-  });
-  if (error) showToast('❌ Google sign-in failed: ' + error.message);
-}
-
-async function signInWithGitHub() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'github',
-    options: { redirectTo: window.location.origin + '/auth-callback.html' },
-  });
-  if (error) showToast('❌ GitHub sign-in failed: ' + error.message);
-}
-
-async function signInWithOAuthContractor(provider) {
-  sessionStorage.setItem('oauth_role', 'contractor');
-  const { error } = await sb.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: window.location.origin + '/auth-callback.html',
-      ...(provider === 'google' ? { queryParams: { access_type: 'offline', prompt: 'consent' } } : {}),
-    },
-  });
-  if (error) showToast('❌ ' + provider + ' sign-in failed: ' + error.message);
-}
-
-// ── SESSION CHECK ON LOAD ─────────────────────────────────────
-async function checkExistingSession() {
-  try {
-    // Always show the page after a short delay to prevent blank screens
-    setTimeout(() => {
-      if (document.body.style.opacity !== '1') {
-        document.body.style.opacity = '1';
-      }
-    }, 1000);
-
-    const intentional = sessionStorage.getItem('auth_intentional');
-    if (intentional) {
-      sessionStorage.removeItem('auth_intentional');
-      document.body.style.opacity = '1';
-      return;
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('reset') === 'true') {
-      document.body.style.opacity = '1';
-      return;
-    }
-
-    // Check if Supabase client exists
-    if (!sb || !sb.auth) {
-      console.error('Supabase client not initialized');
-      document.body.style.opacity = '1';
-      return;
-    }
-
-    let session = null;
-    try {
-      const result = await sb.auth.getSession();
-      session = result.data?.session || null;
-    } catch (e) {
-      console.error('Error getting session:', e);
-      document.body.style.opacity = '1';
-      return;
-    }
-
-    if (!session) {
-      document.body.style.opacity = '1';
-      return;
-    }
-
-    // Already logged in — get role and redirect
-    let role = session.user.user_metadata?.role || 'customer';
-    try {
-      const { data: profile } = await sb.from('users')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-      if (profile?.role) role = profile.role;
-    } catch (e) {
-      console.error('Error fetching user profile:', e);
-      // Continue with metadata fallback
-    }
-
-    window.location.replace(role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html');
-  } catch (e) {
-    console.error('Error in checkExistingSession:', e);
-    // Always show the page if there's any error
-    document.body.style.opacity = '1';
-  }
-}
-
-// Handle post-auth chat intent
-(async function() {
-  const action = sessionStorage.getItem('post_auth_action');
-  if (action) {
-    try {
-      const parsed = JSON.parse(action);
-      if (parsed.action === 'message' && parsed.contractorId) {
-        sessionStorage.removeItem('post_auth_action');
-        sessionStorage.setItem('open_chat', JSON.stringify({
-          contractorId:   parsed.contractorId,
-          contractorName: parsed.contractorName || 'Contractor',
-        }));
-      }
-    } catch (e) { sessionStorage.removeItem('post_auth_action'); }
-  }
-
-  // Handle email confirmation success
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('confirmed') === 'true') {
-    showToast('✅ Email confirmed! You can now sign in.');
-    // Clear the URL parameter
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-
-  // Handle password reset
-  if (urlParams.get('reset') === 'true') {
-    const resetEmail = urlParams.get('email') || sessionStorage.getItem('reset_email');
-    if (resetEmail) {
-      sessionStorage.setItem('reset_email', resetEmail);
-    }
-    try {
-      const { data } = await sb.auth.getSession();
-      if (data?.session) {
-        goScreen('screen-reset-password');
-      } else {
-        showToast('✅ Reset link verified. Please follow the next step in the email or sign in to continue.');
-      }
-    } catch (e) {
-      console.error('Error checking reset session:', e);
-      showToast('⚠️ Unable to complete password reset automatically. Please sign in to continue.');
-    }
-  }
-
-  // Auto-switch to contractor tab if URL param says so
-  if (urlParams.get('type') === 'contractor') {
-    setTimeout(() => goScreen('screen-contractor'), 100);
-  }
-})();
-
-// Initialize screens and check session
-initScreens();
-checkExistingSession();
+init();
 </script>
 </body>
 </html>

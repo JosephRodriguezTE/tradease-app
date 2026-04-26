@@ -1,252 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  'https://linqsojbszglbgpoxgtv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU'
-);
-
-(async () => {
-  // Check for custom confirmation/reset tokens
-  const urlParams = new URLSearchParams(window.location.search);
-  const userId = urlParams.get('userId');
-  const type = urlParams.get('type');
-  const email = urlParams.get('email');
-
-  if (userId && type === 'confirm' && email) {
-    // Handle email confirmation - update user status
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ email_confirmed: true })
-        .eq('id', userId);
-
-      if (error) {
-        showError('❌ Confirmation failed: ' + error.message);
-        return;
-      }
-
-      showSuccess('✅ Email confirmed! Redirecting to login...');
-      setTimeout(() => {
-        window.location.href = "/tradease-auth.html?confirmed=true";
-      }, 2000);
-    } catch (e) {
-      showError('❌ Confirmation failed. Please try logging in manually.');
-    }
-    return;
-  }
-
-  if (type === 'reset' && email) {
-    sessionStorage.setItem('reset_email', email);
-    showSuccess('✅ Reset link verified! Redirecting to password reset page...');
-    setTimeout(() => {
-      window.location.href = "/tradease-auth.html?reset=true";
-    }, 2000);
-    return;
-  }
-
-  // Check for existing session
-  const { data } = await supabase.auth.getSession();
-
-  if (data.session) {
-    window.location.href = "/customer-dashboard.html";
-  }
-})();
-
-function showError(message) {
-  const card = document.querySelector('.card');
-  card.innerHTML = `
-    <div class="icon">❌</div>
-    <h1>Confirmation Failed</h1>
-    <p>${message}</p>
-    <a href="/tradease-auth.html" class="btn btn-or">Back to Login</a>
-  `;
-}
-
-function showSuccess(message) {
-  const card = document.querySelector('.card');
-  card.innerHTML = `
-    <div class="icon">✅</div>
-    <h1>Success!</h1>
-    <p>${message}</p>
-  `;
-}
-</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tradease – Confirming…</title>
+<title>Tradease – Verifying…</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  :root{--bg:#0F0F0F;--bg2:#161616;--bg3:#1E1E1E;--border:#2A2A2A;--orange:#FF6B2B;--orange-dk:#E05520;--white:#FFFFFF;--g1:#F0F0EE;--g2:#A8A8A8;--g3:#555555;--green:#22C55E;--red:#EF4444;}
-  body{font-family:'Barlow',sans-serif;background-color:#4A4A52;background-image:radial-gradient(circle at 12% 45%, rgba(255,255,255,0.035) 0.5px, transparent 1px),radial-gradient(circle at 68% 72%, rgba(255,255,255,0.025) 0.5px, transparent 1px),radial-gradient(circle at 44% 31%, rgba(0,0,0,0.06) 0.8px, transparent 1.5px),radial-gradient(circle at 78% 18%, rgba(255,255,255,0.04) 1px, transparent 2px),radial-gradient(circle at 33% 85%, rgba(0,0,0,0.05) 0.8px, transparent 1.5px),radial-gradient(circle at 89% 54%, rgba(255,255,255,0.03) 1px, transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%, rgba(100,100,110,0.15), transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%, rgba(50,50,58,0.12), transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%, rgba(80,80,88,0.08), transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%, rgba(0,0,0,0.1), transparent),radial-gradient(ellipse 450px 250px at 85% 20%, rgba(255,255,255,0.05), transparent);background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;background-attachment:fixed;color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;}
-  .logo{margin-bottom:48px;display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;}
-  .logo img{width:36px;height:36px;border-radius:10px;object-fit:cover;}
-  .logo span{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:white;text-transform:uppercase;letter-spacing:.04em;}
-  .logo-dot{width:9px;height:9px;background:var(--orange);border-radius:50%;display:inline-block;margin-left:2px;}
-  .card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:48px 40px;max-width:460px;width:100%;}
-  .icon{font-size:52px;margin-bottom:20px;line-height:1;}
-  h1{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;text-transform:uppercase;color:var(--white);letter-spacing:-.01em;margin-bottom:10px;}
-  p{font-size:15px;color:var(--g2);line-height:1.7;margin-bottom:24px;}
-  .spinner{width:44px;height:44px;border-radius:50%;border:3px solid var(--bg3);border-top-color:var(--orange);animation:spin .7s linear infinite;margin:0 auto 20px;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .btn{display:inline-block;padding:13px 28px;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border:none;transition:background .12s;text-decoration:none;}
-  .btn-or{background:var(--orange);color:white;box-shadow:0 4px 16px rgba(255,107,43,.3);}
-  .btn-or:hover{background:var(--orange-dk);}
-  .btn-gy{background:var(--bg3);color:var(--g1);border:1px solid var(--border);margin-top:10px;}
-  .btn-gy:hover{background:var(--bg);border-color:var(--g3);}
-  .state{display:none;}
-  .state.active{display:block;}
-  .progress{position:fixed;top:0;left:0;width:100%;height:3px;background:var(--bg3);}
-  .progress-fill{height:100%;background:var(--orange);width:0%;transition:width .4s ease;}
-  .err-detail{font-size:12px;color:var(--g3);margin-top:8px;word-break:break-all;}
+:root{--orange:#FF6B2B;--accent:#22C55E;--bg:#080A0C;--bg2:#0E1012;--bg3:#141618;--border:rgba(255,255,255,.06);--g1:#E8EAE8;--g2:#7A8A7E;--g3:#3A4A3E;--red:#EF4444;--display:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:var(--body);
+  background-color:#4A4A52;
+  background-image:radial-gradient(circle at 12% 45%,rgba(255,255,255,.035) .5px,transparent 1px),radial-gradient(circle at 68% 72%,rgba(255,255,255,.025) .5px,transparent 1px),radial-gradient(circle at 44% 31%,rgba(0,0,0,.06) .8px,transparent 1.5px),radial-gradient(circle at 78% 18%,rgba(255,255,255,.04) 1px,transparent 2px),radial-gradient(circle at 33% 85%,rgba(0,0,0,.05) .8px,transparent 1.5px),radial-gradient(circle at 89% 54%,rgba(255,255,255,.03) 1px,transparent 2px),radial-gradient(ellipse 180px 100px at 15% 25%,rgba(100,100,110,.15),transparent 60%),radial-gradient(ellipse 220px 130px at 75% 65%,rgba(50,50,58,.12),transparent 60%),radial-gradient(ellipse 250px 150px at 50% 50%,rgba(80,80,88,.08),transparent 70%),radial-gradient(ellipse 400px 200px at 25% 80%,rgba(0,0,0,.1),transparent),radial-gradient(ellipse 450px 250px at 85% 20%,rgba(255,255,255,.05),transparent);
+  background-size:97px 113px,131px 179px,71px 73px,163px 151px,89px 97px,211px 157px,350px 250px,380px 280px,420px 300px,600px 400px,700px 500px;
+  background-position:0 0,40px 60px,10px 30px,20px 80px,50px 20px,100px 100px,0 0,50px 80px,100px 50px,0 0,0 0;
+  background-attachment:fixed;
+  color:var(--g1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;
+}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:rgba(8,10,12,.70);pointer-events:none;}
+
+.logo{margin-bottom:40px;font-family:var(--display);font-size:26px;font-weight:900;color:var(--orange);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;gap:8px;cursor:pointer;}
+.logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;}
+
+.card{
+  background:rgba(14,16,18,.88);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:22px;
+  padding:48px 40px;max-width:460px;width:100%;text-align:center;
+}
+
+/* Progress bar at top */
+.prog-bar{position:fixed;top:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:var(--orange);width:0%;transition:width .4s ease;}
+
+/* States */
+.state{display:none;}
+.state.active{display:block;animation:fadeIn .2s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.state-icon{font-size:52px;margin-bottom:20px;display:block;line-height:1;}
+.state h1{font-family:var(--display);font-size:30px;font-weight:900;text-transform:uppercase;color:white;letter-spacing:-.01em;margin-bottom:10px;}
+.state p{font-size:15px;color:var(--g2);line-height:1.7;margin-bottom:24px;}
+
+.spin{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.08);border-top-color:var(--orange);animation:spin .7s linear infinite;margin:0 auto 20px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 28px;border-radius:10px;font-family:var(--display);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border:none;transition:all .12s;text-decoration:none;}
+.btn-orange{background:var(--orange);color:white;box-shadow:0 4px 16px rgba(255,107,43,.3);margin-bottom:10px;display:block;}
+.btn-orange:hover{background:#E05520;}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--g1);border:1px solid var(--border);display:block;margin-top:8px;}
+.btn-ghost:hover{background:rgba(255,255,255,.1);}
 </style>
 </head>
 <body>
+<div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
 
-<div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
-
-<a class="logo" href="/" onclick="window.location.href='/'">
-  <img src="/tradease-logo.svg" alt="Tradease" onerror="this.style.display='none'"/>
-  <span>Tradease<span class="logo-dot"></span></span>
-</a>
+<div class="logo" onclick="window.location.href='/'">Tradease<span class="logo-dot"></span></div>
 
 <div class="card">
-
+  <!-- Loading state -->
   <div class="state active" id="state-loading">
-    <div class="spinner"></div>
-    <h1>Confirming your account…</h1>
-    <p>Please wait while we verify your session.</p>
+    <div class="spin"></div>
+    <h1>Verifying…</h1>
+    <p>Please wait while we confirm your session.</p>
   </div>
 
+  <!-- Success state -->
   <div class="state" id="state-success">
-    <div class="icon">✅</div>
-    <h1>You're in!</h1>
+    <span class="state-icon">✅</span>
+    <h1>You're In!</h1>
     <p>Your account is verified. Taking you to your dashboard…</p>
-    <div class="spinner"></div>
+    <div class="spin"></div>
   </div>
 
+  <!-- Error state -->
   <div class="state" id="state-error">
-    <div class="icon">❌</div>
-    <h1>Something went wrong</h1>
-    <p id="error-msg">The confirmation link may have expired or already been used.</p>
-    <div class="err-detail" id="error-detail"></div>
-    <br/>
-    <a href="/tradease-auth.html" class="btn btn-or">Go to Login →</a><br/>
-    <a href="/" class="btn btn-gy">Back to Homepage</a>
+    <span class="state-icon">❌</span>
+    <h1>Something Went Wrong</h1>
+    <p id="error-msg">The link may have expired or already been used.</p>
+    <a href="/tradease-auth.html" class="btn btn-orange">Go to Login →</a>
+    <a href="/" class="btn btn-ghost">Back to Homepage</a>
   </div>
 
-  <div class="state" id="state-notoken">
-    <div class="icon">🔗</div>
+  <!-- Invalid link state -->
+  <div class="state" id="state-invalid">
+    <span class="state-icon">🔗</span>
     <h1>Invalid Link</h1>
     <p>This confirmation link is invalid or has expired. Please sign up again or request a new link.</p>
-    <a href="/tradease-auth.html" class="btn btn-or">Sign Up Again →</a>
+    <a href="/tradease-auth.html" class="btn btn-orange">Sign Up Again →</a>
   </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL      = 'https://linqsojbszglbgpoxgtv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* ══════════════════════════════════════════════════
+   AUTH CALLBACK — Single clean script
+   Handles: email confirmation, OAuth, password reset
+   ══════════════════════════════════════════════════ */
+const SB_URL='https://linqsojbszglbgpoxgtv.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbnFzb2pic3pnbGJncG94Z3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDEyMDcsImV4cCI6MjA4OTcxNzIwN30.TfvKH1iNznTFyTpxpqTf7EbrG-L7YnbAxPeUXfnGirU';
+const sb=supabase.createClient(SB_URL,SB_KEY);
 
-const fill = document.getElementById('progress-fill');
-function setProgress(pct) { fill.style.width = pct + '%'; }
+const prog=document.getElementById('prog');
+function setProgress(pct){if(prog)prog.style.width=pct+'%';}
 
-function showState(id) {
-  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById(id);
-  if (el) el.classList.add('active');
+function showState(id){
+  document.querySelectorAll('.state').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
 }
 
-function showError(msg, detail) {
+function showError(msg){
   showState('state-error');
-  const msgEl    = document.getElementById('error-msg');
-  const detailEl = document.getElementById('error-detail');
-  if (msgEl && msg)       msgEl.textContent    = msg;
-  if (detailEl && detail) detailEl.textContent = detail;
+  const el=document.getElementById('error-msg');
+  if(el&&msg)el.textContent=msg;
 }
 
-async function handleCallback() {
-  setProgress(20);
-
-  const hash   = window.location.hash || '';
-  const params = new URLSearchParams(window.location.search);
-  const hashParams = new URLSearchParams(hash.substring(1));
-
-  // Check for custom confirmation/reset tokens
-  const token = params.get('token');
-  const type  = params.get('type');
-  const email = params.get('email');
-
-  if (token && type && email) {
-    setProgress(40);
-
-    if (type === 'confirm') {
-      // Handle email confirmation
-      try {
-        // For now, we'll redirect to login with a success message
-        // In production, you'd verify the token against your database/cache
-        sessionStorage.setItem('email_confirmed', 'true');
-        sessionStorage.setItem('confirmed_email', email);
-        showState('state-success');
-        setProgress(100);
-        setTimeout(() => {
-          window.location.href = '/tradease-auth.html?confirmed=true';
-        }, 1500);
-        return;
-      } catch (e) {
-        showError('Confirmation failed. The link may have expired.', e.message);
-        return;
+async function redirectToDashboard(user){
+  setProgress(90);
+  let role='customer';
+  const ssRole=sessionStorage.getItem('oauth_role');
+  const urlRole=new URLSearchParams(window.location.search).get('role');
+  const hinted=ssRole||urlRole||null;
+  if(ssRole)sessionStorage.removeItem('oauth_role');
+  try{
+    const{data:profile}=await sb.from('users').select('role,username').eq('id',user.id).single();
+    if(profile?.role){
+      role=profile.role;
+    } else {
+      role=hinted||user.user_metadata?.role||'customer';
+      const username=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'User';
+      await sb.from('users').upsert({id:user.id,email:user.email,username,role},{onConflict:'id'});
+      if(role==='contractor'){
+        const cName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'';
+        await sb.from('contractors').upsert({id:user.id,company_name:cName,email:user.email,plan:'free',verified:false,approved:false,approval_status:'pending',rating:0,review_count:0,portfolio:[],avatar_url:''},{onConflict:'id'});
       }
-    } else if (type === 'reset') {
-      // Handle password reset
-      sessionStorage.setItem('reset_token', token);
-      sessionStorage.setItem('reset_email', email);
-      showState('state-success');
-      setProgress(100);
-      setTimeout(() => {
-        window.location.href = '/tradease-auth.html?reset=true';
-      }, 1500);
-      return;
     }
-  }
+  }catch(e){role=hinted||user.user_metadata?.role||'customer';}
+  setProgress(100);
+  showState('state-success');
+  setTimeout(()=>{window.location.replace(role==='contractor'?'/contractor-dashboard.html':'/customer-dashboard.html');},1000);
+}
 
-  // Check for explicit OAuth error in URL
-  const errorDesc = params.get('error_description') || hashParams.get('error_description');
-  const errorCode = params.get('error') || hashParams.get('error');
-  if (errorDesc || errorCode) {
-    showError(
-      errorDesc || 'Authentication failed.',
-      errorCode ? 'Error code: ' + errorCode : ''
-    );
-    return;
-  }
+async function handleCallback(){
+  setProgress(20);
+  const params=new URLSearchParams(window.location.search);
+  const hash=window.location.hash||'';
+  const hashParams=new URLSearchParams(hash.substring(1));
+
+  /* Check for explicit OAuth error */
+  const errDesc=params.get('error_description')||hashParams.get('error_description');
+  const errCode=params.get('error')||hashParams.get('error');
+  if(errDesc||errCode){showError(errDesc||'Authentication failed.');return;}
 
   setProgress(40);
 
-  // PKCE flow — exchange code for session (used by email confirmation + Google OAuth)
-  const code = params.get('code');
-  if (code) {
-    let data, error;
-    try {
-      ({ data, error } = await sb.auth.exchangeCodeForSession(code));
-    } catch (e) {
-      showError('Session exchange failed. Please try signing in again.', e.message);
-      return;
-    }
-    if (error) {
-      showError('Could not verify your session.', error.message);
-      return;
-    }
-    if (data?.session) {
+  /* PKCE flow — email confirmation & OAuth */
+  const code=params.get('code');
+  if(code){
+    let data,error;
+    try{({data,error}=await sb.auth.exchangeCodeForSession(code));}
+    catch(e){showError('Session exchange failed. Please try signing in again.');return;}
+    if(error){showError('Could not verify your session. '+error.message);return;}
+    if(data?.session){
       setProgress(80);
-      showState('state-success');
+
+      /* Password reset — redirect to reset page */
+      const type=hashParams.get('type')||params.get('type');
+      if(type==='recovery'){
+        showState('state-success');
+        document.querySelector('#state-success h1').textContent='Link Verified!';
+        document.querySelector('#state-success p').textContent='Taking you to reset your password…';
+        setTimeout(()=>{window.location.replace('/tradease-auth.html?reset=true');},1000);
+        return;
+      }
+
       await redirectToDashboard(data.session.user);
       return;
     }
@@ -254,132 +181,44 @@ async function handleCallback() {
 
   setProgress(60);
 
-  // Implicit flow — check for access_token in hash (legacy or some providers)
-  const accessToken  = hashParams.get('access_token');
-  const refreshToken = hashParams.get('refresh_token');
-
-  if (accessToken) {
-    let data, error;
-    try {
-      ({ data: { session: data }, error } = await sb.auth.setSession({
-        access_token:  accessToken,
-        refresh_token: refreshToken || '',
-      }));
-    } catch (e) {
-      showError('Could not set session from link.', e.message);
-      return;
-    }
-    if (error || !data) {
-      showError('Session expired or already used. Please sign in again.', error?.message);
-      return;
-    }
+  /* Implicit flow (legacy / some providers) — access_token in hash */
+  const accessToken=hashParams.get('access_token');
+  const refreshToken=hashParams.get('refresh_token');
+  if(accessToken){
+    let data,error;
+    try{({data:{session:data},error}=await sb.auth.setSession({access_token:accessToken,refresh_token:refreshToken||''}))}
+    catch(e){showError('Could not set session. Please sign in again.');return;}
+    if(error||!data){showError('Session expired or already used.');return;}
     setProgress(80);
-    showState('state-success');
     await redirectToDashboard(data.user);
     return;
   }
 
   setProgress(70);
 
-  // Check if there's already an active session (user clicked link in same browser)
-  let session = null;
-  try {
-    const result = await sb.auth.getSession();
-    session = result.data?.session || null;
-  } catch (e) { /* ignore */ }
-
-  if (session) {
+  /* Already has a session (same browser click) */
+  let session=null;
+  try{const r=await sb.auth.getSession();session=r.data?.session||null;}catch(e){}
+  if(session){
     setProgress(80);
-    showState('state-success');
     await redirectToDashboard(session.user);
     return;
   }
 
-  // Nothing worked
-  showState('state-notoken');
+  /* Nothing worked */
+  showState('state-invalid');
 }
 
-async function redirectToDashboard(user) {
-  setProgress(90);
-
-  // Determine role — DB is source of truth
-  let role = 'customer';
-
-  // Check sessionStorage for OAuth contractor hint
-  const urlRole = new URLSearchParams(window.location.search).get('role');
-  const ssRole  = sessionStorage.getItem('oauth_role');
-  const hintedRole = urlRole || ssRole || null;
-  if (ssRole) sessionStorage.removeItem('oauth_role');
-
-  try {
-    const { data: profile } = await sb.from('users')
-      .select('role, username')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role) {
-      role = profile.role;
-    } else {
-      // New user — create profile row
-      role = hintedRole || user.user_metadata?.role || 'customer';
-
-      const username = user.user_metadata?.full_name
-        || user.user_metadata?.name
-        || user.email?.split('@')[0]
-        || 'User';
-
-      await sb.from('users').upsert({
-        id:       user.id,
-        email:    user.email,
-        username,
-        role,
-      }, { onConflict: 'id' });
-
-      // Create contractor row for new contractor OAuth users
-      if (role === 'contractor') {
-        const companyName = user.user_metadata?.full_name
-          || user.user_metadata?.name
-          || user.email?.split('@')[0]
-          || '';
-
-        await sb.from('contractors').upsert({
-          id:              user.id,
-          company_name:    companyName,
-          email:           user.email,
-          plan:            'free',
-          verified:        false,
-          approved:        false,
-          approval_status: 'pending',
-          rating:          0,
-          review_count:    0,
-          portfolio:       [],
-          avatar_url:      '',
-        }, { onConflict: 'id' });
-      }
-    }
-  } catch (e) {
-    // DB query failed — fall back to metadata
-    role = hintedRole || user.user_metadata?.role || 'customer';
-  }
-
-  setProgress(100);
-
-  const dest = role === 'contractor' ? '/contractor-dashboard.html' : '/customer-dashboard.html';
-  setTimeout(() => { window.location.replace(dest); }, 800);
-}
-
-// Add a safety timeout — if nothing resolves in 15s, show error
-const safetyTimeout = setTimeout(() => {
-  const loadingEl = document.getElementById('state-loading');
-  if (loadingEl?.classList.contains('active')) {
+/* Safety timeout */
+const safety=setTimeout(()=>{
+  if(document.getElementById('state-loading')?.classList.contains('active')){
     showError('Verification timed out. Please try signing in directly.');
   }
-}, 15000);
+},15000);
 
-handleCallback().then(() => clearTimeout(safetyTimeout)).catch(e => {
-  clearTimeout(safetyTimeout);
-  showError('An unexpected error occurred.', e.message);
-});
+handleCallback()
+  .then(()=>clearTimeout(safety))
+  .catch(e=>{clearTimeout(safety);showError('An unexpected error occurred. '+e.message);});
 </script>
 </body>
 </html>

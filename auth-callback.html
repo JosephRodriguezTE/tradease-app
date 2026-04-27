@@ -117,28 +117,29 @@ function showError(msg){
 
 async function redirectToDashboard(user){
   setProgress(90);
-  let role='customer';
-  const ssRole=sessionStorage.getItem('oauth_role');
-  const urlRole=new URLSearchParams(window.location.search).get('role');
-  const hinted=ssRole||urlRole||null;
-  if(ssRole)sessionStorage.removeItem('oauth_role');
   try{
-    const{data:profile}=await sb.from('users').select('role,username').eq('id',user.id).single();
-    if(profile?.role){
-      role=profile.role;
+    // Check if contractor by looking in contractors table
+    const { data: contractor } = await sb
+      .from('contractors')
+      .select('id')
+      .eq('id', user.id)
+      .single();
+
+    if (contractor) {
+      setProgress(100);
+      showState('state-success');
+      setTimeout(()=>{window.location.replace('/contractor-dashboard.html');},1000);
     } else {
-      role=hinted||user.user_metadata?.role||'customer';
-      const username=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'User';
-      await sb.from('users').upsert({id:user.id,email:user.email,username,role},{onConflict:'id'});
-      if(role==='contractor'){
-        const cName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'';
-        await sb.from('contractors').upsert({id:user.id,company_name:cName,email:user.email,plan:'free',verified:false,approved:false,approval_status:'pending',rating:0,review_count:0,portfolio:[],avatar_url:''},{onConflict:'id'});
-      }
+      setProgress(100);
+      showState('state-success');
+      setTimeout(()=>{window.location.replace('/customer-dashboard.html');},1000);
     }
-  }catch(e){role=hinted||user.user_metadata?.role||'customer';}
-  setProgress(100);
-  showState('state-success');
-  setTimeout(()=>{window.location.replace(role==='contractor'?'/contractor-dashboard.html':'/customer-dashboard.html');},1000);
+  }catch(e){
+    // If contractor check fails, default to customer dashboard
+    setProgress(100);
+    showState('state-success');
+    setTimeout(()=>{window.location.replace('/customer-dashboard.html');},1000);
+  }
 }
 
 async function handleCallback(){
